@@ -4,11 +4,14 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User, Group
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from .models import *
 from .forms import *
 from .forms import semester as setting_semester
 
 # Create your views here.
+@login_required(login_url=settings.LOGIN_URL)
 def MainView(request):
     user = User.objects.get(username=request.user.username)
     user_group = user.groups.get()
@@ -16,7 +19,8 @@ def MainView(request):
 
 
 
-def StudentFormView(request):
+@login_required(login_url=settings.LOGIN_URL)
+def student_form_view(request):
     if request.method == "POST":
         form = StudentForm(request.POST, request.FILES)
         if form.is_valid():
@@ -31,7 +35,6 @@ def StudentFormView(request):
                 username=new_student.student_number,
                 password=str(new_student.date_of_birth)[:4]
             )
-
             new_student.user = new_user
             new_student.save()
             
@@ -52,7 +55,8 @@ def StudentFormView(request):
 
 
 
-def ProfessorFormView(request):
+@login_required(login_url=settings.LOGIN_URL)
+def professor_form_view(request):
 
     if request.method == "POST":
         form = ProfessorForm(request.POST, request.FILES)
@@ -91,7 +95,8 @@ def ProfessorFormView(request):
 
 
 
-def LessonFormView(request):
+@login_required(login_url=settings.LOGIN_URL)
+def lesson_form_view(request):
     if request.method == "POST":
         form = LessonForm(request.POST)
 
@@ -113,7 +118,8 @@ def LessonFormView(request):
 
 
 
-def LessonClassFromView(request):
+@login_required(login_url=settings.LOGIN_URL)
+def lesson_class_form_view(request):
     if request.method == "POST":
         form = LessonClassFrom(request.POST)
         #flag = False
@@ -180,7 +186,7 @@ def LessonClassFromView(request):
     
 
 
-def LoginFromView(request):
+def login_form_view(request):
 
     if request.method == "POST":
         form = LoginForm(request.POST)
@@ -209,8 +215,9 @@ def LoginFromView(request):
     return render(request, "Login.html", {'form':form})
     
     
-    
-def ProfessorProfile(request):
+
+@login_required(login_url=settings.LOGIN_URL)
+def professor_profile_view(request):
     username = User.objects.get(username=request.user.username)
     professor_name = username.professor
     p_university_list = professor_name.universities.all()
@@ -223,7 +230,8 @@ def ProfessorProfile(request):
 
 
 
-def ProfessorLessonList(request, p_code, u_code):
+@login_required(login_url=settings.LOGIN_URL)
+def professor_lesson_list_view(request, p_code, u_code):
     professor_name = professor.objects.get(code=p_code)
     l_university = university.objects.get(code=u_code)
     temp_lesson_list = professor_name.classes.all()
@@ -246,7 +254,8 @@ def ProfessorLessonList(request, p_code, u_code):
 
 
 
-def LessonDetails(request, l_code):
+@login_required(login_url=settings.LOGIN_URL)
+def professor_lesson_details(request, l_code):
     professor_name = professor.objects.get(code=request.session["p_code"])
     assigned_lessons = lesson_class.objects.filter(lesson_code=l_code, professor_name=professor_name)
     lesson_details = []
@@ -261,7 +270,8 @@ def LessonDetails(request, l_code):
     
 
 
-def GradeFormView(request, l_code, class_code):
+@login_required(login_url=settings.LOGIN_URL)
+def grade_form_view(request, l_code, class_code):
     initail_data = []
     student_data = {}
     professor_name = professor.objects.get(code=request.session["p_code"])
@@ -282,7 +292,6 @@ def GradeFormView(request, l_code, class_code):
     if request.method == "POST":
         formset = GradeFormset(data=request.POST)
         
-        print(formset.error_messages)
         if formset.is_valid():
             for i in formset:
                 student_info = student.objects.get(student_number=i.cleaned_data["student_id"])
@@ -302,8 +311,7 @@ def GradeFormView(request, l_code, class_code):
 
 
 
-
-
+@login_required(login_url=settings.LOGIN_URL)
 def LessonSearchView(request):
     flag = False
     if request.method == "POST":
@@ -347,6 +355,7 @@ def LessonSearchView(request):
 
 
 
+@login_required(login_url=settings.LOGIN_URL)
 def ChoosingLessonFormView(request):
 
 
@@ -409,6 +418,7 @@ def ChoosingLessonFormView(request):
 
 
 # todo - this is for saving the chosen lesson in previous view
+@login_required(login_url=settings.LOGIN_URL)
 def SavingTheChosenLessonView(request):
     if request.method == "POST":
         choices = request.session.get("lesson_choices")
@@ -564,6 +574,7 @@ def SavingTheChosenLessonView(request):
 
 
 
+
 def maximum_unit_allowed(request, student_info, class_info, max_unit) -> bool:
     try:
         student_classes = student_choosing_lesson.objects.filter(student_name=student_info, semester=semester())
@@ -580,3 +591,9 @@ def maximum_unit_allowed(request, student_info, class_info, max_unit) -> bool:
                                                             chosen_class=class_info,
                                                             semester=request.session.get("semester"))
     return False
+
+
+
+@login_required(login_url=settings.LOGIN_URL)
+def student_grade_history(request):
+    pass

@@ -3,17 +3,17 @@ from . import views
 
 app_name = "website"
 urlpatterns = [
-    path("", views.LoginFromView, name="login"),
+    path("", views.login_form_view, name="login"),
     path("main/", views.MainView, name="main"),
-    path("register-student", views.StudentFormView, name="register_student"),
-    path("register-professor", views.ProfessorFormView, name="register_professor"),
-    path("create_lesson", views.LessonFormView, name="create_lesson"),
-    path("create_class", views.LessonClassFromView, name="lesson_class"),
-    path("professor/profile", views.ProfessorProfile, name="professor_profile"),
-    path("professor/classes/<str:p_code>/<str:u_code>", views.ProfessorLessonList, name="professor_lessons"),
-    path('professor/lesson/details/<str:l_code>', views.LessonDetails, name="lesson_detail"),
+    path("register-student", views.student_form_view, name="register_student"),
+    path("register-professor", views.professor_form_view, name="register_professor"),
+    path("create_lesson", views.lesson_form_view, name="create_lesson"),
+    path("create_class", views.lesson_class_form_view, name="lesson_class"),
+    path("professor/profile", views.professor_profile_view, name="professor_profile"),
+    path("professor/classes/<str:p_code>/<str:u_code>", views.professor_lesson_list_view, name="professor_lessons"),
+    path('professor/lesson/details/<str:l_code>', views.professor_lesson_details, name="lesson_detail"),
     path("search", views.LessonSearchView, name="lesson_search"),
     path("choosing_lesson", views.ChoosingLessonFormView, name="choosing_lesson"),
     path("saving", views.SavingTheChosenLessonView, name="save"),
-    path("professor/lesson/details/<str:l_code>/<int:class_code>/submitting_grade", views.GradeFormView, name="grade")
+    path("professor/lesson/details/<str:l_code>/<int:class_code>/submitting_grade", views.grade_form_view, name="grade")
 ]

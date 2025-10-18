@@ -349,7 +349,7 @@ def set_semester(sender, instance, **kwargs):
         today_date_year = year + "2"
 
     elif 6 <= today_date_month <= 10:
-        today_date_year[1:] += "1"
+        today_date_year[1:] + "1"
     
     elif today_date_month == 4 or today_date_month == 5:
         year = str(int(today_date_year) - 1)

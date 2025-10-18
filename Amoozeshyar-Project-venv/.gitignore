@@ -4,3 +4,4 @@ Scripts
 pyvenv.cfg
 Amoozeshyar/db.sqlite3
 .vscode
+.env

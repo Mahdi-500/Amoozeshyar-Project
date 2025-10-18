@@ -8,14 +8,14 @@ def semester() -> str:
     today_date_year = str(jmodels.jdatetime.date.today().year)
 
     if 11 <= today_date_month <= 12:
-        today_date_year[1:] += '2'
+        today_date_year[1:] + '2'
         
     elif 1 <= today_date_month <= 3:
         year = str(int(today_date_year) - 1)[1:]
         today_date_year = year + "2"
 
     elif 6 <= today_date_month <= 10:
-        today_date_year[1:] += "1"
+        today_date_year[1:] + '1'
 
     elif today_date_month == 4 or today_date_month == 5:
         year = str(int(today_date_year) - 1)[1:]
@@ -40,12 +40,16 @@ class StudentForm(forms.ModelForm):
                 "dir":"rtl"})
         }
 
+        error_messages = {
+            "date_of_birth":{"invalid":"تاریخ نامعتبر است"},
+        }
+
     def clean(self):
         clean_data = super().clean()
         first_name = clean_data.get("first_name")
         last_name = clean_data.get("last_name")
         student_id = clean_data.get("student_id")
-        
+    
         space_fname = first_name.find(" ")
         space_lname = last_name.find(" ")
 
@@ -54,10 +58,10 @@ class StudentForm(forms.ModelForm):
             first_name = first_name.split(' ')
             for i in first_name:
                 if not i.isalpha():
-                    raise forms.ValidationError("فقط حروف الفبا در نام و نام خانوادگی مجاز است")
+                    self.add_error("first_name", "فقط حروف الفبا در نام و نام خانوادگی مجاز است")
         else:
             if not first_name.isalpha():
-                raise forms.ValidationError("فقط حروف الفبا در نام و نام خانوادگی مجاز است")
+                self.add_error("first_name","فقط حروف الفبا در نام و نام خانوادگی مجاز است" )
             
 
         # ? last name validation
@@ -65,16 +69,16 @@ class StudentForm(forms.ModelForm):
             last_name = last_name.split(' ')
             for i in last_name:
                 if not i.isalpha():
-                    raise forms.ValidationError("فقط حروف الفبا در نام و نام خانوادگی مجاز است")
+                    self.add_error("last_name","فقط حروف الفبا در نام و نام خانوادگی مجاز است")
         else:
             if not last_name.isalpha():
-                raise forms.ValidationError("فقط حروف الفبا در نام و نام خانوادگی مجاز است")
+                self.add_error("last_name","فقط حروف الفبا در نام و نام خانوادگی مجاز است")
         
         if not student_id.isdigit():
-            raise forms.ValidationError("فقط عدد مجاز است")
+            self.add_error("student_id", "فقط عدد مجاز است")
         
         if len(student_id) < 10:
-            raise forms.ValidationError("کد ملی باید 10 کاراکتر باشد")
+            self.add_error("student_id", "کد ملی باید 10 کاراکتر باشد")
         
 
 class ProfessorForm(forms.ModelForm):
@@ -95,6 +99,10 @@ class ProfessorForm(forms.ModelForm):
             "date_of_birth": "مثال: 25-12-1357",
         }
 
+        error_messages = {
+            "date_of_birth":{"invalid":"تاریخ نامعتبر است"},
+        }
+
     def clean(self):
         clean_data = super().clean()
         first_name = clean_data.get("first_name")
@@ -105,21 +113,21 @@ class ProfessorForm(forms.ModelForm):
         student_object = student.objects.all().filter(student_id=professor_id)
 
         if student_object:
-            raise forms.ValidationError("کد ملی را با دقت وارد کنید")
+            self.add_error("professor_id", "کد ملی را با دقت وارد کنید")
         
         if not first_name.isalpha() or not last_name.isalpha():
-            raise forms.ValidationError("فقط حروف الفبا مجاز است")
+            self.add_error("first_name", "فقط حروف الفبا مجاز است")
         
         major = major.split(' ')
         for i in major:
             if not i.isalpha():
-                raise forms.ValidationError("فقط حروف الفبا مجاز است")
+                self.add_error("professor_major", "فقط حروف الفبا مجاز است")
         
         if not professor_id.isdigit():
-            raise forms.ValidationError("فقط عدد مجاز است")
+            self.add_error("professor_id", "فقط عدد مجاز است")
         
         if len(professor_id) < 10:
-            raise forms.ValidationError("کد ملی باید 10 کاراکتر باشد")
+            self.add_error("professor_id", "کد ملی باید 10 کاراکتر باشد")
         
 
     # def save(self, commit=True):
@@ -153,7 +161,7 @@ class LessonForm(forms.ModelForm):
 
         for name in name.split(" "):
             if not name.isalpha() and not name.isalnum():
-                raise forms.ValidationError(" ترکیب عدد با حروف الفبا یا فقط حروف الفبا مجاز است")
+                self.add_error("name", " ترکیب عدد با حروف الفبا یا فقط حروف الفبا مجاز است")
             
         # if apply_to_all:
         #     clean_data["lesson_major"] = major.objects.none()
@@ -192,19 +200,19 @@ class LessonClassFrom(forms.ModelForm):
             raise forms.ValidationError("فرمت وارد شده صحیح نیست")
         
         if temp < 0:
-            raise forms.ValidationError("کلمه ' تا ' حتما باید درج شود")
+            self.add_error("lesson_time", "کلمه ' تا ' حتما باید درج شود")
         
         if temp != 5 and temp != 6:
-            raise forms.ValidationError("کلمه ' تا ' را براساس فرمت داده شده در جای مناسب قرار دهید")
+            self.add_error("lesson_time", "کلمه ' تا ' را براساس فرمت داده شده در جای مناسب قرار دهید")
         
         if not first_time_hour.isdigit() or not first_time_minute.isdigit() or not second_time_hour.isdigit() or not second_time_minute.isdigit():
-            raise forms.ValidationError("فرمت وارد شده صحیح نیست")
+            self.add_error("lesson_time", "فرمت وارد شده صحیح نیست")
         
         if (int(first_time_hour) > 24 or int(first_time_hour) < 1) or (int(second_time_hour) > 24 or int(second_time_hour) < 1):
-            raise forms.ValidationError("مقدار ساعت باید بین 1 تا 24 باشد")
+            self.add_error("lesson_time", "مقدار ساعت باید بین 1 تا 24 باشد")
         
         if (int(first_time_minute) > 59 or int(first_time_minute) < 0) or (int(second_time_minute) > 59 or int(second_time_minute) < 0):
-            raise forms.ValidationError("مقدار دقیقه باید بین 1 تا 59 باشید")
+            self.add_error("lesson_time", "مقدار دقیقه باید بین 1 تا 59 باشید")
         
 
 

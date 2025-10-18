@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -97,11 +98,18 @@ WSGI_APPLICATION = 'Amoozeshyar.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+load_dotenv(dotenv_path=r'..\.env')
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "Amoozeshyar",
+        "USER": "AmoozeshyarAdmin",
+        "PASSWORD": os.getenv("db_password"),
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
+
     }
 }
 
@@ -143,7 +151,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-LOGIN_URL = "login/"
 STATIC_URL = 'static/'
 MEDIA_URL = "/Images/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "Images")
@@ -152,3 +159,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "Images")
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ? login info
+LOGIN_URL = "/"

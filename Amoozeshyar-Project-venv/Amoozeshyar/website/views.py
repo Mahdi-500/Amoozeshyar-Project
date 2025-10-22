@@ -46,8 +46,8 @@ def student_form_view(request):
             new_student.user.groups.add(student_group)
 
             messages.success(request, "ثبت نام موفقیت آمیز بود")
-            return redirect('website:main') 
-
+            return redirect('website:main')
+        
     else:
         form = StudentForm()
 
@@ -283,7 +283,7 @@ def grade_form_view(request, l_code, class_code):
         student_data = {
             "first_name":j.student_name.first_name,
             "last_name":j.student_name.last_name,
-            "student_id":j.student_name.student_number,
+            "student_number":j.student_name.student_number,
             "score":0
         }
         initail_data.append(student_data)
@@ -312,7 +312,7 @@ def grade_form_view(request, l_code, class_code):
 
 
 @login_required(login_url=settings.LOGIN_URL)
-def LessonSearchView(request):
+def lesson_search_view(request):
     flag = False
     if request.method == "POST":
         flag = True
@@ -356,7 +356,7 @@ def LessonSearchView(request):
 
 
 @login_required(login_url=settings.LOGIN_URL)
-def ChoosingLessonFormView(request):
+def choosing_lesson_form_view(request):
 
 
     if request.method == "POST":
@@ -419,7 +419,7 @@ def ChoosingLessonFormView(request):
 
 # todo - this is for saving the chosen lesson in previous view
 @login_required(login_url=settings.LOGIN_URL)
-def SavingTheChosenLessonView(request):
+def saving_chosen_lesson_view(request):
     if request.method == "POST":
         choices = request.session.get("lesson_choices")
         form = ChoosingLessonForm(data=request.POST)

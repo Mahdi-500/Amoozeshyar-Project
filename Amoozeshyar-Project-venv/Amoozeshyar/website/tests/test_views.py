@@ -59,34 +59,6 @@ class generalViewsTests(TestCase):
 
 
 
-    def test_student_form_view(self):
-        response = self.client.get(reverse("website:register_student"))
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, "/?next=/register-student")
-        self.assertTemplateNotUsed(response, "register_student.html")
-
-        # ? after login
-        self.client.login(username="teststudent", password="test")
-        response_after_login = self.client.get(reverse("website:register_student"))
-        self.assertEqual(response_after_login.status_code, 200)
-        self.assertTemplateUsed(response_after_login, "register_student.html")
-
-
-
-    def test_professor_form_view(self):
-        response = self.client.get(reverse("website:register_professor"))
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, "/?next=/register-professor")
-        self.assertTemplateNotUsed(response, "register_professor.html")
-
-        # ? after login
-        self.client.login(username="testprofessor", password="test")
-        respone_after_login = self.client.get(reverse("website:register_professor"))
-        self.assertEqual(respone_after_login.status_code, 200)
-        self.assertTemplateUsed(respone_after_login, "register_professor.html")
-
-
-
     def test_lesson_form_view(self):
         response = self.client.get(reverse("website:create_lesson"))
         self.assertEqual(response.status_code, 302)
@@ -144,6 +116,20 @@ class professorViewsTests(TestCase):
         # ? creating lesson class
         lesson_class.objects.create(lesson_code=self.test_leeson_1, professor_name=self.professor_obj, university_location=self.uni_1, group_name=self.test_group, capacity=35, class_code=300, class_number=1002)
         lesson_class.objects.create(lesson_code=self.test_lesson_2, professor_name=self.professor_obj, university_location=self.uni_2, group_name=self.test_group, lesson_day="یک شنبه", capacity=35, class_code=301, class_number=1003)
+
+
+
+    def test_professor_form_view(self):
+        response = self.client.get(reverse("website:register_professor"))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, "/?next=/register-professor")
+        self.assertTemplateNotUsed(response, "register_professor.html")
+
+        # ? after login
+        self.client.login(username="testprofessor", password="test")
+        respone_after_login = self.client.get(reverse("website:register_professor"))
+        self.assertEqual(respone_after_login.status_code, 200)
+        self.assertTemplateUsed(respone_after_login, "register_professor.html")
 
 
 
@@ -217,3 +203,68 @@ class professorViewsTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/?next=/professor/lesson/details/l_code/1234/submitting_grade")
         self.assertTemplateNotUsed(response,"submittingGrade.html")
+
+
+
+class studentViewsTests(TestCase):
+
+    def setUp(self):
+        student = User.objects.create_user(username="teststudent", password="test")
+        Group.objects.create(name="student")
+        student.groups.add(Group.objects.get(name="student"))
+
+
+
+    def test_student_form_view(self):
+        response = self.client.get(reverse("website:register_student"))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, "/?next=/register-student")
+        self.assertTemplateNotUsed(response, "register_student.html")
+
+        # ? after login
+        self.client.login(username="teststudent", password="test")
+        response_after_login = self.client.get(reverse("website:register_student"))
+        self.assertEqual(response_after_login.status_code, 200)
+        self.assertTemplateUsed(response_after_login, "register_student.html")
+
+
+
+    def test_lesson_search_view(self):
+        response = self.client.get(reverse("website:lesson_search"))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, "/?next=/search")
+        self.assertTemplateNotUsed(response, "lesson_search_result.html")
+
+        # ? after login
+        self.client.login(username="teststudent", password="test")
+        response_after_login = self.client.get(reverse("website:lesson_search"))
+        self.assertEqual(response_after_login.status_code, 200)
+        self.assertTemplateUsed(response_after_login, "lesson_search_result.html")
+
+
+
+    def test_choosing_lesson_form_view(self):
+        response = self.client.get(reverse("website:choosing_lesson"))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, "/?next=/choosing_lesson")
+        self.assertTemplateNotUsed(response, "lesson_search_result.html")
+
+        # ? after login
+        self.client.login(username="teststudent", password="test")
+        response_after_login = self.client.get(reverse("website:choosing_lesson"))
+        self.assertEqual(response_after_login.status_code, 200)
+        self.assertTemplateUsed("lesson_search_result.htnl")
+    
+
+
+    def test_saving_chosen_lesson_view(self):
+        response = self.client.get(reverse("website:save"))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, "/?next=/saving")
+        self.assertTemplateNotUsed("choosing_lesson.html")
+
+        # ? after login
+        self.client.login(username="teststudent", password="test")
+        response_after_login = self.client.get(reverse("website:save"))
+        self.assertEqual(response_after_login.status_code, 302)
+        self.assertRedirects(response_after_login, "/choosing_lesson")

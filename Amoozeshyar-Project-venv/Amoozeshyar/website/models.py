@@ -13,6 +13,8 @@ class major(models.Model):
     name = models.CharField(max_length=255, blank=False, verbose_name="نام رشته")
     code = models.PositiveIntegerField(verbose_name="کد رشته", primary_key=True, blank=False, unique=True)
     capacity = models.PositiveSmallIntegerField(verbose_name="ظرفیت", blank=False)
+    created = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    modified = jmodels.jDateTimeField(auto_now=True, verbose_name="تاریخ تغییر")
 
     class Meta:
         indexes = [models.Index(
@@ -27,6 +29,8 @@ class university(models.Model):
     name = models.CharField(max_length=100, verbose_name="نام دانشگاه", blank=False)
     code = models.PositiveIntegerField(verbose_name="کد دانشگاه", unique=True, primary_key=True)
     address = models.TextField(blank=False, verbose_name="آدرس", default="تهران")
+    created = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    modified = jmodels.jDateTimeField(auto_now=True, verbose_name="تاریخ تغییر")
 
     class Meta:
         indexes = [models.Index(
@@ -41,6 +45,8 @@ class university(models.Model):
 class group(models.Model):
     name = models.CharField(max_length=100, blank=False, verbose_name="نام گروه")
     code = models.PositiveSmallIntegerField(blank=False, verbose_name="کد گروه", default=0)
+    created = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    modified = jmodels.jDateTimeField(auto_now=True, verbose_name="تاریخ تغییر")
 
     def __str__(self):
         return f'{self.name}({self.code})'
@@ -72,6 +78,8 @@ class lesson(models.Model):
     pishniaz = models.ManyToManyField('self', blank=True, verbose_name="پیش نیاز")
     hamniaz = models.ManyToManyField('self', blank=True, verbose_name="هم نیاز")
     lesson_major = models.ManyToManyField(major, blank=False, verbose_name="رشته")
+    created = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    modified = jmodels.jDateTimeField(auto_now=True, verbose_name="تاریخ تغییر")
 
     class Meta:
         indexes = [
@@ -148,6 +156,7 @@ class student(models.Model):
     address = models.TextField(blank=False, verbose_name="آدرس")
     gender = models.CharField(max_length=3, blank=False, choices=gender_choices, default=gender_choices.MALE, verbose_name="جنسیت")
     modified = jmodels.jDateTimeField(auto_now=True, verbose_name="تاریخ تغییر")
+    created = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
 
     # ? student's educational information
     student_number = models.CharField(max_length=12, primary_key=True, default=None, verbose_name="شماره دانشجویی")     # ? autofill - primary key

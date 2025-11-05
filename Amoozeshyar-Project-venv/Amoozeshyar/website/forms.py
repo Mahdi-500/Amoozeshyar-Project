@@ -59,17 +59,13 @@ class StudentForm(forms.ModelForm):
         no_space_address = address.replace(" ", "")
 
         # ? first name validation
-        for i in no_space_first_name:
-            if not i.isalpha():
-                self.add_error("first_name", "فقط حروف الفبا در نام و نام خانوادگی مجاز است")
-                break
+        if not no_space_first_name.isalpha():
+            self.add_error("first_name", "فقط حروف الفبا در نام و نام خانوادگی مجاز است")
             
 
         # ? last name validation
-        for i in no_space_last_name:
-            if not i.isalpha():
-                self.add_error("last_name","فقط حروف الفبا در نام و نام خانوادگی مجاز است")
-                break
+        if not no_space_last_name.isalpha():
+            self.add_error("last_name","فقط حروف الفبا در نام و نام خانوادگی مجاز است")
         
         
 
@@ -138,17 +134,13 @@ class ProfessorForm(forms.ModelForm):
             self.add_error("professor_id", "کد ملی را با دقت وارد کنید")
         
         # ? first name validation
-        for i in no_space_first_name:
-            if not i.isalpha():
-                self.add_error("first_name", "فقط حروف الفبا در نام و نام خانوادگی مجاز است")
-                break
+        if not no_space_first_name.isalpha():
+            self.add_error("first_name", "فقط حروف الفبا در نام و نام خانوادگی مجاز است")
             
 
         # ? last name validation
-        for i in no_space_last_name:
-            if not i.isalpha():
-                self.add_error("last_name","فقط حروف الفبا در نام و نام خانوادگی مجاز است")
-                break
+        if not no_space_last_name.isalpha():
+            self.add_error("last_name","فقط حروف الفبا در نام و نام خانوادگی مجاز است")
         
 
         # ? address validation
@@ -261,8 +253,8 @@ class LessonClassFrom(forms.ModelForm):
             self.add_error("class_end_time", "فقط یک ':' مجاز است")
             return
         
-        start_time.replace(":", "")
-        end_time.replace(":","")
+        start_time = start_time.replace(":", "")
+        end_time = end_time.replace(":","")
         
         if start_time == end_time:
             raise forms.ValidationError("ساعت شروع و پایان نمی توانند یکسان باشند")

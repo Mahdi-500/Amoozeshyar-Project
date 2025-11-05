@@ -28,7 +28,6 @@ class generalViewsTests(TestCase):
 
     def test_main_view(self):
         response = self.client.get(reverse("website:main"))
-        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/?next=/main/")
         self.assertTemplateNotUsed(response, "main.html")
         
@@ -61,7 +60,6 @@ class generalViewsTests(TestCase):
 
     def test_lesson_form_view(self):
         response = self.client.get(reverse("website:create_lesson"))
-        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/?next=/create_lesson")
         self.assertTemplateNotUsed(response, "regiister_professor.html")
 
@@ -121,7 +119,6 @@ class professorViewsTests(TestCase):
 
     def test_professor_form_view(self):
         response = self.client.get(reverse("website:register_professor"))
-        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/?next=/register-professor")
         self.assertTemplateNotUsed(response, "register_professor.html")
 
@@ -135,7 +132,6 @@ class professorViewsTests(TestCase):
 
     def test_professor_profile_view(self):
         response = self.client.get(reverse("website:professor_profile"))
-        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/?next=/professor/profile")
         self.assertTemplateNotUsed(response, "professor/profile.html")
 
@@ -154,7 +150,6 @@ class professorViewsTests(TestCase):
 
     def test_professor_lesson_list_view(self):
         response = self.client.get(reverse("website:professor_lessons", kwargs={"p_code":"p_code", "u_code":"u_code"}))
-        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/?next=/professor/classes/p_code/u_code")
         self.assertTemplateNotUsed(response, "professor/professor_lesson_list.html")
 
@@ -176,7 +171,6 @@ class professorViewsTests(TestCase):
 
     def test_professor_lesson_details(self):
         response = self.client.get(reverse("website:lesson_detail", kwargs={"l_code":"l_code"}))
-        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/?next=/professor/lesson/details/l_code")
         self.assertTemplateNotUsed(response, "lesson_details.html")
 
@@ -217,7 +211,6 @@ class studentViewsTests(TestCase):
 
     def test_student_form_view(self):
         response = self.client.get(reverse("website:register_student"))
-        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/?next=/register-student")
         self.assertTemplateNotUsed(response, "register_student.html")
 
@@ -231,7 +224,6 @@ class studentViewsTests(TestCase):
 
     def test_lesson_search_view(self):
         response = self.client.get(reverse("website:lesson_search"))
-        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/?next=/search")
         self.assertTemplateNotUsed(response, "lesson_search_result.html")
 
@@ -245,7 +237,6 @@ class studentViewsTests(TestCase):
 
     def test_choosing_lesson_form_view(self):
         response = self.client.get(reverse("website:choosing_lesson"))
-        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/?next=/choosing_lesson")
         self.assertTemplateNotUsed(response, "lesson_search_result.html")
 
@@ -259,12 +250,10 @@ class studentViewsTests(TestCase):
 
     def test_saving_chosen_lesson_view(self):
         response = self.client.get(reverse("website:save"))
-        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/?next=/saving")
         self.assertTemplateNotUsed("choosing_lesson.html")
 
         # ? after login
         self.client.login(username="teststudent", password="test")
         response_after_login = self.client.get(reverse("website:save"))
-        self.assertEqual(response_after_login.status_code, 302)
         self.assertRedirects(response_after_login, "/choosing_lesson")

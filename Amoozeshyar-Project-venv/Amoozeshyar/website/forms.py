@@ -42,6 +42,8 @@ class StudentForm(forms.ModelForm):
 
         error_messages = {
             "date_of_birth":{"invalid":"تاریخ نامعتبر است"},
+            "student_id":{"unique":"کد ملی را با دقت وارد کنید"},
+            "mobile":{"invalid":"شماره موبایل نامعتبر است"}
         }
 
     def clean(self):
@@ -49,36 +51,47 @@ class StudentForm(forms.ModelForm):
         first_name = clean_data.get("first_name")
         last_name = clean_data.get("last_name")
         student_id = clean_data.get("student_id")
+        address = clean_data.get("address")
+        phone_number = clean_data.get("mobile")
     
-        space_fname = first_name.find(" ")
-        space_lname = last_name.find(" ")
+        no_space_first_name = first_name.replace(" ","")
+        no_space_last_name = last_name.replace(" ","")
+        no_space_address = address.replace(" ", "")
 
         # ? first name validation
-        if space_fname != -1:
-            first_name = first_name.split(' ')
-            for i in first_name:
-                if not i.isalpha():
-                    self.add_error("first_name", "فقط حروف الفبا در نام و نام خانوادگی مجاز است")
-        else:
-            if not first_name.isalpha():
-                self.add_error("first_name","فقط حروف الفبا در نام و نام خانوادگی مجاز است" )
+        for i in no_space_first_name:
+            if not i.isalpha():
+                self.add_error("first_name", "فقط حروف الفبا در نام و نام خانوادگی مجاز است")
+                break
             
 
         # ? last name validation
-        if space_lname != -1:
-            last_name = last_name.split(' ')
-            for i in last_name:
-                if not i.isalpha():
-                    self.add_error("last_name","فقط حروف الفبا در نام و نام خانوادگی مجاز است")
-        else:
-            if not last_name.isalpha():
+        for i in no_space_last_name:
+            if not i.isalpha():
                 self.add_error("last_name","فقط حروف الفبا در نام و نام خانوادگی مجاز است")
+                break
         
+        
+
+        # ? studnet id validation
         if not student_id.isdigit():
             self.add_error("student_id", "فقط عدد مجاز است")
         
-        if len(student_id) < 10:
+        if len(student_id) != 10:
             self.add_error("student_id", "کد ملی باید 10 کاراکتر باشد")
+
+        
+        # ? address validation
+        if not no_space_address.isalpha():
+            self.add_error("address", "فقط حروف الفبا مجاز است")
+
+        
+        # ? mobile validation
+        # if not str(phone_number).startswith("+989"):
+        #     self.add_error("mobile", "شماره موبایل معتبر نیست")
+
+        if phone_number is None:
+                self.add_error("mobile","شماره موبایل باید شامل 11 عدد باشد")
         
 
 class ProfessorForm(forms.ModelForm):
@@ -96,37 +109,71 @@ class ProfessorForm(forms.ModelForm):
 
         help_texts = {
             "phone":"مثال: 09121234567",
-            "date_of_birth": "مثال: 25-12-1357",
+            "date_of_birth": "مثال: 25-05-1357",
         }
 
         error_messages = {
             "date_of_birth":{"invalid":"تاریخ نامعتبر است"},
+            "email":{"invalid":"ایمیل نامعبتر است"},
+            "phone":{"invalid":"شماره موبایل نامعتبر است"}
         }
 
     def clean(self):
         clean_data = super().clean()
         first_name = clean_data.get("first_name")
         last_name = clean_data.get("last_name")
-        major = clean_data.get("professor_major")
+        address = clean_data.get("address")
+        phone_number = clean_data.get("phone")
+        major = clean_data.get("major")
         professor_id = clean_data.get("professor_id")
+
+        no_space_first_name = first_name.replace(" ","")
+        no_space_last_name = last_name.replace(" ","")
+        no_space_address = address.replace(" ","")
+        no_space_major = major.replace(" ","")
 
         student_object = student.objects.all().filter(student_id=professor_id)
 
         if student_object:
             self.add_error("professor_id", "کد ملی را با دقت وارد کنید")
         
-        if not first_name.isalpha() or not last_name.isalpha():
-            self.add_error("first_name", "فقط حروف الفبا مجاز است")
-        
-        major = major.split(' ')
-        for i in major:
+        # ? first name validation
+        for i in no_space_first_name:
             if not i.isalpha():
-                self.add_error("professor_major", "فقط حروف الفبا مجاز است")
+                self.add_error("first_name", "فقط حروف الفبا در نام و نام خانوادگی مجاز است")
+                break
+            
+
+        # ? last name validation
+        for i in no_space_last_name:
+            if not i.isalpha():
+                self.add_error("last_name","فقط حروف الفبا در نام و نام خانوادگی مجاز است")
+                break
         
+
+        # ? address validation
+        if not no_space_address.isalpha():
+            self.add_error("address", "فقط حروف الفبا مجاز است")
+
+
+        # ? mobile validation
+        # if not str(phone_number).startswith("+989"):
+        #     self.add_error("phone", "شماره موبایل معتبر نیست")
+
+        if phone_number is None:
+                self.add_error("phone","شماره موبایل باید شامل 11 عدد باشد")
+
+
+        # ? major validation
+        if not no_space_major.isalpha():
+            self.add_error("major", "فقط حروف الفبا مجاز است")
+        
+
+        # ? professor id validation
         if not professor_id.isdigit():
             self.add_error("professor_id", "فقط عدد مجاز است")
         
-        if len(professor_id) < 10:
+        if len(professor_id) != 10:
             self.add_error("professor_id", "کد ملی باید 10 کاراکتر باشد")
         
 
@@ -157,12 +204,23 @@ class LessonForm(forms.ModelForm):
     def clean(self):
         clean_data = super().clean()
         name = clean_data.get("name")
+        pishniaz = clean_data.get("pishniaz")
+        hamniaz = clean_data.get("hamniaz")
+
+        no_space_name = name.replace(" ","")
         # apply_to_all = clean_data.get("apply_to_all")
 
-        for name in name.split(" "):
-            if not name.isalpha() and not name.isalnum():
+        # ? lesson name validation
+        for i in no_space_name:
+            if not i.isalpha() and not i.isalnum():
                 self.add_error("name", " ترکیب عدد با حروف الفبا یا فقط حروف الفبا مجاز است")
-            
+                break
+        
+        # ? pishniaz and hamniaz validation
+        for i in pishniaz.all():
+            for j in hamniaz.all():
+                if i == j:
+                    self.add_error("pishniaz", "یک درس نمی تواند هم پیش نیاز باشد و هم همنیاز")
         # if apply_to_all:
         #     clean_data["lesson_major"] = major.objects.none()
 
@@ -175,44 +233,51 @@ class LessonClassFrom(forms.ModelForm):
         exclude = ['created', 'modified']
 
         help_texts = {
-            "lesson_time":"مثال: 09:05 تا 15:00"
+            "class_start_time":"مثال: 09:05",
+            "class_end_time":"مثال: 13:25",
         }
 
         widgets = {
-            "lesson_time":forms.TextInput(attrs={
+            "class_start_time":forms.TextInput(attrs={
+                "dir":"rtl"
+            }),
+            "class_end_time":forms.TextInput(attrs={
                 "dir":"rtl"
             })
         }
 
     def clean(self):
         clean_date = super().clean()
-        time = clean_date.get("lesson_time")
-        index = [i for i,x in enumerate(time) if x == ":"]
-        temp = time.find("تا")
+        start_time = clean_date.get("class_start_time")
+        end_time = clean_date.get("class_end_time")
+        start_index = [i for i,x in enumerate(start_time) if x == ":"]
+        end_index = [i for i,x in enumerate(end_time) if x == ":"]
 
-        # ? saving the numbers
-        first_time_hour = time[:index[0]]
-        first_time_minute = time[index[0] + 1:index[0] + 3]
-        second_time_hour = time[index[1] - 2:index[1]]
-        second_time_minute = time[index[1] + 1:]
+        if len(start_index) != 1:
+            self.add_error("class_start_time", "فقط یک ':' مجاز است")
+            return
         
-        if len(index) != 2:
-            raise forms.ValidationError("فرمت وارد شده صحیح نیست")
+        if len(end_index) != 1:
+            self.add_error("class_end_time", "فقط یک ':' مجاز است")
+            return
         
-        if temp < 0:
-            self.add_error("lesson_time", "کلمه ' تا ' حتما باید درج شود")
+        start_time.replace(":", "")
+        end_time.replace(":","")
         
-        if temp != 5 and temp != 6:
-            self.add_error("lesson_time", "کلمه ' تا ' را براساس فرمت داده شده در جای مناسب قرار دهید")
+        if start_time == end_time:
+            raise forms.ValidationError("ساعت شروع و پایان نمی توانند یکسان باشند")
         
-        if not first_time_hour.isdigit() or not first_time_minute.isdigit() or not second_time_hour.isdigit() or not second_time_minute.isdigit():
-            self.add_error("lesson_time", "فرمت وارد شده صحیح نیست")
+        if len(start_time) != 4:
+            self.add_error("class_start_time", "عدد ها را مانند مثال های داده شده وارد کنید")
+
+        elif not 0 < int(start_time) < 2359:
+            self.add_error("class_start_time","ساعت باید عددی بین 1 تا 23 و دقیقه باید عددی بین 0 تا 59 باشد")
         
-        if (int(first_time_hour) > 24 or int(first_time_hour) < 1) or (int(second_time_hour) > 24 or int(second_time_hour) < 1):
-            self.add_error("lesson_time", "مقدار ساعت باید بین 1 تا 24 باشد")
+        if len(end_time) != 4:
+            self.add_error("class_end_time", "عدد ها را مانند مثال های داده شده وارد کنید")
         
-        if (int(first_time_minute) > 59 or int(first_time_minute) < 0) or (int(second_time_minute) > 59 or int(second_time_minute) < 0):
-            self.add_error("lesson_time", "مقدار دقیقه باید بین 1 تا 59 باشید")
+        elif not 0 < int(end_time) < 2359:
+            self.add_error("class_end_time","ساعت باید عددی بین 1 تا 23 و دقیقه باید عددی بین 0 تا 59 باشد")
         
 
 
@@ -220,14 +285,14 @@ class GradeForm(forms.Form):
 
     first_name = forms.CharField(max_length=100, label="نام")
     last_name = forms.CharField(max_length=150, label="نام خانوادگی")
-    student_id = forms.CharField(max_length=12, label="شماره دانشجویی")
+    student_number = forms.CharField(max_length=12, label="شماره دانشجویی")
     score = forms.DecimalField(label="نمره", required=True, decimal_places=2 ,widget=forms.NumberInput(attrs={"step":0.25, "min":0, "max":20}))
     
     def clean(self):
         clean_data = super().clean()
         first_name = clean_data.get("first_name")
         last_name = clean_data.get("last_name")
-        student_id = clean_data.get("student_id")
+        student_number = clean_data.get("student_number")
         
         if not first_name.isalpha() or not last_name.isalpha():
             raise forms.ValidationError("فقط حروف الفبا مجاز است")
@@ -236,11 +301,11 @@ class GradeForm(forms.Form):
         super().__init__(*args, **kwargs)
         field_f_name = self.fields['first_name']
         field_l_name = self.fields['last_name']
-        field_student_id = self.fields["student_id"]
+        field_student_number = self.fields["student_number"]
 
         field_f_name.widget.attrs['readonly'] = True
         field_l_name.widget.attrs["readonly"] = True
-        field_student_id.widget.attrs["readonly"] = True
+        field_student_number.widget.attrs["readonly"] = True
 GradeFormset = formset_factory(GradeForm, extra=0)
 
 

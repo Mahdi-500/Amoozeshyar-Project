@@ -127,8 +127,9 @@ def lesson_class_form_view(request):
         if form.is_valid():
             
             new_lesson_class = form.save(commit=False)
-            day = form.cleaned_data["lesson_day"]
-            time = form.cleaned_data["lesson_time"]
+            day = form.cleaned_data["class_day"]
+            start_time = form.cleaned_data["class_start_time"]
+            end_time = form.cleaned_data["class_end_time"]
             class_number = form.cleaned_data["class_number"]
             semester = form.cleaned_data["semester"]
             class_location = form.cleaned_data["university_location"]
@@ -141,7 +142,8 @@ def lesson_class_form_view(request):
             # ? checking class overlap
             classes = lesson_class.objects.filter(semester=semester,
                                                         lesson_day=day,
-                                                        lesson_time=time,
+                                                        class_start_time=start_time,
+                                                        class_end_time=end_time,
                                                         class_number=class_number,
                                                         university_location=class_location
                                                         )
@@ -396,7 +398,7 @@ def choosing_lesson_form_view(request):
                 flag = False
                 choices = []
                 for i in result:
-                    choices.append((i.id,f"نام درس: {i.lesson_code.name}   ---   نام استاد: {i.professor_name}   ---   کد درس: {i.lesson_code.code}   ---   زمان برگزاری: {i.lesson_day} - {i.lesson_time}"))
+                    choices.append((i.id,f"نام درس: {i.lesson_code.name}   ---   نام استاد: {i.professor_name}   ---   کد درس: {i.lesson_code.code}   ---   زمان برگزاری: {i.lesson_day} - {i.class_end_time} تا {i.class_start_time}"))
 
                 form_choosing.fields["chosen_lesson"].choices = choices
                 request.session['lesson_choices'] = choices

@@ -72,7 +72,7 @@ class lesson(models.Model):
     
     name = models.CharField(max_length=255, blank=False, verbose_name="نام درس")
     code = models.CharField(max_length=10, primary_key=True, blank=False, verbose_name="کد درس", default=None)     # ? autocomplete - primary key
-    unit = models.PositiveSmallIntegerField(verbose_name="تعداد واحد")
+    unit = models.PositiveSmallIntegerField(blank= False, default=0, verbose_name="تعداد واحد")
     unit_type = models.CharField(max_length=11, choices=unit_type_choices, default=unit_type_choices.NAZARI, verbose_name="نوع واحد")
     lesson_type = models.CharField(max_length=9, choices=lesson_type_choices, default=lesson_type_choices.ASLI, verbose_name="نوع درس")
     pishniaz = models.ManyToManyField('self', blank=True, verbose_name="پیش نیاز")
@@ -99,15 +99,22 @@ class professor(models.Model):
     def image_saving_location(instance, filename):
         return f'professor/{instance.last_name}/{filename}'
     
+    class gender_choices(models.TextChoices):
+        MALE = "مرد", ("مرد")
+        FEMALE = "زن", ("زن")
+    
 
     # ? general information
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="professor")
     first_name = models.CharField(max_length=70, blank=False, verbose_name="نام")
     last_name = models.CharField(max_length=100, blank=False, verbose_name="نام خانوادگی")
     date_of_birth = jmodels.jDateField(blank=False, verbose_name="تاریخ تولد")
+    gender = models.CharField(max_length=3, blank=False, choices=gender_choices, default=gender_choices.MALE, verbose_name="جنسیت")
+    address = models.TextField(blank=False, verbose_name="آدرس")
+    marriage = models.BooleanField(default=False, verbose_name="وضعیت تاهل")
     professor_id = models.CharField(max_length=10, blank=False, unique=True, verbose_name="کد ملی")
     photo = ResizedImageField(upload_to=image_saving_location, blank=False, scale=0.75, force_format="PNG", verbose_name="عکس")
-    professor_major = models.CharField(max_length=255, blank=False, verbose_name="رشته تحصیلی")
+    major = models.CharField(max_length=255, blank=False, verbose_name="رشته تحصیلی")
     email = models.EmailField(blank=True, verbose_name="ایمیل")
     phone = PhoneNumberField(blank=False, region="IR", verbose_name="شماره موبایل")
     created = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
@@ -207,8 +214,9 @@ class lesson_class(models.Model):
     group_name = models.ForeignKey(group, on_delete=models.CASCADE, related_name="classes", blank=False, verbose_name="نام گروه")
 
     # ? date and time
-    lesson_day = models.CharField(max_length=10, choices=lesson_day_choices, default=lesson_day_choices.SATURDAY, verbose_name="روز برگزاری کلاس")
-    lesson_time = models.CharField(max_length=100, verbose_name="ساعت برگزاری")
+    class_day = models.CharField(max_length=10, choices=lesson_day_choices, default=lesson_day_choices.SATURDAY, verbose_name="روز برگزاری کلاس")
+    class_time_start = models.CharField(max_length=5, verbose_name="ساعت شروع کلاس")
+    class_time_end = models.CharField(max_length=5, verbose_name="ساعت پایان کلاس")
 
     # ? class info
     degree = models.CharField(max_length=8, choices=lesson_dgree_choices, default=lesson_dgree_choices.BACHELOR ,verbose_name="مقطع")

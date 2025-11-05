@@ -5,9 +5,12 @@ django-jalali==7.3.0
 django-phonenumber-field==8.0.0
 django-resized==1.0.3
 django-select2==8.3.0
+dotenv==0.9.9
 jalali_core==1.0.0
 jdatetime==5.2.0
 phonenumberslite==8.13.54
 pillow==11.1.0
+psycopg2==2.9.11
+python-dotenv==1.2.1
 sqlparse==0.5.3
 tzdata==2025.1

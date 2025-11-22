@@ -229,6 +229,12 @@ class LessonClassFrom(forms.ModelForm):
             "class_end_time":"مثال: 13:25",
         }
 
+        error_messages = {
+            "class_start_time":{"invalid":"باشد HH:MM زمان باید به فرمت",
+                                "invalid_time":"ساعت باید 0 تا 23 و دقیقه باید بین 0 تا 59 باشد"},
+            "class_end_time":{"invalid":"باشد HH:MM زمان باید به فرمت",
+                                "invalid_time":"ساعت باید 0 تا 23 و دقیقه باید بین 0 تا 59 باشد"}
+        }
         widgets = {
             "class_start_time":forms.TextInput(attrs={
                 "dir":"rtl"
@@ -242,34 +248,38 @@ class LessonClassFrom(forms.ModelForm):
         clean_date = super().clean()
         start_time = clean_date.get("class_start_time")
         end_time = clean_date.get("class_end_time")
-        start_index = [i for i,x in enumerate(start_time) if x == ":"]
-        end_index = [i for i,x in enumerate(end_time) if x == ":"]
-
-        if len(start_index) != 1:
-            self.add_error("class_start_time", "فقط یک ':' مجاز است")
-            return
-        
-        if len(end_index) != 1:
-            self.add_error("class_end_time", "فقط یک ':' مجاز است")
-            return
-        
-        start_time = start_time.replace(":", "")
-        end_time = end_time.replace(":","")
         
         if start_time == end_time:
             raise forms.ValidationError("ساعت شروع و پایان نمی توانند یکسان باشند")
         
-        if len(start_time) != 4:
-            self.add_error("class_start_time", "عدد ها را مانند مثال های داده شده وارد کنید")
+        # start_index = [i for i,x in enumerate(start_time) if x == ":"]
+        # end_index = [i for i,x in enumerate(end_time) if x == ":"]
+        # flag = False
 
-        elif not 0 < int(start_time) < 2359:
-            self.add_error("class_start_time","ساعت باید عددی بین 1 تا 23 و دقیقه باید عددی بین 0 تا 59 باشد")
+        # if len(start_index) != 1:
+        #     self.add_error("class_start_time", "فقط یک ':' مجاز است")
+        #     flag = True
         
-        if len(end_time) != 4:
-            self.add_error("class_end_time", "عدد ها را مانند مثال های داده شده وارد کنید")
-        
-        elif not 0 < int(end_time) < 2359:
-            self.add_error("class_end_time","ساعت باید عددی بین 1 تا 23 و دقیقه باید عددی بین 0 تا 59 باشد")
+        # if len(end_index) != 1:
+        #     self.add_error("class_end_time", "فقط یک ':' مجاز است")
+        #     flag = True
+
+        # if not flag:
+        #     start_time = start_time.replace(":", "")
+        #     end_time = end_time.replace(":","")
+            
+            
+        #     if len(start_time) != 4:
+        #         self.add_error("class_start_time", "عدد ها را مانند مثال های داده شده وارد کنید")
+
+        #     elif not 0 <= int(start_time) <= 2359:
+        #         self.add_error("class_start_time","ساعت باید عددی بین 1 تا 23 و دقیقه باید عددی بین 0 تا 59 باشد")
+            
+        #     if len(end_time) != 4:
+        #         self.add_error("class_end_time", "عدد ها را مانند مثال های داده شده وارد کنید")
+            
+        #     elif not 0 <= int(end_time) <= 2359:
+        #         self.add_error("class_end_time","ساعت باید عددی بین 1 تا 23 و دقیقه باید عددی بین 0 تا 59 باشد")
         
 
 
@@ -284,7 +294,6 @@ class GradeForm(forms.Form):
         clean_data = super().clean()
         first_name = clean_data.get("first_name")
         last_name = clean_data.get("last_name")
-        student_number = clean_data.get("student_number")
         
         if not first_name.isalpha() or not last_name.isalpha():
             raise forms.ValidationError("فقط حروف الفبا مجاز است")

@@ -87,13 +87,14 @@ class studentFormTest(TestCase):
             "student_id":"1234567890",
             "mobile":"+989121234567",
             "address":"این یک آدرس برای تست است",
-            "gender":student.gender_choices.MALE,
             "major":self.test_major.pk,
             "university":self.test_uni_1.pk,
-            "status":student.status_choices.STUDYING
         }
-        response = self.client.post(reverse("website:register_student"), data={**form_data, "photo":photo})
+        response = self.client.post(reverse("website:register_student"), data={**form_data, "photo":photo}, follow=True)
+        messages = list(list(response.context["messages"]))
         self.assertRedirects(response, reverse("website:main"))
+        for i in messages:
+            self.assertTrue("ثبت نام موفقیت آمیز بود" == i.message)
         self.assertTrue(student.objects.filter(**form_data).exists())
 
 
@@ -175,7 +176,6 @@ class professorFormTest(TestCase):
             "first_name": "محمد علی",
             "last_name":"حدادی",
             "date_of_birth":jdatetime.date(1382,10,12),
-            "gender":professor.gender_choices.MALE,
             "address":"این یک آدرس برای تست کردن است",
             "professor_id":"1234567890",
             "major":"مهندسی کامپیوتر",
@@ -183,8 +183,11 @@ class professorFormTest(TestCase):
             "phone":"+989121234567",
             "universities":[self.test_uni_1.pk, self.test_uni_2.pk],
         }
-        response = self.client.post(reverse("website:register_professor"), data={**form_date, "photo":photo})
+        response = self.client.post(reverse("website:register_professor"), data={**form_date, "photo":photo}, follow=True)
+        messages = list(response.context["messages"])
         self.assertRedirects(response, reverse("website:main"))
+        for i in messages:
+            self.assertTrue("ثبت نام موفقیت آمیز بود" == i.message)
         self.assertTrue(professor.objects.filter(professor_id="1234567890").exists())
 
 
@@ -212,8 +215,6 @@ class lessonFormTests(TestCase):
         form_data = {
             "name":"ریا@ی مهند!س 1",
             "unit":3,
-            "unit_type":lesson.unit_type_choices.NAZARI,
-            "lesson_type":lesson.lesson_type_choices.TAKHASOSI,
             "pishniaz":(self.test_lesson_1.pk, self.test_lesson_2.pk),
             "hamniaz":self.test_lesson_1.pk,
             "lesson_major":(self.test_major_1.pk, self.test_major_2.pk)
@@ -231,14 +232,15 @@ class lessonFormTests(TestCase):
         form_data = {
             "name":"ریاضی مهندسی",
             "unit":3,
-            "unit_type":lesson.unit_type_choices.NAZARI,
-            "lesson_type":lesson.lesson_type_choices.TAKHASOSI,
             "pishniaz":self.test_lesson_2.pk,
             "hamniaz":self.test_lesson_1.pk,
             "lesson_major":(self.test_major_1.pk, self.test_major_2.pk)
         }
-        response = self.client.post(reverse("website:create_lesson"), data={**form_data})
+        response = self.client.post(reverse("website:create_lesson"), data={**form_data}, follow=True)
+        messages = list(response.context["messages"])
         self.assertRedirects(response, reverse("website:main"))
+        for i in messages:
+            self.assertTrue("ثبت درس موفقیت آمیز بود" == i.message)
         self.assertTrue(lesson.objects.filter(name="ریاضی مهندسی").exists())
 
 
@@ -268,83 +270,84 @@ class lessonClassFormTests(TestCase):
 
     def test_help_text(self):
         response = self.client.get(reverse("website:lesson_class"))
-        self.assertContains(response, "مثال: 09:05 تا 15:00")
+        self.assertContains(response, "مثال: 09:05")
+        self.assertContains(response, "مثال: 13:25")
 
 
 
     def test_with_wrong_data(self):
 
-        # ? testing without the ":" symbol
+        # ? testing with more than one or no ":" symbol
         form_data = {
             "lesson_code":self.test_lesson,
             "professor_name":self.test_professor,
             "university_location":self.test_uni,
             "group_name":self.test_group,
-            "lesson_time":"1050 تا 950",
+            "class_start_time":"9:50:",
+            "class_end_time":"1050",
             "capacity":35,
             "class_code":300,
             "class_number":1212,
         }
         response = self.client.post(reverse("website:lesson_class"), data={**form_data})
         form = response.context["form"]
-        self.assertFormError(form, errors="فرمت وارد شده صحیح نیست", field="lesson_time")
+        self.assertFormError(form, errors="باشد HH:MM زمان باید به فرمت", field="class_start_time")
+        self.assertFormError(form, errors="باشد HH:MM زمان باید به فرمت", field="class_end_time")
+        self.assertFalse(lesson_class.objects.filter(class_code=300, class_number=1212).exists())
 
-        # ? testing without the word "تا"
+        # ? testing with both start and end time being the same
         form_data = {
             "lesson_code":self.test_lesson,
             "professor_name":self.test_professor,
             "university_location":self.test_uni,
             "group_name":self.test_group,
-            "lesson_time":"9:50 10:50",
+            "class_start_time":"23:45",
+            "class_end_time":"23:45",
             "capacity":35,
             "class_code":300,
             "class_number":1212,
         }
         response = self.client.post(reverse("website:lesson_class"), data={**form_data})
         form = response.context["form"]
-        self.assertFormError(form, errors="کلمه ' تا ' حتما باید درج شود", field="lesson_time")
+        self.assertTrue("ساعت شروع و پایان نمی توانند یکسان باشند" in form.non_field_errors())
+        self.assertFalse(lesson_class.objects.filter(class_code=300, class_number=1212).exists())
 
-        # ? testing with the word "تا" in the wrong place
+        # ? testing with entered numbers being out of range
         form_data = {
             "lesson_code":self.test_lesson,
             "professor_name":self.test_professor,
             "university_location":self.test_uni,
             "group_name":self.test_group,
-            "lesson_time":"تا 9:50 10:50",
+            "class_start_time":"26:68",
+            "class_end_time":"25:75",
             "capacity":35,
             "class_code":300,
             "class_number":1212,
         }
         response = self.client.post(reverse("website:lesson_class"), data={**form_data})
         form = response.context["form"]
-        self.assertFormError(form, errors=["کلمه ' تا ' را براساس فرمت داده شده در جای مناسب قرار دهید", "فرمت وارد شده صحیح نیست"], field="lesson_time")
+        self.assertFormError(form, errors="باشد HH:MM زمان باید به فرمت", field="class_start_time")
+        self.assertFormError(form, errors="باشد HH:MM زمان باید به فرمت", field="class_end_time")
+        self.assertFalse(lesson_class.objects.filter(class_code=300, class_number=1212).exists())
 
-        # ? testing with numbers being replaced with words
-        form_data = {
-            "lesson_code":self.test_lesson,
-            "professor_name":self.test_professor,
-            "university_location":self.test_uni,
-            "group_name":self.test_group,
-            "lesson_time":"ساعتی تا ساعتی",
-            "capacity":35,
-            "class_code":300,
-            "class_number":1212,
-        }
-        response = self.client.post(reverse("website:lesson_class"), data={**form_data})
-        form = response.context["form"]
-        self.assertFormError(form, errors="فرمت وارد شده صحیح نیست", field="lesson_time")
 
-        # ? testing with wrong numbers
+
+    def test_with_correct_data(self):
         form_data = {
-            "lesson_code":self.test_lesson,
-            "professor_name":self.test_professor,
-            "university_location":self.test_uni,
-            "group_name":self.test_group,
-            "lesson_time":"25:65 jh 27:75",
+            "lesson_code":self.test_lesson.pk,
+            "professor_name":self.test_professor.pk,
+            "university_location":self.test_uni.pk,
+            "group_name":self.test_group.pk,
+            "class_start_time":"9:50",
+            "class_end_time":"10:50",
             "capacity":35,
             "class_code":300,
             "class_number":1212,
+            "semester":4032,
         }
-        response = self.client.post(reverse("website:lesson_class"), data={**form_data})
-        form = response.context["form"]
-        self.assertFormError(form, errors=["مقدار ساعت باید بین 1 تا 24 باشد", "مقدار دقیقه باید بین 1 تا 59 باشید", "کلمه ' تا ' را براساس فرمت داده شده در جای مناسب قرار دهید"], field="lesson_time")
+        response = self.client.post(reverse("website:lesson_class"), data={**form_data}, follow=True)
+        messages = list(response.context["messages"])
+        self.assertRedirects(response, reverse("website:main"))
+        for i in messages:
+            self.assertTrue("کلاس با موفقیت ایجاد شد" == i.message)
+        self.assertTrue(lesson_class.objects.filter(class_code=300, class_number=1212).exists())

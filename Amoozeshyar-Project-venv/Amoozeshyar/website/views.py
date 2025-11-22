@@ -125,7 +125,6 @@ def lesson_class_form_view(request):
         #flag = False
 
         if form.is_valid():
-            
             new_lesson_class = form.save(commit=False)
             day = form.cleaned_data["class_day"]
             start_time = form.cleaned_data["class_start_time"]
@@ -141,7 +140,7 @@ def lesson_class_form_view(request):
 
             # ? checking class overlap
             classes = lesson_class.objects.filter(semester=semester,
-                                                        lesson_day=day,
+                                                        class_day=day,
                                                         class_start_time=start_time,
                                                         class_end_time=end_time,
                                                         class_number=class_number,
@@ -156,7 +155,7 @@ def lesson_class_form_view(request):
             #classes = lesson_class.objects.all()
             # for i in classes:
             #     if i.semester == semester:
-            #         if i.lesson_day == day:
+            #         if i.class_day == day:
             #             if i.lesson_time == time:
             #                 if i.class_number == class_number:
             #                     flag = True
@@ -262,7 +261,7 @@ def professor_lesson_details(request, l_code):
     assigned_lessons = lesson_class.objects.filter(lesson_code=l_code, professor_name=professor_name)
     lesson_details = []
     for i in assigned_lessons:
-        lesson_details.append((i.lesson_day, i.class_code))
+        lesson_details.append((i.class_day, i.class_code))
     
     context = {
         "lesson":lesson_details,
@@ -398,7 +397,7 @@ def choosing_lesson_form_view(request):
                 flag = False
                 choices = []
                 for i in result:
-                    choices.append((i.id,f"نام درس: {i.lesson_code.name}   ---   نام استاد: {i.professor_name}   ---   کد درس: {i.lesson_code.code}   ---   زمان برگزاری: {i.lesson_day} - {i.class_end_time} تا {i.class_start_time}"))
+                    choices.append((i.id,f"نام درس: {i.lesson_code.name}   ---   نام استاد: {i.professor_name}   ---   کد درس: {i.lesson_code.code}   ---   زمان برگزاری: {i.class_day} - {i.class_end_time} تا {i.class_start_time}"))
 
                 form_choosing.fields["chosen_lesson"].choices = choices
                 request.session['lesson_choices'] = choices

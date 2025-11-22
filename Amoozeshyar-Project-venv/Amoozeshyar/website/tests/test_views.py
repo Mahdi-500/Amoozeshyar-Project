@@ -113,7 +113,7 @@ class professorViewsTests(TestCase):
         
         # ? creating lesson class
         lesson_class.objects.create(lesson_code=self.test_leeson_1, professor_name=self.professor_obj, university_location=self.uni_1, group_name=self.test_group, capacity=35, class_code=300, class_number=1002)
-        lesson_class.objects.create(lesson_code=self.test_lesson_2, professor_name=self.professor_obj, university_location=self.uni_2, group_name=self.test_group, lesson_day="یک شنبه", capacity=35, class_code=301, class_number=1003)
+        lesson_class.objects.create(lesson_code=self.test_lesson_2, professor_name=self.professor_obj, university_location=self.uni_2, group_name=self.test_group, class_day="یک شنبه", capacity=35, class_code=301, class_number=1003)
 
 
 
@@ -187,7 +187,7 @@ class professorViewsTests(TestCase):
         session.save()
         for i in professor.classes.all():
             response_after_getting_class = self.client.get(reverse("website:lesson_detail", kwargs={"l_code":i.lesson_code.code}))
-            self.assertContains(response_after_getting_class, f"لیست دانشجوهای روز {i.lesson_day}")
+            self.assertContains(response_after_getting_class, f"لیست دانشجوهای روز {i.class_day}")
             self.assertTemplateUsed(response_after_getting_class,"lesson_details.html")
 
 

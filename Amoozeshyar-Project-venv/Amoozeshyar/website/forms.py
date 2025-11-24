@@ -288,15 +288,12 @@ class GradeForm(forms.Form):
     first_name = forms.CharField(max_length=100, label="نام")
     last_name = forms.CharField(max_length=150, label="نام خانوادگی")
     student_number = forms.CharField(max_length=12, label="شماره دانشجویی")
-    score = forms.DecimalField(label="نمره", required=True, decimal_places=2 ,widget=forms.NumberInput(attrs={"step":0.25, "min":0, "max":20}))
+    score = forms.DecimalField(label="نمره", required=True, decimal_places=2 , min_value=0, max_value=20, 
+                                error_messages={"max_value":"نمره باید بین 0 تا 20 باشد",
+                                                "min_value":"نمره باید بین 0 تا 20 باشد",
+                                                "max_decimal_places":"فرمت نمره صحیح نیست"},
+                                widget=forms.NumberInput(attrs={"step":0.25, "min":0, "max":20}))
     
-    def clean(self):
-        clean_data = super().clean()
-        first_name = clean_data.get("first_name")
-        last_name = clean_data.get("last_name")
-        
-        if not first_name.isalpha() or not last_name.isalpha():
-            raise forms.ValidationError("فقط حروف الفبا مجاز است")
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -346,7 +343,6 @@ class LessonSearchForm(forms.Form):
 
 class ChoosingLessonForm(forms.Form):
     today_date_year = semester()
-        
     lesson_semester= forms.CharField(label="نیمسال", initial= today_date_year, required=False, widget=forms.HiddenInput())
     chosen_lesson = forms.ChoiceField(label="کلاس ها", widget=forms.RadioSelect, choices=[("default", "select")])
 

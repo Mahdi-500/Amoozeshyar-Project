@@ -295,7 +295,7 @@ def grade_form_view(request, l_code, class_code):
         
         if formset.is_valid():
             for i in formset:
-                student_info = student.objects.get(student_number=i.cleaned_data["student_id"])
+                student_info = student.objects.get(student_number=i.cleaned_data["student_number"])
                 submitted_score = i.cleaned_data["score"]
 
                 Grade.objects.create(
@@ -308,7 +308,8 @@ def grade_form_view(request, l_code, class_code):
         
     else:
         formset = GradeFormset(initial=initail_data)
-        return render(request, "submittingGrade.html", {"formset":formset})
+    
+    return render(request, "submittingGrade.html", {"formset":formset})
 
 
 

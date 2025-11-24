@@ -351,3 +351,139 @@ class lessonClassFormTests(TestCase):
         for i in messages:
             self.assertTrue("کلاس با موفقیت ایجاد شد" == i.message)
         self.assertTrue(lesson_class.objects.filter(class_code=300, class_number=1212).exists())
+
+
+
+class gradeFormTest(TestCase):
+    def setUp(self):
+        # ? creating professor user
+        with open("website/tests/test_photo.jpg", "rb") as f:
+            photo = SimpleUploadedFile(name="test_photo.jpg",
+                                    content=f.read(),
+                                    content_type="image/jpeg")
+            
+        self.test_user = User.objects.create_user(username="testuser", password="test")
+        Group.objects.create(name="professor")
+        self.test_user.groups.add(Group.objects.get(name="professor"))
+
+        self.test_professor = professor.objects.create(user=self.test_user, first_name="test", last_name="test", date_of_birth="1382-12-19",
+                                                        address="test", professor_id="0123456789", photo=photo,
+                                                        major = "test", phone="09121234567")
+        self.client.login(username="testuser", password="test")
+
+        # ? creating university
+        self.test_uni = university.objects.create(name="test", code=500, address="test")
+        
+        # ? creating major
+        self.test_major = major.objects.create(name="test", code=100, capacity=1000)
+
+        # ? creating students
+        test_student_1 = User.objects.create(username="teststudent1", password="test")
+        test_student_2 = User.objects.create(username="teststudent2", password="test")
+        test_student_3 = User.objects.create(username="teststudent3", password="test")
+
+
+        self.test_student_1 = student.objects.create(user=test_student_1, first_name = "test", last_name="test", date_of_birth=jdatetime.date(1382,10,10), student_id="0123456789",
+                            photo=photo, marriage=False, mobile="09121234567", address="test", gender=student.gender_choices.MALE, 
+                            major=self.test_major, university=self.test_uni, status=student.status_choices.STUDYING)
+        
+        self.test_student_2 = student.objects.create(user=test_student_2, first_name = "test", last_name="test", date_of_birth=jdatetime.date(1380,10,10), student_id="1234567890",
+                            photo=photo, marriage=True, mobile="09121234567", address="test", gender=student.gender_choices.FEMALE, 
+                            major=self.test_major, university=self.test_uni, status=student.status_choices.STUDYING)
+        
+        self.test_student_3 = student.objects.create(user=test_student_3, first_name = "test", last_name="test", date_of_birth=jdatetime.date(1379,12,10), student_id="1123456789",
+                            photo=photo, marriage=True, mobile="09121234567", address="test", gender=student.gender_choices.MALE, 
+                            major=self.test_major, university=self.test_uni, status=student.status_choices.STUDYING)
+        
+        # ? creating lesson
+        self.test_lesson = lesson.objects.create(name="test1", unit=3, unit_type=lesson.unit_type_choices.NAZARI,
+                                            lesson_type=lesson.lesson_type_choices.TAKHASOSI)
+
+        self.test_lesson.lesson_major.add(self.test_major)
+
+        # ? creating group
+        self.test_group = group.objects.create(name="test", code=500)
+
+        # ? creating lesson class
+        data = {
+            "lesson_code":self.test_lesson,
+            "professor_name":self.test_professor,
+            "university_location":self.test_uni,
+            "group_name":self.test_group,
+            "class_start_time":"9:50",
+            "class_end_time":"10:50",
+            "capacity":35,
+            "class_code":300,
+            "class_number":1212,
+            "semester":4032,
+        }
+        self.test_class = lesson_class.objects.create(**data)
+
+        # ? assigning students to the class
+        student_choosing_lesson.objects.create(student_name=self.test_student_1, chosen_class=self.test_class, semester=4032)
+        student_choosing_lesson.objects.create(student_name=self.test_student_2, chosen_class=self.test_class, semester=4032)
+        student_choosing_lesson.objects.create(student_name=self.test_student_3, chosen_class=self.test_class, semester=4032)
+
+
+
+    def test_with_wrong_data(self):
+        form_data = {
+            "form-TOTAL_FORMS": '3',
+            "form-INITIAL_FORMS": '1',
+            "form-0-first_name":self.test_student_1.first_name,
+            "form-0-last_name":self.test_student_1.last_name,
+            "form-0-student_number":self.test_student_1.student_number,
+            "form-0-score":22,
+            "form-1-first_name":self.test_student_2.first_name,
+            "form-1-last_name":self.test_student_2.last_name,
+            "form-1-student_number":self.test_student_2.student_number,
+            "form-1-score":-1,
+            "form-2-first_name":self.test_student_3.first_name,
+            "form-2-last_name":self.test_student_3.last_name,
+            "form-2-student_number":self.test_student_3.student_number,
+            "form-2-score":12.658
+        }
+
+        session = self.client.session
+        session["p_code"] = self.test_professor.code
+        session.save()
+        response = self.client.post(reverse("website:grade", kwargs={"l_code":self.test_lesson.code, "class_code":self.test_class.class_code}), data={**form_data})
+        formset = response.context["formset"]
+        self.assertFormSetError(formset=formset, form_index=0, errors="نمره باید بین 0 تا 20 باشد", field="score")
+        self.assertFormSetError(formset=formset, form_index=1, errors="نمره باید بین 0 تا 20 باشد", field="score")
+        self.assertFormSetError(formset=formset, form_index=2, errors="فرمت نمره صحیح نیست", field="score")
+        self.assertFalse(Grade.objects.filter(student_name=self.test_student_1, lesson_name=self.test_class).exists())
+        self.assertFalse(Grade.objects.filter(student_name=self.test_student_2, lesson_name=self.test_class).exists())
+        self.assertFalse(Grade.objects.filter(student_name=self.test_student_3, lesson_name=self.test_class).exists())
+
+
+
+    def test_with_correct_data(self):
+        form_data = {
+            "form-TOTAL_FORMS": '3',
+            "form-INITIAL_FORMS": '1',
+            "form-0-first_name":self.test_student_1.first_name,
+            "form-0-last_name":self.test_student_1.last_name,
+            "form-0-student_number":self.test_student_1.student_number,
+            "form-0-score":20,
+            "form-1-first_name":self.test_student_2.first_name,
+            "form-1-last_name":self.test_student_2.last_name,
+            "form-1-student_number":self.test_student_2.student_number,
+            "form-1-score":17.25,
+            "form-2-first_name":self.test_student_3.first_name,
+            "form-2-last_name":self.test_student_3.last_name,
+            "form-2-student_number":self.test_student_3.student_number,
+            "form-2-score":12.75
+        }
+
+        session = self.client.session
+        session["p_code"] = self.test_professor.code
+        session.save()
+        response = self.client.post(reverse("website:grade", kwargs={"l_code":self.test_lesson.code, "class_code":self.test_class.class_code}), data={**form_data}, follow=True)
+        messages = list(response.context["messages"])
+        self.assertRedirects(response, reverse("website:main"))
+        for i in messages:
+            self.assertTrue("ثبت نمره با موفقیت انجام شد" == i.message)
+        self.assertTrue(Grade.objects.filter(student_name=self.test_student_1, lesson_name=self.test_class).exists())
+        self.assertTrue(Grade.objects.filter(student_name=self.test_student_2, lesson_name=self.test_class).exists())
+        self.assertTrue(Grade.objects.filter(student_name=self.test_student_3, lesson_name=self.test_class).exists())

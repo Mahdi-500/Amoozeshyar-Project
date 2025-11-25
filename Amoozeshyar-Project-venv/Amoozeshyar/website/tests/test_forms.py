@@ -91,10 +91,9 @@ class studentFormTest(TestCase):
             "university":self.test_uni_1.pk,
         }
         response = self.client.post(reverse("website:register_student"), data={**form_data, "photo":photo}, follow=True)
-        messages = list(list(response.context["messages"]))
+        messages = list(response.context["messages"])
         self.assertRedirects(response, reverse("website:main"))
-        for i in messages:
-            self.assertTrue("ثبت نام موفقیت آمیز بود" == i.message)
+        self.assertTrue("ثبت نام موفقیت آمیز بود" == str(messages[0]))
         self.assertTrue(student.objects.filter(**form_data).exists())
 
 
@@ -186,8 +185,7 @@ class professorFormTest(TestCase):
         response = self.client.post(reverse("website:register_professor"), data={**form_date, "photo":photo}, follow=True)
         messages = list(response.context["messages"])
         self.assertRedirects(response, reverse("website:main"))
-        for i in messages:
-            self.assertTrue("ثبت نام موفقیت آمیز بود" == i.message)
+        self.assertTrue("ثبت نام موفقیت آمیز بود" == str(messages[0]))
         self.assertTrue(professor.objects.filter(professor_id="1234567890").exists())
 
 
@@ -239,8 +237,7 @@ class lessonFormTests(TestCase):
         response = self.client.post(reverse("website:create_lesson"), data={**form_data}, follow=True)
         messages = list(response.context["messages"])
         self.assertRedirects(response, reverse("website:main"))
-        for i in messages:
-            self.assertTrue("ثبت درس موفقیت آمیز بود" == i.message)
+        self.assertTrue("ثبت درس موفقیت آمیز بود" == str(messages[0]))
         self.assertTrue(lesson.objects.filter(name="ریاضی مهندسی").exists())
 
 
@@ -348,8 +345,7 @@ class lessonClassFormTests(TestCase):
         response = self.client.post(reverse("website:lesson_class"), data={**form_data}, follow=True)
         messages = list(response.context["messages"])
         self.assertRedirects(response, reverse("website:main"))
-        for i in messages:
-            self.assertTrue("کلاس با موفقیت ایجاد شد" == i.message)
+        self.assertTrue("کلاس با موفقیت ایجاد شد" == str(messages[0]))
         self.assertTrue(lesson_class.objects.filter(class_code=300, class_number=1212).exists())
 
 
@@ -482,8 +478,50 @@ class gradeFormTest(TestCase):
         response = self.client.post(reverse("website:grade", kwargs={"l_code":self.test_lesson.code, "class_code":self.test_class.class_code}), data={**form_data}, follow=True)
         messages = list(response.context["messages"])
         self.assertRedirects(response, reverse("website:main"))
-        for i in messages:
-            self.assertTrue("ثبت نمره با موفقیت انجام شد" == i.message)
+        self.assertTrue("ثبت نمره با موفقیت انجام شد" == str(messages[0]))
         self.assertTrue(Grade.objects.filter(student_name=self.test_student_1, lesson_name=self.test_class).exists())
         self.assertTrue(Grade.objects.filter(student_name=self.test_student_2, lesson_name=self.test_class).exists())
         self.assertTrue(Grade.objects.filter(student_name=self.test_student_3, lesson_name=self.test_class).exists())
+
+
+
+class loginFormTest(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_user(username="testadmin", password="test")
+        Group.objects.create(name="admin")
+
+
+
+    def test_with_wrong_data(self):
+        # ? testing with wrong username and password
+        form_data = {
+            "username":"test",
+            "password":"test1"
+        }
+        response = self.client.post(reverse("website:login"), data={**form_data}, follow=True)
+        messages = list(response.context["messages"])
+        self.assertTrue("نام کاربری یا رمز عبور صحیح نیست" == str(messages[0]))
+        self.assertRedirects(response, reverse("website:login"))
+
+        # ? testing with a user which doesn't have any group
+        form_data = {
+            "username":"testadmin",
+            "password":"test"
+        }
+        response = self.client.post(reverse("website:login"), data={**form_data}, follow=True)
+        messages = list(response.context["messages"])
+        self.assertTrue("گروهی برای شما تعیین نشده است" == str(messages[0]))
+        self.assertRedirects(response, reverse("website:login"))
+
+    
+
+    def test_with_correct_data(self):
+        form_data = {
+            "username":"testadmin",
+            "password":"test"
+        }
+        self.admin.groups.add(Group.objects.get(name="admin"))
+        response = self.client.post(reverse("website:login"), data={**form_data}, follow=True)
+        messages = list(response.context["messages"])
+        self.assertTrue("وارد شدید" == str(messages[0]))
+        self.assertRedirects(response, reverse("website:main"))

@@ -320,7 +320,7 @@ def lesson_search_view(request):
         flag = True
         form = LessonSearchForm(data=request.POST)
         if form.is_valid():
-
+            
             # ? decides to use which model for searching
             if form.cleaned_data["query_lesson_code"] != None:
                 result = lesson_class.objects.filter(Q(lesson_code=form.cleaned_data["query_lesson_code"]) &

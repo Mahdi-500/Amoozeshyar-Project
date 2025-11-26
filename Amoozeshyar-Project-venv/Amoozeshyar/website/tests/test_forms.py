@@ -16,6 +16,10 @@ class studentFormTest(TestCase):
         self.test_major = major.objects.create(name="test", code=100, capacity=1000)
         self.test_uni_1 = university.objects.create(name="test", code=500, address="test")
 
+        with open("website/tests/test_photo.jpg", "rb") as f:
+            self.photo = SimpleUploadedFile(name="test_photo.jpg",
+                                    content=f.read(),
+                                    content_type="image/jpeg")
 
     def test_help_texts(self):
         response = self.client.get(reverse("website:register_student"))
@@ -24,11 +28,7 @@ class studentFormTest(TestCase):
     
 
 
-    def test_form_with_wrong_data(self):
-        with open("website/tests/test_photo.jpg", "rb") as f:
-            photo = SimpleUploadedFile(name="test_photo.jpg",
-                                    content=f.read(),
-                                    content_type="image/jpeg")
+    def testing_form_errors(self):
         form_data = {
             "first_name": "#@$565",
             "last_name":"#@565",
@@ -40,7 +40,7 @@ class studentFormTest(TestCase):
             "university":self.test_uni_1.pk,
         }
 
-        response = self.client.post(reverse("website:register_student"), data={**form_data, "photo":photo})
+        response = self.client.post(reverse("website:register_student"), data={**form_data, "photo":self.photo})
         form = response.context["form"]
         self.assertFormError(form, errors="فقط حروف الفبا در نام و نام خانوادگی مجاز است", field="first_name")
         self.assertFormError(form, errors="فقط حروف الفبا در نام و نام خانوادگی مجاز است", field="last_name")
@@ -51,10 +51,11 @@ class studentFormTest(TestCase):
         self.assertFalse(student.objects.filter(**form_data).exists())
 
 
-        # ? checking for another error in student id
-        test_student = User.objects.create(username="teststudents", password="test")
+
+    def testing_duplicate_id(self):
+        test_student = User.objects.create_user(username="teststudents", password="test")
         student.objects.create(user=test_student, first_name = "test", last_name="test", date_of_birth=jdatetime.date(1382,10,10), student_id="0123456789",
-                            photo=photo, marriage=False, mobile="09121234567", address="test", gender=student.gender_choices.MALE, 
+                            photo=self.photo, marriage=False, mobile="09121234567", address="test", gender=student.gender_choices.MALE, 
                             major=self.test_major, university=self.test_uni_1, status=student.status_choices.STUDYING)
         form_data = {
             "first_name": "محم5د عل@",
@@ -67,7 +68,7 @@ class studentFormTest(TestCase):
             "university":self.test_uni_1.pk,
         }
 
-        response = self.client.post(reverse("website:register_student"), data={**form_data, "photo":photo})
+        response = self.client.post(reverse("website:register_student"), data={**form_data, "photo":self.photo})
         form = response.context["form"]
         self.assertFormError(form, errors="کد ملی را با دقت وارد کنید",field="student_id")
         self.assertFalse(student.objects.filter(**form_data).exists())
@@ -75,7 +76,7 @@ class studentFormTest(TestCase):
 
 
     
-    def test_form_with_correct_data(self):
+    def test_with_correct_data(self):
         with open("website/tests/test_photo.jpg", "rb") as f:
             photo = SimpleUploadedFile(name="test_photo.jpg",
                                     content=f.read(),
@@ -109,6 +110,10 @@ class professorFormTest(TestCase):
         self.test_uni_1 = university.objects.create(name="test", code=500, address="test")
         self.test_uni_2 = university.objects.create(name="test2", code=501, address="test address")
 
+        with open("website/tests/test_photo.jpg", "rb") as f:
+            self.photo = SimpleUploadedFile(name="test_photo.jpg",
+                                    content=f.read(),
+                                    content_type="image/jpeg")
 
     def test_help_texts(self):
         response = self.client.get(reverse("website:register_professor"))
@@ -117,11 +122,7 @@ class professorFormTest(TestCase):
 
 
 
-    def test_form_with_wrong_data(self):
-        with open("website/tests/test_photo.jpg", "rb") as f:
-            photo = SimpleUploadedFile(name="test_photo.jpg",
-                                    content=f.read(),
-                                    content_type="image/jpeg")
+    def test_with_wrong_data(self):
         form_date = {
             "first_name": "مح4د ع@ی",
             "last_name":"حدا85د@",
@@ -134,7 +135,7 @@ class professorFormTest(TestCase):
             "universities":[self.test_uni_1.pk, self.test_uni_2.pk],
         }
 
-        response = self.client.post(reverse("website:register_professor"), data={**form_date, "photo":photo})
+        response = self.client.post(reverse("website:register_professor"), data={**form_date, "photo":self.photo})
         form = response.context["form"]
         self.assertFormError(form, errors="فقط حروف الفبا در نام و نام خانوادگی مجاز است", field="first_name")
         self.assertFormError(form, errors="فقط حروف الفبا در نام و نام خانوادگی مجاز است", field="last_name")
@@ -144,11 +145,12 @@ class professorFormTest(TestCase):
         self.assertFormError(form, errors=["فقط عدد مجاز است", "کد ملی باید 10 کاراکتر باشد"], field="professor_id")
         self.assertFalse(professor.objects.filter(professor_id="0f@23g45").exists())
 
+
         
-        # ? testin for another error for professor id
+    def testing_duplicate_id(self):
         test_major = major.objects.create(name="test", code=300, capacity=2000)
         student.objects.create(user= self.admin, first_name="test", last_name="test", date_of_birth=jdatetime.date(1382,10,12),
-                            student_id="0123456789", photo=photo, university=self.test_uni_1, major=test_major)
+                            student_id="0123456789", photo=self.photo, university=self.test_uni_1, major=test_major)
         form_date = {
             "first_name": "مح4د ع@ی",
             "last_name":"حدا85د@",
@@ -160,7 +162,7 @@ class professorFormTest(TestCase):
             "phone":"+98811212345678",
             "universities":[self.test_uni_1.pk, self.test_uni_2.pk],
         }
-        response = self.client.post(reverse("website:register_professor"), data={**form_date, "photo":photo})
+        response = self.client.post(reverse("website:register_professor"), data={**form_date, "photo":self.photo})
         form = response.context["form"]
         self.assertFormError(form, errors="کد ملی را با دقت وارد کنید", field="professor_id")
     
@@ -272,7 +274,7 @@ class lessonClassFormTests(TestCase):
 
 
 
-    def test_with_wrong_data(self):
+    def test_for_time_symbol(self):
 
         # ? testing with more than one or no ":" symbol
         form_data = {
@@ -292,6 +294,9 @@ class lessonClassFormTests(TestCase):
         self.assertFormError(form, errors="باشد HH:MM زمان باید به فرمت", field="class_end_time")
         self.assertFalse(lesson_class.objects.filter(class_code=300, class_number=1212).exists())
 
+
+
+    def test_for_no_equal_times(self):
         # ? testing with both start and end time being the same
         form_data = {
             "lesson_code":self.test_lesson,
@@ -309,6 +314,9 @@ class lessonClassFormTests(TestCase):
         self.assertTrue("ساعت شروع و پایان نمی توانند یکسان باشند" in form.non_field_errors())
         self.assertFalse(lesson_class.objects.filter(class_code=300, class_number=1212).exists())
 
+
+
+    def test_time_out_of_range(self):
         # ? testing with entered numbers being out of range
         form_data = {
             "lesson_code":self.test_lesson,
@@ -374,9 +382,9 @@ class gradeFormTest(TestCase):
         self.test_major = major.objects.create(name="test", code=100, capacity=1000)
 
         # ? creating students
-        test_student_1 = User.objects.create(username="teststudent1", password="test")
-        test_student_2 = User.objects.create(username="teststudent2", password="test")
-        test_student_3 = User.objects.create(username="teststudent3", password="test")
+        test_student_1 = User.objects.create_user(username="teststudent1", password="test")
+        test_student_2 = User.objects.create_user(username="teststudent2", password="test")
+        test_student_3 = User.objects.create_user(username="teststudent3", password="test")
 
 
         self.test_student_1 = student.objects.create(user=test_student_1, first_name = "test", last_name="test", date_of_birth=jdatetime.date(1382,10,10), student_id="0123456789",
@@ -397,7 +405,7 @@ class gradeFormTest(TestCase):
 
         self.test_lesson.lesson_major.add(self.test_major)
 
-        # ? creating group
+        # ? creating lesson group
         self.test_group = group.objects.create(name="test", code=500)
 
         # ? creating lesson class
@@ -492,7 +500,7 @@ class loginFormTest(TestCase):
 
 
 
-    def test_with_wrong_data(self):
+    def test_with_wrong_username_password(self):
         # ? testing with wrong username and password
         form_data = {
             "username":"test",
@@ -503,6 +511,9 @@ class loginFormTest(TestCase):
         self.assertTrue("نام کاربری یا رمز عبور صحیح نیست" == str(messages[0]))
         self.assertRedirects(response, reverse("website:login"))
 
+
+
+    def test_no_group(self):
         # ? testing with a user which doesn't have any group
         form_data = {
             "username":"testadmin",
@@ -525,3 +536,96 @@ class loginFormTest(TestCase):
         messages = list(response.context["messages"])
         self.assertTrue("وارد شدید" == str(messages[0]))
         self.assertRedirects(response, reverse("website:main"))
+
+
+
+class lessonSearchFormTest(TestCase):
+    def setUp(self):
+        # ? creating lessons
+        self.test_lesson_1 = lesson.objects.create(name="test1", unit=3, code="12345", unit_type=lesson.unit_type_choices.NAZARI,
+                                            lesson_type=lesson.lesson_type_choices.TAKHASOSI)
+        self.test_lesson_2 = lesson.objects.create(name="test2", unit=1, code="67890", unit_type=lesson.unit_type_choices.AMALI,
+                                                lesson_type=lesson.lesson_type_choices.PAYE)
+        
+        # ? creating professors
+        with open("website/tests/test_photo.jpg", "rb") as f:
+            photo = SimpleUploadedFile(name="test_photo.jpg",
+                                    content=f.read(),
+                                    content_type="image/jpeg")
+            
+        self.test_user = User.objects.create_user(username="testuser", password="test")
+        Group.objects.create(name="professor")
+        self.test_user.groups.add(Group.objects.get(name="professor"))
+
+        self.test_professor = professor.objects.create(user=self.test_user, first_name="test", last_name="test", date_of_birth="1382-12-19",
+                                                        address="test", professor_id="0123456789", photo=photo,
+                                                        major = "test", phone="09121234567")
+        
+        # ? creating lesson group
+        self.test_group = group.objects.create(name="test", code=500)
+
+        # ? creating university
+        self.test_uni = university.objects.create(name="test", code=500, address="test")
+
+        # ? creating classes
+        data = {
+            "lesson_code":self.test_lesson_1,
+            "professor_name":self.test_professor,
+            "university_location":self.test_uni,
+            "group_name":self.test_group,
+            "class_start_time":"9:50",
+            "class_end_time":"10:50",
+            "capacity":35,
+            "class_code":300,
+            "class_number":1212,
+            "semester":4032,
+        }
+        lesson_class.objects.create(**data)
+
+        data = {
+            "lesson_code":self.test_lesson_2,
+            "professor_name":self.test_professor,
+            "university_location":self.test_uni,
+            "group_name":self.test_group,
+            "class_start_time":"17:15",
+            "class_end_time":"14:50",
+            "capacity":35,
+            "class_code":302,
+            "class_number":1201,
+            "semester":4032,
+        }
+        lesson_class.objects.create(**data)
+        
+        # ? creating major
+        self.test_major = major.objects.create(name="test", code=100, capacity=1000)
+
+        # ? creating student
+        self.test_student = User.objects.create_user(username="teststudent", password="test")
+        Group.objects.create(name="student")
+        self.test_student.groups.add(Group.objects.get(name="student"))
+        student.objects.create(user=self.test_student, first_name = "test", last_name="test", date_of_birth=jdatetime.date(1382,10,10), student_id="0123456789",
+                            photo=photo, marriage=False, mobile="09121234567", address="test", gender=student.gender_choices.MALE, 
+                            major=self.test_major, university=self.test_uni, status=student.status_choices.STUDYING)
+        self.client.login(username="teststudent", password="test")
+
+
+
+    def test_form_errors(self):
+        form_data = {
+            "query_lesson_code":"01234",
+            "query_lesson_name":"5445^&%@&"
+        }
+        response = self.client.post(reverse("website:lesson_search"), data={**form_data})
+        form = response.context["form"]
+        self.assertFormError(form, errors="کد درس باید 10 کاراکتر باشد", field="query_lesson_code")
+        self.assertFormError(form, errors="نام درس معتر نیست", field="query_lesson_name")
+
+
+
+    def test_no_lesson_found(self):
+        form_data = {
+            "query_lesson_name":"something"
+        }
+        response = self.client.post(reverse("website:lesson_search"), data={**form_data})
+        self.assertContains(response, "درسی پیدا نشد")
+

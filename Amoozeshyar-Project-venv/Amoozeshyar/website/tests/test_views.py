@@ -112,8 +112,10 @@ class professorViewsTests(TestCase):
         self.professor_obj.universities.add(self.uni_1, self.uni_2)
         
         # ? creating lesson class
-        lesson_class.objects.create(lesson_code=self.test_leeson_1, professor_name=self.professor_obj, university_location=self.uni_1, group_name=self.test_group, capacity=35, class_code=300, class_number=1002)
-        lesson_class.objects.create(lesson_code=self.test_lesson_2, professor_name=self.professor_obj, university_location=self.uni_2, group_name=self.test_group, class_day="یک شنبه", capacity=35, class_code=301, class_number=1003)
+        lesson_class.objects.create(lesson_code=self.test_leeson_1, professor_name=self.professor_obj, university_location=self.uni_1, group_name=self.test_group, 
+                                    capacity=35, class_code=300, class_number=1002, class_start_time="9:50", class_end_time="11:50")
+        lesson_class.objects.create(lesson_code=self.test_lesson_2, professor_name=self.professor_obj, university_location=self.uni_2, group_name=self.test_group, 
+                                    class_day="یک شنبه", capacity=35, class_code=301, class_number=1003, class_start_time="13:00", class_end_time="15:00")
 
 
 

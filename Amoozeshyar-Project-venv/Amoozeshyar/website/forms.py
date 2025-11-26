@@ -339,6 +339,17 @@ class LessonSearchForm(forms.Form):
     query_unit_type = forms.TypedChoiceField(choices=UNIT_TYPE_CHOICES, label="نوع واحد", required=False, empty_value=None)
     query_lesson_type = forms.TypedChoiceField(choices=LESSON_TYPE_CHOICES, label="نوع درس", required=False, empty_value=None)
 
+    def clean(self):
+        clean_data = super().clean()
+        lesson_code = clean_data.get("query_lesson_code")
+        lesson_name = clean_data.get("query_lesson_name")
+
+        if len(str(lesson_code)) != 10:
+            self.add_error("query_lesson_code", "کد درس باید 10 کاراکتر باشد")
+
+        if not lesson_name.isalpha() or not lesson_name.isalnum():
+            self.add_error("query_lesson_name", "نام درس معتر نیست")
+
 
 
 class ChoosingLessonForm(forms.Form):

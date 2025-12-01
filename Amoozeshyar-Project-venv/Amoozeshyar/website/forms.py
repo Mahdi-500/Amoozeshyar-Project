@@ -111,7 +111,8 @@ class ProfessorForm(forms.ModelForm):
         error_messages = {
             "date_of_birth":{"invalid":"تاریخ نامعتبر است"},
             "email":{"invalid":"ایمیل نامعبتر است"},
-            "phone":{"invalid":"شماره موبایل نامعتبر است"}
+            "phone":{"invalid":"شماره موبایل نامعتبر است"},
+            "universities":{"required":"این فیلد اجباری است"}
         }
 
     def clean(self):

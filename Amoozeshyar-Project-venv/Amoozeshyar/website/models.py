@@ -7,6 +7,7 @@ from django_resized import ResizedImageField
 from django_jalali.db import models as jmodels
 from phonenumber_field.modelfields import PhoneNumberField
 import os, shutil
+import logging
 
 # Create your models here.
 class major(models.Model):
@@ -71,7 +72,7 @@ class lesson(models.Model):
 
     
     name = models.CharField(max_length=255, blank=False, verbose_name="نام درس")
-    code = models.CharField(max_length=10, primary_key=True, blank=False, verbose_name="کد درس", default=None)     # ? autocomplete - primary key
+    code = models.CharField(max_length=10, primary_key=True, blank=False, verbose_name="کد درس", default="1111111111")     # ? autocomplete - primary key
     unit = models.PositiveSmallIntegerField(blank= False, default=0, verbose_name="تعداد واحد")
     unit_type = models.CharField(max_length=11, choices=unit_type_choices, default=unit_type_choices.NAZARI, blank=True, verbose_name="نوع واحد")
     lesson_type = models.CharField(max_length=9, choices=lesson_type_choices, default=lesson_type_choices.ASLI, blank=True, verbose_name="نوع درس")
@@ -121,7 +122,7 @@ class professor(models.Model):
     modified = jmodels.jDateTimeField(auto_now=True, verbose_name="تاریخ تغییر")
 
     # ? university related information
-    code = models.CharField(max_length=10, primary_key=True, default=None, verbose_name="کد استاد")    # ? autofill - primary key
+    code = models.CharField(max_length=10, primary_key=True, default="1111111111", verbose_name="کد استاد")    # ? autofill - primary key
     universities = models.ManyToManyField(university, related_name="professor", blank=False, verbose_name="دانشگاه(های) مشغول به تدریس")
     role = models.CharField(max_length=10, default="professor")
 
@@ -166,7 +167,7 @@ class student(models.Model):
     created = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
 
     # ? student's educational information
-    student_number = models.CharField(max_length=12, primary_key=True, default=None, verbose_name="شماره دانشجویی")     # ? autofill - primary key
+    student_number = models.CharField(max_length=12, primary_key=True, default="111111111111", verbose_name="شماره دانشجویی")     # ? autofill - primary key
     entrance_year = jmodels.jDateField(auto_now_add=True, verbose_name="سال ورودی")
     last_year = models.PositiveSmallIntegerField(verbose_name="آخرین سال تحصیل", null=True, blank=True)     # ? autofill - entrance year + 5
     major = models.ForeignKey(major,on_delete=models.DO_NOTHING, related_name="student", default=None, verbose_name="رشته", blank=False)  
@@ -224,7 +225,7 @@ class lesson_class(models.Model):
     capacity = models.PositiveSmallIntegerField(blank=False, verbose_name="ظرفیت")
     class_code = models.PositiveSmallIntegerField(blank=False, verbose_name="کد ارائه")
     class_number = models.PositiveSmallIntegerField(blank=False, verbose_name="شماره کلاس")
-    semester = models.PositiveSmallIntegerField(blank=True, verbose_name="نیمسال")
+    semester = models.PositiveSmallIntegerField(blank=True, verbose_name="نیمسال", default="1111")
 
     created = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
     modified = jmodels.jDateTimeField(auto_now=True, verbose_name="تاریخ تغییر")
@@ -265,48 +266,58 @@ class student_choosing_lesson(models.Model):
     modified = jmodels.jDateTimeField(auto_now=True, verbose_name="تاریخ تغییر")
     
 
+log = logging.getLogger(__name__)
 
 # todo - student model functions
 
 @receiver(post_save, sender=student)
-def set_last_year(sender, instance, **kwargs):
-    if not instance.last_year and hasattr(instance, 'entrance_year'):
-        temp = int(str(instance.entrance_year)[:4])
-        instance.last_year = temp + 5
+def set_last_year(sender, instance, created, **kwargs):
+    if created:
+        if not instance.last_year and hasattr(instance, 'entrance_year'):
+            temp = int(str(instance.entrance_year)[:4])
+            instance.last_year = temp + 5
+    else:
+        log.info(msg="set_last_year; this is an update")
 
 
 
 @receiver(pre_save, sender=student)
 def set_student_number(sender, instance, **kwargs):
-    if hasattr(instance, 'student_number') and not instance.student_number:
-        part_1 = str(instance.entrance_year)[1:4]
-        part_2 = str(instance.university.code)
-        part_3 = str(instance.major.code)
-        part_4 = '100'
-        try:
-            last_user = student.objects.all().order_by("-student_number")
-        except TypeError:
-            pass
+    if instance.student_number == "111111111111":
+        if hasattr(instance, 'student_number'):
+            part_1 = str(instance.entrance_year)[1:4]
+            part_2 = str(instance.university.code)
+            part_3 = str(instance.major.code)
+            part_4 = '100'
+            try:
+                last_user = student.objects.all().order_by("-student_number")
+            except TypeError:
+                pass
 
-        if last_user:
-            part_4 = str(int(last_user[0].student_number[9:12]) + 1)
+            if last_user:
+                part_4 = str(int(last_user[0].student_number[9:12]) + 1)
 
-        instance.student_number = part_1 + part_2 + part_3 + part_4
+            instance.student_number = part_1 + part_2 + part_3 + part_4
+    else:
+        log.info(msg="set_student_number; this is an update")
 
 
 
 @receiver(pre_save, sender=student)
 def set_entrance_year(sender, instance, **kwargs):
-    if hasattr(instance, "entrance_year") and not instance.entrance_year:
-        instance.entrance_year = jmodels.jdatetime.date.today()
+    if not instance.entrance_year:
+        if hasattr(instance, "entrance_year") and not instance.entrance_year:
+            instance.entrance_year = jmodels.jdatetime.date.today()
+    else:
+        log.info(msg="set_entrance_year; this is an update")
 
 
 
 # todo - professor model functions
 
 @receiver(pre_save, sender=professor)
-def set_professor_code(sender, instance, **kwargs):
-    if hasattr(instance, "code") and not instance.code:
+def set_professor_code(sender, instance, created=False, **kwargs):
+    if hasattr(instance, "code") and instance.code == "1111111111":
         part_1 = str(instance.date_of_birth)[:4]
         part_2 = str(instance.created)[1:4]
         part_3 = "100"
@@ -320,13 +331,17 @@ def set_professor_code(sender, instance, **kwargs):
             part_3 = str(int(last_user[0].code[6:]) + 1)
 
         instance.code = part_1 + part_2 + part_3
+
+    else:
+        log.info(msg="set_professor_code; this is an update")
     
 
 
-@receiver(pre_save, sender=professor)
-def set_created(sender, instance, **kwargs):
-    if not instance.created:
-        instance.created = jmodels.jdatetime.datetime.now()
+# @receiver(pre_save, sender=professor)
+# def set_created(sender, instance, created=False, **kwargs):
+#     if created:
+#         if not instance.created:
+#             instance.created = jmodels.jdatetime.datetime.now()
 
 
 
@@ -334,7 +349,7 @@ def set_created(sender, instance, **kwargs):
 
 @receiver(pre_save, sender=lesson)
 def set_lesson_code(sender, instance, **kwrage):
-    if hasattr(instance, "code") and not instance.code:
+    if hasattr(instance, "code") and instance.code == "1111111111":
         part_1 = '491'
         part_2 = '052'
         part_3 = str(instance.unit)
@@ -349,30 +364,35 @@ def set_lesson_code(sender, instance, **kwrage):
             part_4 = str(int(last_code[0].code[7:]) + 1)
 
         instance.code = part_1 + part_2 + part_3 + part_4
+    else:
+        log.info(msg="set_lesson_code; this is an update")
 
 
 
 # todo - lesson_class functions
 @receiver(pre_save, sender=lesson_class)
 def set_semester(sender, instance, **kwargs):
-    today_date_month = jmodels.jdatetime.date.today().month
-    today_date_year = str(jmodels.jdatetime.date.today().year)
-    
-    if 11 <= today_date_month <= 12:
-        today_date_year[1:] += '2'
+    if  instance.semester == "1111":
+        today_date_month = jmodels.jdatetime.date.today().month
+        today_date_year = str(jmodels.jdatetime.date.today().year)
         
-    elif 1 <= today_date_month <= 3:
-        year = str(int(today_date_year) - 1)[1:]
-        today_date_year = year + "2"
+        if 11 <= today_date_month <= 12:
+            today_date_year[1:] += '2'
+            
+        elif 1 <= today_date_month <= 3:
+            year = str(int(today_date_year) - 1)[1:]
+            today_date_year = year + "2"
 
-    elif 6 <= today_date_month <= 10:
-        today_date_year[1:] + "1"
-    
-    elif today_date_month == 4 or today_date_month == 5:
-        year = str(int(today_date_year) - 1)
-        today_date_year = year + "3"
+        elif 6 <= today_date_month <= 10:
+            today_date_year[1:] + "1"
         
-    instance.semester = int(today_date_year[1:])
+        elif today_date_month == 4 or today_date_month == 5:
+            year = str(int(today_date_year) - 1)
+            today_date_year = year + "3"
+            
+        instance.semester = int(today_date_year[1:])
+    else:
+        log.info(msg="set_semester; this is an update")
 
 
 
@@ -384,14 +404,17 @@ def delete_image(sender, instance, **kwargs):
         if os.path.isdir(folder_path):
             shutil.rmtree(folder_path)
 
+        log.info(msg=f"{sender.__name__}; photo deleted")
+
 
 def delete_user(sender, instance, **kwargs):
-        if instance.user:
-            username = instance.user.username
-            password = instance.user.password
-            user = User.objects.get(username=username, password=password)
-            user.delete()
+    if instance.user:
+        username = instance.user.username
+        password = instance.user.password
+        user = User.objects.get(username=username, password=password)
+        user.delete()
 
+        log.info(msg=f"{sender.__name__}; user deleted")
 
 models_to_handle = [professor, student]
 

@@ -288,14 +288,12 @@ def set_student_number(sender, instance, **kwargs):
             part_1 = str(instance.entrance_year)[1:4]
             part_2 = str(instance.university.code)
             part_3 = str(instance.major.code)
-            part_4 = '100'
-            try:
-                last_user = student.objects.all().order_by("-student_number")
-            except TypeError:
-                pass
-
+            
+            last_user = student.objects.all().order_by("-student_number")
             if last_user:
                 part_4 = str(int(last_user[0].student_number[9:12]) + 1)
+            else:
+                part_4 = '100'
 
             instance.student_number = part_1 + part_2 + part_3 + part_4
     else:
@@ -320,15 +318,12 @@ def set_professor_code(sender, instance, created=False, **kwargs):
     if hasattr(instance, "code") and instance.code == "1111111111":
         part_1 = str(instance.date_of_birth)[:4]
         part_2 = str(instance.created)[1:4]
-        part_3 = "100"
 
-        try:
-            last_user = professor.objects.all().order_by("-code")
-        except TypeError:
-            pass
-
+        last_user = professor.objects.all().order_by("-code")
         if last_user:
             part_3 = str(int(last_user[0].code[6:]) + 1)
+        else:
+            part_3 = "100"
 
         instance.code = part_1 + part_2 + part_3
 
@@ -353,15 +348,13 @@ def set_lesson_code(sender, instance, **kwrage):
         part_1 = '491'
         part_2 = '052'
         part_3 = str(instance.unit)
-        part_4 = '100'
 
-        try:
-            last_code = lesson.objects.all().order_by("-code")
-        except TypeError:
-            pass
-
+        last_code = lesson.objects.all().order_by("-code")
         if last_code:
             part_4 = str(int(last_code[0].code[7:]) + 1)
+        else:
+            part_4 = '100'
+
 
         instance.code = part_1 + part_2 + part_3 + part_4
     else:

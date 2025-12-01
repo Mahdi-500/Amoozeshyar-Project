@@ -26,7 +26,7 @@ def student_form_view(request):
         if form.is_valid():
             new_student = form.save(commit=False)
             set_entrance_year(student, new_student)
-            set_last_year(student, new_student)
+            set_last_year(student, new_student, created=True)
             set_student_number(student, new_student)
 
             new_user = User.objects.create_user(
@@ -63,7 +63,7 @@ def professor_form_view(request):
         if form.is_valid():
             new_professor = form.save(commit=False)
 
-            set_created(professor, new_professor)
+            #set_created(professor, new_professor, created=True)
             set_professor_code(professor, new_professor)
 
 

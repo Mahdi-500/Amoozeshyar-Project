@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}{{professor.first_name}} {{professor.last_name}}{% endblock title %}
+
+{% block content %}
+    {% for uni in p_university %}
+        <a href="{% url 'academic:professor_lessons' professor.code  uni.code %}">لیست دروس {{uni.name}}</a>    
+    {% endfor %}
+    
+    
+{% endblock content %}

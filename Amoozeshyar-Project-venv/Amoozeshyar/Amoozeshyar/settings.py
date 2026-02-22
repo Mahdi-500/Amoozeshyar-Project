@@ -34,7 +34,10 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django_jalali',
-    'website.apps.WebsiteConfig',
+    'academic.apps.AcademicConfig',
+    'StudentsApp.apps.StudentsAppConfig',
+    'ProfessorsApp.apps.ProfessorsAppConfig',
+    'LessonsApp.apps.LessonsAppConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -98,7 +101,7 @@ WSGI_APPLICATION = 'Amoozeshyar.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-load_dotenv(dotenv_path=r'..\.env')
+load_dotenv(dotenv_path=BASE_DIR/".env")
 DATABASES = {
     'default': {
         # 'ENGINE': 'django.db.backends.sqlite3',
@@ -112,7 +115,6 @@ DATABASES = {
 
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

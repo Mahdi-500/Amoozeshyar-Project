@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}لیست کلاس ها{% endblock title %}
+
+{% block content %}
+        {% for lesson in list %}
+            {% if l_university.code == lesson.university_location.code %}
+                <a href="{% url 'academic:lesson_detail' lesson.lesson_code.code %}">{{lesson.lesson_code}}</a>
+                <br>    
+            {% endif %}
+            
+        {% endfor %}    
+    
+{% endblock content %}

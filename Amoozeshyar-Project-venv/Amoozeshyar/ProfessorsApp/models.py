@@ -40,7 +40,7 @@ class professor(models.Model):
 
     # ? university related information
     code = models.CharField(max_length=10, primary_key=True, default="1111111111", verbose_name="کد استاد")    # ? autofill - primary key
-    #universities = models.ManyToManyField(university, related_name="professor", blank=False, verbose_name="دانشگاه(های) مشغول به تدریس")
+    universities = models.ManyToManyField("academic.university", related_name="professor", blank=False, verbose_name="دانشگاه(های) مشغول به تدریس")
     role = models.CharField(max_length=10, default="professor")
 
     

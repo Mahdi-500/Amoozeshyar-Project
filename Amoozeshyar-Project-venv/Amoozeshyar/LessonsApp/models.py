@@ -4,7 +4,7 @@ from django.db.models import UniqueConstraint
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from academic.models import major, university, group
-from ProfessorsApp.models import professor
+#from ProfessorsApp.models import professor
 import logging
 
 # Create your models here.
@@ -73,7 +73,7 @@ class lesson_class(models.Model):
 
     # ? connected models    
     lesson_code = models.ForeignKey(lesson, on_delete=models.CASCADE, verbose_name="نام درس",related_name="classes", blank=False)
-    professor_name = models.ForeignKey(professor, on_delete=models.CASCADE, verbose_name="نام استاد", related_name="classes", blank=False)
+    professor_name = models.ForeignKey("ProfessorsApp.professor", on_delete=models.CASCADE, verbose_name="نام استاد", related_name="classes", blank=False)
     university_location = models.ForeignKey(university, on_delete=models.CASCADE, related_name="classes", verbose_name="مکان برگزاری", blank=False)
     group_name = models.ForeignKey(group, on_delete=models.CASCADE, related_name="classes", blank=False, verbose_name="نام گروه")
 
@@ -81,6 +81,7 @@ class lesson_class(models.Model):
     class_day = models.CharField(max_length=10, choices=lesson_day_choices, default=lesson_day_choices.SATURDAY, blank=True, verbose_name="روز برگزاری کلاس")
     class_start_time = models.TimeField(max_length=5, blank=False, verbose_name="ساعت شروع کلاس")
     class_end_time = models.TimeField(max_length=5, blank=False, verbose_name="ساعت پایان کلاس")
+    exam_date_time = jmodels.jDateTimeField(null=True, verbose_name="زمان و تاریخ امتحان")
 
     # ? class info
     degree = models.CharField(max_length=8, choices=lesson_dgree_choices, default=lesson_dgree_choices.BACHELOR, blank=True, verbose_name="مقطع")

@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from LessonsApp.models import lesson_class, lesson
+from Amoozeshyar.LessonsApp.models import lesson_class, lesson
 from ProfessorsApp.models import Grade
 from .forms import *
 from .forms import semester as setting_semester
@@ -99,7 +99,6 @@ def choosing_lesson_form_view(request):
         form_searching = StudentLessonSearchForm(data=request.POST)
         form_choosing = ChoosingLessonForm()
 
-        result = []
         result = []
         temp = []
         if form_searching.is_valid():

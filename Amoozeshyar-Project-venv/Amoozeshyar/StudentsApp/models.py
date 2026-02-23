@@ -5,8 +5,8 @@ from django.dispatch import receiver
 from django_resized import ResizedImageField
 from django_jalali.db import models as jmodels
 from phonenumber_field.modelfields import PhoneNumberField
-from academic.models import major, university
-from LessonsApp.models import lesson_class
+#from academic.models import major, university
+#from LessonsApp.models import lesson_class
 import logging, os, shutil
 
 # Create your models here.
@@ -44,11 +44,11 @@ class student(models.Model):
     student_number = models.CharField(max_length=12, primary_key=True, default="111111111111", verbose_name="شماره دانشجویی")     # ? autofill - primary key
     entrance_year = jmodels.jDateField(auto_now_add=True, verbose_name="سال ورودی")
     last_year = models.PositiveSmallIntegerField(verbose_name="آخرین سال تحصیل", null=True, blank=True)     # ? autofill - entrance year + 5
-    major = models.ForeignKey(major,on_delete=models.DO_NOTHING, related_name="student", default=None, verbose_name="رشته", blank=False)  
+    major = models.ForeignKey("academic.major",on_delete=models.DO_NOTHING, related_name="student", default=None, verbose_name="رشته", blank=False)  
     # credit =  # ! auto calculate
     # average_score =   # ! auto calculate
     role = models.CharField(max_length=10, default="student")
-    university = models.ForeignKey(university,on_delete=models.DO_NOTHING, related_name="student", default=None, verbose_name="دانشگاه", blank=False)
+    university = models.ForeignKey("academic.university",on_delete=models.DO_NOTHING, related_name="student", default=None, verbose_name="دانشگاه", blank=False)
     status = models.CharField(max_length=5, blank=True, choices=status_choices, default=status_choices.STUDYING, verbose_name="وضعیت تحصیل")
 
 
@@ -64,7 +64,7 @@ class student(models.Model):
 
 class student_choosing_lesson(models.Model):
     student_name = models.ForeignKey(student, on_delete=models.CASCADE, verbose_name="دانشجو", related_name="lessons")
-    chosen_class = models.ForeignKey(lesson_class,on_delete=models.CASCADE, verbose_name="درس", related_name="students")
+    chosen_class = models.ForeignKey("LessonsApp.lesson_class",on_delete=models.CASCADE, verbose_name="درس", related_name="students")
     semester = models.SmallIntegerField(blank=False, default=0, verbose_name="نیمسال")
     created = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ انتخاب")
     modified = jmodels.jDateTimeField(auto_now=True, verbose_name="تاریخ تغییر")

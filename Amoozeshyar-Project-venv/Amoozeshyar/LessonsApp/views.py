@@ -20,6 +20,7 @@ def lesson_form_view(request):
             new_lesson.save()
             new_lesson.pishniaz.set(form.cleaned_data["pishniaz"])
             new_lesson.hamniaz.set(form.cleaned_data["hamniaz"])
+            form.save_m2m()
 
             messages.success(request, "ثبت درس موفقیت آمیز بود")
             return redirect('academic:main')
@@ -27,7 +28,7 @@ def lesson_form_view(request):
     else:
         form = LessonForm()
     
-    return render(request, "register_professor.html", {'form':form})
+    return render(request, "register_lesson.html", {'form':form})
 
 
 
@@ -84,7 +85,7 @@ def lesson_class_form_view(request):
             #     return render(request, "add_lesson_class.html", {'form':form})
             
             try:
-                form.save()
+                form.save(commit=True)
             except IntegrityError:
                 messages.error(request, "این کد ارائه در این نیمسال وجود دارد")
                 form = LessonClassFrom(request.POST)

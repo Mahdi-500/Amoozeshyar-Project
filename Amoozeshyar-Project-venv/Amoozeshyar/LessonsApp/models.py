@@ -4,7 +4,7 @@ from django.db.models import UniqueConstraint
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from academic.models import major, university, group
-#from ProfessorsApp.models import professor
+from StudentsApp.forms import semester
 import logging
 
 # Create your models here.
@@ -36,8 +36,6 @@ class lesson(models.Model):
     lesson_major = models.ManyToManyField(major, blank=False, verbose_name="رشته")
     created = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
     modified = jmodels.jDateTimeField(auto_now=True, verbose_name="تاریخ تغییر")
-    student_number = models.CharField(max_length=10)
-    student_id = models.CharField(max_length=10)
 
     class Meta:
         indexes = [
@@ -81,7 +79,7 @@ class lesson_class(models.Model):
     class_day = models.CharField(max_length=10, choices=lesson_day_choices, default=lesson_day_choices.SATURDAY, blank=True, verbose_name="روز برگزاری کلاس")
     class_start_time = models.TimeField(max_length=5, blank=False, verbose_name="ساعت شروع کلاس")
     class_end_time = models.TimeField(max_length=5, blank=False, verbose_name="ساعت پایان کلاس")
-    exam_date_time = jmodels.jDateTimeField(null=True, verbose_name="زمان و تاریخ امتحان")
+    exam_date_time = jmodels.jDateTimeField(verbose_name="زمان و تاریخ امتحان")
 
     # ? class info
     degree = models.CharField(max_length=8, choices=lesson_dgree_choices, default=lesson_dgree_choices.BACHELOR, blank=True, verbose_name="مقطع")
@@ -89,7 +87,7 @@ class lesson_class(models.Model):
     capacity = models.PositiveSmallIntegerField(blank=False, verbose_name="ظرفیت")
     class_code = models.PositiveSmallIntegerField(blank=False, verbose_name="کد ارائه")
     class_number = models.PositiveSmallIntegerField(blank=False, verbose_name="شماره کلاس")
-    semester = models.PositiveSmallIntegerField(blank=True, verbose_name="نیمسال", default="1111")
+    semester = models.PositiveSmallIntegerField(blank=True, verbose_name="نیمسال", default=int(semester()))
 
     created = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
     modified = jmodels.jDateTimeField(auto_now=True, verbose_name="تاریخ تغییر")

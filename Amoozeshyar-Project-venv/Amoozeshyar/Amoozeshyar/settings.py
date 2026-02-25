@@ -33,11 +33,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django_jalali',
-    'academic.apps.AcademicConfig',
-    'StudentsApp.apps.StudentsAppConfig',
-    'ProfessorsApp.apps.ProfessorsAppConfig',
-    'LessonsApp.apps.LessonsAppConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,6 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'phonenumber_field',
+    'django_jalali',
+    'academic.apps.AcademicConfig',
+    'StudentsApp.apps.StudentsAppConfig',
+    'ProfessorsApp.apps.ProfessorsAppConfig',
+    'LessonsApp.apps.LessonsAppConfig',
 ]
 
 JALALI_SETTINGS = {

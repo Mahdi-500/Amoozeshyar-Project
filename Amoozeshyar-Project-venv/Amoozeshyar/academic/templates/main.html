@@ -5,21 +5,21 @@
 {% block content %}
 
     {% if group.name == 'admin' %}
-        <a href="{% url 'academic:register_student' %}">ثبت نام دانشجو</a>
-        <a href="{% url 'academic:register_professor' %}">ثبت نام استاد</a>
-        <a href="{% url 'academic:create_lesson' %}">ایجاد درس</a>
-        <a href="{% url 'academic:lesson_class' %}">ایجاد کلاس</a>
-        <a href="{% url 'academic:lesson_search' %}">جتسجوی کلاس درس</a>
+        <a href="{% url 'student:register_student' %}">ثبت نام دانشجو</a>
+        <a href="{% url 'professor:register_professor' %}">ثبت نام استاد</a>
+        <a href="{% url 'lesson:create_lesson' %}">ایجاد درس</a>
+        <a href="{% url 'lesson:lesson_class' %}">ایجاد کلاس</a>
+        <a href="{% url 'student:lesson_search' %}">جتسجوی کلاس درس</a>
 
     {% endif %}
 
     {% if group.name == 'professor' %}
-        <a href="{% url 'academic:professor_profile' %}">پروفایل</a>
+        <a href="{% url 'professor:professor_profile' %}">پروفایل</a>
     {% endif %}
 
     {% if group.name == 'student' %}
-        <a href="{% url 'academic:lesson_search' %}">جتسجوی کلاس درس</a>
-        <a href="{% url 'academic:choosing_lesson' %}">انتخاب واحد</a>
+        <a href="{% url 'student:lesson_search' %}">جتسجوی کلاس درس</a>
+        <a href="{% url 'student:choosing_lesson' %}">انتخاب واحد</a>
     {% endif %}
 
     {% if messages %}

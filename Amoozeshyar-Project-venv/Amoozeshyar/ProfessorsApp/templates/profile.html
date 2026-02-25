@@ -4,7 +4,7 @@
 
 {% block content %}
     {% for uni in p_university %}
-        <a href="{% url 'academic:professor_lessons' professor.code  uni.code %}">لیست دروس {{uni.name}}</a>    
+        <a href="{% url 'professor:professor_lessons' professor.code  uni.code %}">لیست دروس {{uni.name}}</a>    
     {% endfor %}
     
     

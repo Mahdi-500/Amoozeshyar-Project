@@ -22,7 +22,7 @@
         <h2>درسی پیدا نشد</h2>
     
     {% else %}
-        <form method="POST" action="{% url 'academic:save' %}">
+        <form method="POST" action="{% url 'student:save' %}">
             {% csrf_token %}
             {{form_choosing.as_p}}
             <button type="submit">انتخاب</button>

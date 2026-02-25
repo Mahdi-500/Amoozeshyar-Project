@@ -24,7 +24,11 @@ class testLessonForm(TestCase):
 
 
 
-    def test_with_wrong_data(self):
+    def test_lesson_name_validation(self):
+        """
+        ? testing invalid lesson name 
+        """
+
         form_data = {
             "name":"ریا@ی مهند!س 1",
             "unit":3,
@@ -33,12 +37,29 @@ class testLessonForm(TestCase):
             "lesson_major":(self.test_major_1.pk, self.test_major_2.pk)
         }
 
-        response = self.client.post(reverse("academic:create_lesson"), data=form_data)
+        response = self.client.post(reverse("lesson:create_lesson"), data=form_data)
         form = response.context["form"]
         self.assertFormError(form, errors=" ترکیب عدد با حروف الفبا یا فقط حروف الفبا مجاز است", field="name")
-        self.assertFormError(form, errors="یک درس نمی تواند هم پیش نیاز باشد و هم همنیاز", field="pishniaz")
         self.assertFalse(lesson.objects.filter(name="ریا@ی مهند!س 1").exists())
 
+
+    def test_pishniaz_hamniaz_validation(self):
+        """
+        ? testing having lesson for pishniaz and hamniaz at the same time
+        """
+
+        form_data = {
+            "name":"ریاضی مهندسی",
+            "unit":3,
+            "pishniaz":(self.test_lesson_1.pk, self.test_lesson_2.pk),
+            "hamniaz":self.test_lesson_1.pk,
+            "lesson_major":(self.test_major_1.pk, self.test_major_2.pk)
+        }
+
+        response = self.client.post(reverse("lesson:create_lesson"), data=form_data)
+        form = response.context["form"]
+        self.assertFormError(form, errors="یک درس نمی تواند هم پیش نیاز باشد و هم همنیاز", field="pishniaz")
+        self.assertFalse(lesson.objects.filter(name="ریا@ی مهند!س 1").exists())
     
 
     def test_with_correct_data(self):
@@ -49,7 +70,7 @@ class testLessonForm(TestCase):
             "hamniaz":self.test_lesson_1.pk,
             "lesson_major":(self.test_major_1.pk, self.test_major_2.pk)
         }
-        response = self.client.post(reverse("academic:create_lesson"), data={**form_data}, follow=True)
+        response = self.client.post(reverse("lesson:create_lesson"), data={**form_data}, follow=True)
         messages = list(response.context["messages"])
         self.assertRedirects(response, reverse("academic:main"))
         self.assertTrue("ثبت درس موفقیت آمیز بود" == str(messages[0]))
@@ -80,34 +101,13 @@ class testLessonClassForm(TestCase):
         self.test_group = group.objects.create(name="test", code=500)
 
 
-    def test_help_text(self):
+    def test_help_text_display(self):
         response = self.client.get(reverse("lesson:lesson_class"))
-        self.assertContains(response, "مثال: 09:05")
-        self.assertContains(response, "مثال: 13:25")
+        self.assertContains(response, "AM/PM 09:05 :مثال")
+        self.assertContains(response, "AM/PM 13:25 :مثال")
+        self.assertContains(response, "eg: 1404-06-09T15:05")
 
-
-
-    # def test_for_time_symbol(self):
-
-    #     # ? testing with more than one or no ":" symbol
-    #     form_data = {
-    #         "lesson_code":self.test_lesson,
-    #         "professor_name":self.test_professor,
-    #         "university_location":self.test_uni,
-    #         "group_name":self.test_group,
-    #         "class_start_time":"9:50:",
-    #         "class_end_time":"1050",
-    #         "capacity":35,
-    #         "class_code":300,
-    #         "class_number":1212,
-    #     }
-    #     response = self.client.post(reverse("academic:lesson_class"), data={**form_data})
-    #     form = response.context["form"]
-    #     self.assertFormError(form, errors="باشد HH:MM زمان باید به فرمت", field="class_start_time")
-    #     self.assertFormError(form, errors="باشد HH:MM زمان باید به فرمت", field="class_end_time")
-    #     self.assertFalse(lesson_class.objects.filter(class_code=300, class_number=1212).exists())
-
-
+        
 
     def test_for_no_equal_times(self):
         # ? testing with both start and end time being the same
@@ -127,27 +127,77 @@ class testLessonClassForm(TestCase):
         self.assertTrue("ساعت شروع و پایان نمی توانند یکسان باشند" in form.non_field_errors())
         self.assertFalse(lesson_class.objects.filter(class_code=300, class_number=1212).exists())
 
+    
+    def test_exam_date_time_validation(self):
+        """
+        ? checking the length to be excatly 16 characters
+        """
+        form_data = {
+            "lesson_code":self.test_lesson.pk,
+            "professor_name":self.test_professor.pk,
+            "university_location":self.test_uni.pk,
+            "group_name":self.test_group.pk,
+            "class_start_time":"9:50",
+            "class_end_time":"10:50",
+            "exam_date_time":"1404-12-1T19:52",
+            "capacity":35,
+            "class_code":300,
+            "class_number":1212,
+            "semester":4032,
+        }
+        response = self.client.post(reverse("lesson:lesson_class"), data={**form_data})
+        form = response.context["form"]
+        self.assertFormError(form, errors=["باشد yyyy/mm/ddThh:mm تاریخ و زمان باید به فرمت"], field="exam_date_time")
+        self.assertFalse(lesson_class.objects.filter(class_code=300, class_number=1212).exists())
 
+        
+        """
+        ? testing the "this field is required" error
+        """
+        form_data = {
+            "lesson_code":self.test_lesson.pk,
+            "professor_name":self.test_professor.pk,
+            "university_location":self.test_uni.pk,
+            "group_name":self.test_group.pk,
+            "class_start_time":"9:50",
+            "class_end_time":"10:50",
+            "exam_date_time":"",
+            "capacity":35,
+            "class_code":300,
+            "class_number":1212,
+            "semester":4032,
+        }
+        response = self.client.post(reverse("lesson:lesson_class"), data={**form_data})
+        form = response.context["form"]
+        self.assertFormError(form, errors=["این فیلد اجباری است"], field="exam_date_time")
+        self.assertFalse(lesson_class.objects.filter(class_code=300, class_number=1212).exists())
 
-    # def test_time_out_of_range(self):
-    #     # ? testing with entered numbers being out of range
-    #     form_data = {
-    #         "lesson_code":self.test_lesson,
-    #         "professor_name":self.test_professor,
-    #         "university_location":self.test_uni,
-    #         "group_name":self.test_group,
-    #         "class_start_time":"26:68",
-    #         "class_end_time":"25:75",
-    #         "capacity":35,
-    #         "class_code":300,
-    #         "class_number":1212,
-    #     }
-    #     response = self.client.post(reverse("academic:lesson_class"), data={**form_data})
-    #     form = response.context["form"]
-    #     self.assertFormError(form, errors="باشد HH:MM زمان باید به فرمت", field="class_start_time")
-    #     self.assertFormError(form, errors="باشد HH:MM زمان باید به فرمت", field="class_end_time")
-    #     self.assertFalse(lesson_class.objects.filter(class_code=300, class_number=1212).exists())
-
+        """
+        ? testing the input numbers validation for date and time
+        """
+        form_data = {
+            "lesson_code":self.test_lesson.pk,
+            "professor_name":self.test_professor.pk,
+            "university_location":self.test_uni.pk,
+            "group_name":self.test_group.pk,
+            "class_start_time":"9:50",
+            "class_end_time":"10:50",
+            "exam_date_time":"1400-13-32T21:62",
+            "capacity":35,
+            "class_code":300,
+            "class_number":1212,
+            "semester":4032,
+        }
+        response = self.client.post(reverse("lesson:lesson_class"), data={**form_data})
+        form = response.context["form"]
+        self.assertFormError(form, errors=["سال امتحان نمی تواند از سال فعلی کمتر باشد",
+                                            "ماه امتحان باید عددی بین 1 تا 12 باشد",
+                                            "روز امتحان باید عددی بین 1 تا 31 باشد",
+                                            "ساعت امتحان باید عددی بین 7 تا 20 باشد",
+                                            "دقیقه امتحان باید عددی بین 0 تا 59 باشد"
+                                        ],
+                            field="exam_date_time")
+        self.assertFalse(lesson_class.objects.filter(class_code=300, class_number=1212).exists())
 
 
     def test_with_correct_data(self):
@@ -158,6 +208,7 @@ class testLessonClassForm(TestCase):
             "group_name":self.test_group.pk,
             "class_start_time":"9:50",
             "class_end_time":"10:50",
+            "exam_date_time":"1404-12-01T19:52",
             "capacity":35,
             "class_code":300,
             "class_number":1212,

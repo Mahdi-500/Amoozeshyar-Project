@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from Amoozeshyar.LessonsApp.models import lesson_class, lesson
+from LessonsApp.models import lesson_class, lesson
 from ProfessorsApp.models import Grade
 from .forms import *
 from .forms import semester as setting_semester
@@ -56,17 +56,24 @@ def student_lesson_search_view(request):
         if form.is_valid():
             
             # ? decides to use which model for searching
-            if form.cleaned_data["query_lesson_code"] != None:
+            filter_options = {}
+            query_options = ["query_lesson_name", "query_unit_type", "query_lesson_type"]
+            if form.cleaned_data["query_lesson_code"] is not None:
                 result = lesson_class.objects.filter(Q(lesson_code=form.cleaned_data["query_lesson_code"]) &
                                                     Q(semester=form.cleaned_data["query_lesson_semester"]))
             else:
-                if form.cleaned_data["query_lesson_name"] != "":
-                    lessons = lesson.objects.filter(Q(name__contains=form.cleaned_data["query_lesson_name"]) |
-                                                    Q(unit_type=form.cleaned_data["query_unit_type"]) |
-                                                    Q(lesson_type=form.cleaned_data["query_lesson_type"]))
-                else:
-                    lessons = lesson.objects.filter(Q(unit_type=form.cleaned_data["query_unit_type"]) |
-                                                    Q(lesson_type=form.cleaned_data["query_lesson_type"]))
+                for i,j in form.data.items():
+                    if i in query_options and (j is not None and j != ""):
+                        if i == "query_lesson_name":
+                            key = "name"
+                        elif i == "query_unit_type":
+                            key = "unit_type"
+                        elif i == "query_lesson_type":
+                            key = "lesson_type"
+                        
+                        filter_options[key] = j
+                
+                lessons = lesson.objects.filter(**filter_options)
                 
                 result = []
                 temp = []
@@ -191,7 +198,7 @@ def saving_chosen_lesson_view(request):
 
                 if duplicate_flag:
                     messages.error(request, "این درس را قبلا برداشته اید")  # ! error
-                    return redirect("academic:choosin_lesson")
+                    return redirect("student:choosin_lesson")
                 
                 
 

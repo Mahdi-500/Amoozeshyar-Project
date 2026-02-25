@@ -7,4 +7,4 @@ pyvenv.cfg
 Amoozeshyar/Images
 .vscode
 Amoozeshyar/.coverage
-__pycache__
+__pycache__/

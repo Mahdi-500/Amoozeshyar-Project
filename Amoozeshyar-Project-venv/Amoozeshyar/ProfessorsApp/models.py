@@ -35,8 +35,6 @@ class professor(models.Model):
     phone = PhoneNumberField(blank=False, region="IR", verbose_name="شماره موبایل")
     created = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
     modified = jmodels.jDateTimeField(auto_now=True, verbose_name="تاریخ تغییر")
-    student_number = models.CharField(max_length=10)
-    student_id = models.CharField(max_length=10)
 
     # ? university related information
     code = models.CharField(max_length=10, primary_key=True, default="1111111111", verbose_name="کد استاد")    # ? autofill - primary key

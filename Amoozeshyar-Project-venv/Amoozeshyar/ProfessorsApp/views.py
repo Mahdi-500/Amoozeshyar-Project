@@ -101,7 +101,7 @@ def professor_lesson_details(request, l_code):
         "lesson":lesson_details,
         "l_code":l_code,
     }
-    return render(request, "lesson_details.html", context)
+    return render(request, "professor_lesson_details.html", context)
     
 
 

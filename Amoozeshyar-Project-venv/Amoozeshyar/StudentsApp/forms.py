@@ -6,19 +6,19 @@ def semester() -> str:
     today_date_month = jmodels.jdatetime.date.today().month
     today_date_year = str(jmodels.jdatetime.date.today().year)
 
-    if 11 <= today_date_month <= 12:
-        today_date_year[1:] + '2'
+    if today_date_month == 12 or today_date_month == 11:
+        today_date_year = today_date_year[1:] + '2'
         
     elif 1 <= today_date_month <= 3:
         year = str(int(today_date_year) - 1)[1:]
-        today_date_year = year + "2"
+        today_date_year = today_date_year = year + "2"
 
     elif 6 <= today_date_month <= 10:
-        today_date_year[1:] + '1'
+        today_date_year = today_date_year[1:] + '1'
 
     elif today_date_month == 4 or today_date_month == 5:
         year = str(int(today_date_year) - 1)[1:]
-        today_date_year = year + "3"
+        today_date_year = today_date_year = year + "3"
 
     return today_date_year
 
@@ -60,33 +60,40 @@ class StudentForm(forms.ModelForm):
         # ? first name validation
         if not no_space_first_name.isalpha():
             self.add_error("first_name", "فقط حروف الفبا در نام و نام خانوادگی مجاز است")
+            return clean_data
             
 
         # ? last name validation
         if not no_space_last_name.isalpha():
             self.add_error("last_name","فقط حروف الفبا در نام و نام خانوادگی مجاز است")
+            return clean_data
         
         
 
         # ? studnet id validation
         if not student_id.isdigit():
             self.add_error("student_id", "فقط عدد مجاز است")
+            return clean_data
         
         if len(student_id) != 10:
             self.add_error("student_id", "کد ملی باید 10 کاراکتر باشد")
+            return clean_data
 
         
         # ? address validation
         if not no_space_address.isalpha():
             self.add_error("address", "فقط حروف الفبا مجاز است")
+            return clean_data
 
         
         # ? mobile validation
-        # if not str(phone_number).startswith("+989"):
-        #     self.add_error("mobile", "شماره موبایل معتبر نیست")
+        if not str(phone_number).startswith("+989"):
+            self.add_error("mobile", "شماره موبایل معتبر نیست")
+            return clean_data
 
         if phone_number is None:
                 self.add_error("mobile","شماره موبایل باید شامل 11 عدد باشد")
+                return clean_data
 
 
 
@@ -120,15 +127,18 @@ class StudentLessonSearchForm(forms.Form):
         lesson_code = clean_data.get("query_lesson_code")
         lesson_name = clean_data.get("query_lesson_name")
 
-        if len(str(lesson_code)) != 10:
-            self.add_error("query_lesson_code", "کد درس باید 10 کاراکتر باشد")
+        if lesson_code is not None:
+            if len(str(lesson_code)) != 10:
+                self.add_error("query_lesson_code", "کد درس باید 10 کاراکتر باشد")
+                return clean_data
 
-        if not lesson_name.isalpha() or not lesson_name.isalnum():
-            self.add_error("query_lesson_name", "نام درس معتر نیست")
+            if not lesson_name.isalpha() or not lesson_name.isalnum():
+                self.add_error("query_lesson_name", "نام درس معتر نیست")
+                return clean_data
 
 
 
 class ChoosingLessonForm(forms.Form):
     today_date_year = semester()
-    lesson_semester= forms.CharField(label="نیمسال", initial= today_date_year, required=False, widget=forms.HiddenInput())
+    #lesson_semester= forms.CharField(label="نیمسال", initial= today_date_year, required=False, widget=forms.TextInput(attrs={"readonly":"readonly"}))
     chosen_lesson = forms.ChoiceField(label="کلاس ها", widget=forms.RadioSelect, choices=[("default", "select")])

@@ -59,41 +59,28 @@ class StudentForm(forms.ModelForm):
 
         # ? first name validation
         if not no_space_first_name.isalpha():
-            self.add_error("first_name", "فقط حروف الفبا در نام و نام خانوادگی مجاز است")
-            return clean_data
-            
+            self.add_error("first_name", "فقط حروف الفبا در نام و نام خانوادگی مجاز است")            
 
         # ? last name validation
         if not no_space_last_name.isalpha():
-            self.add_error("last_name","فقط حروف الفبا در نام و نام خانوادگی مجاز است")
-            return clean_data
+            self.add_error("last_name","فقط حروف الفبا در نام و نام خانوادگی مجاز است")        
         
-        
-
         # ? studnet id validation
         if not student_id.isdigit():
             self.add_error("student_id", "فقط عدد مجاز است")
-            return clean_data
         
         if len(student_id) != 10:
             self.add_error("student_id", "کد ملی باید 10 کاراکتر باشد")
-            return clean_data
-
         
         # ? address validation
         if not no_space_address.isalpha():
             self.add_error("address", "فقط حروف الفبا مجاز است")
-            return clean_data
-
-        
-        # ? mobile validation
-        if not str(phone_number).startswith("+989"):
-            self.add_error("mobile", "شماره موبایل معتبر نیست")
-            return clean_data
 
         if phone_number is None:
                 self.add_error("mobile","شماره موبایل باید شامل 11 عدد باشد")
-                return clean_data
+
+        
+        return clean_data
 
 
 
@@ -130,11 +117,11 @@ class StudentLessonSearchForm(forms.Form):
         if lesson_code is not None:
             if len(str(lesson_code)) != 10:
                 self.add_error("query_lesson_code", "کد درس باید 10 کاراکتر باشد")
-                return clean_data
 
             if not lesson_name.isalpha() or not lesson_name.isalnum():
                 self.add_error("query_lesson_name", "نام درس معتر نیست")
-                return clean_data
+        
+        return clean_data
 
 
 

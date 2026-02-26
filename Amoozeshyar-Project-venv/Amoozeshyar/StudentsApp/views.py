@@ -227,7 +227,7 @@ def saving_chosen_lesson_view(request):
                 
                 if not confirmation_of_passed_all_pishniazes:
                     messages.error(request, "ابتدا باید پیش نیاز درس را قبول بشوید")    # ! error
-                    return redirect("academic:choosing_lesson")
+                    return redirect("student:choosing_lesson")
                 
 
                 ### ? checking the maximum units allowed
@@ -240,13 +240,13 @@ def saving_chosen_lesson_view(request):
                     flag = maximum_unit_allowed(request, student_info, class_info, max_unit)
                     if flag:
                         messages.error(request, f"تعداد واحد انتخابی از سقف تعداد واحد مجاز ({max_unit}) بیشتر است")    # ! error
-                        return redirect("academic:choosing_lesson")
+                        return redirect("student:choosing_lesson")
                     else:
                         student_choosing_lesson.objects.create(student_name=student_info,
                                                                 chosen_class=class_info,
                                                                 semester=request.session.get("semester"))
                         messages.success(request, "درس با موفقیت انتخاب شد")    # + success
-                        return redirect("academic:choosing_lesson")
+                        return redirect("student:choosing_lesson")
 
 
                 # ?? for fall semester
@@ -272,13 +272,13 @@ def saving_chosen_lesson_view(request):
                     flag = maximum_unit_allowed(request, student_info, class_info, max_unit)
                     if flag:
                         messages.error(request, f"تعداد واحد انتخابی از سقف تعداد واحد مجاز ({max_unit}) بیشتر است")    # ! error
-                        return redirect("academic:choosing_lesson")
+                        return redirect("student:choosing_lesson")
                     else:
                         student_choosing_lesson.objects.create(student_name=student_info,
                                                                 chosen_class=class_info,
                                                                 semester=request.session.get("semester"))
                         messages.success(request, "درس با موفقیت انتخاب شد")    # + success
-                        return redirect("academic:choosing_lesson")
+                        return redirect("student:choosing_lesson")
                     
                     
                 # ?? for spring semester
@@ -303,16 +303,16 @@ def saving_chosen_lesson_view(request):
                     flag = maximum_unit_allowed(request, student_info, class_info, max_unit)
                     if flag:
                         messages.error(request, f"تعداد واحد انتخابی از سقف تعداد واحد مجاز ({max_unit}) بیشتر است")    # ! error
-                        return redirect("academic:choosing_lesson")
+                        return redirect("student:choosing_lesson")
 
                     else:
                         student_choosing_lesson.objects.create(student_name=student_info,
                                                                 chosen_class=class_info,
                                                                 semester=request.session.get("semester"))
                         messages.success(request, "درس با موفقیت انتخاب شد")    # + success
-                        return redirect("academic:choosing_lesson")
+                        return redirect("student:choosing_lesson")
             
-    return redirect("academic:choosing_lesson")
+    return redirect("student:choosing_lesson")
 
 
 

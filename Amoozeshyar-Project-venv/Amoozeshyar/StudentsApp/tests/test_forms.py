@@ -25,7 +25,7 @@ class testStudentForm(TestCase):
                                     content_type="image/jpeg")
 
     def test_help_texts(self):
-        response = self.client.get(reverse("academic:register_student"))
+        response = self.client.get(reverse("student:register_student"))
         self.assertContains(response, "مثال: 09121234567")
         self.assertContains(response, "مثال: 25-08-1357")
     
@@ -43,7 +43,7 @@ class testStudentForm(TestCase):
             "university":self.test_uni_1.pk,
         }
 
-        response = self.client.post(reverse("academic:register_student"), data={**form_data, "photo":self.photo})
+        response = self.client.post(reverse("student:register_student"), data={**form_data, "photo":self.photo})
         form = response.context["form"]
         self.assertFormError(form, errors="فقط حروف الفبا در نام و نام خانوادگی مجاز است", field="first_name")
         self.assertFormError(form, errors="فقط حروف الفبا در نام و نام خانوادگی مجاز است", field="last_name")
@@ -71,7 +71,7 @@ class testStudentForm(TestCase):
             "university":self.test_uni_1.pk,
         }
 
-        response = self.client.post(reverse("academic:register_student"), data={**form_data, "photo":self.photo})
+        response = self.client.post(reverse("student:register_student"), data={**form_data, "photo":self.photo})
         form = response.context["form"]
         self.assertFormError(form, errors="کد ملی را با دقت وارد کنید",field="student_id")
         self.assertFalse(student.objects.filter(**form_data).exists())
@@ -94,7 +94,7 @@ class testStudentForm(TestCase):
             "major":self.test_major.pk,
             "university":self.test_uni_1.pk,
         }
-        response = self.client.post(reverse("academic:register_student"), data={**form_data, "photo":photo}, follow=True)
+        response = self.client.post(reverse("student:register_student"), data={**form_data, "photo":photo}, follow=True)
         messages = list(response.context["messages"])
         self.assertRedirects(response, reverse("academic:main"))
         self.assertTrue("ثبت نام موفقیت آمیز بود" == str(messages[0]))
@@ -138,6 +138,8 @@ class testLessonSearchForm(TestCase):
             "group_name":self.test_group,
             "class_start_time":"9:50",
             "class_end_time":"10:50",
+            "exam_date_time":"1404-12-06 16:00",
+            "exam_date_time":"1404-12-06 14:00",
             "capacity":35,
             "class_code":300,
             "class_number":1212,
@@ -152,6 +154,7 @@ class testLessonSearchForm(TestCase):
             "group_name":self.test_group,
             "class_start_time":"17:15",
             "class_end_time":"14:50",
+            "exam_date_time":"1404-12-06 14:00",
             "capacity":35,
             "class_code":302,
             "class_number":1201,
@@ -178,7 +181,7 @@ class testLessonSearchForm(TestCase):
             "query_lesson_code":"01234",
             "query_lesson_name":"5445^&%@&"
         }
-        response = self.client.post(reverse("academic:lesson_search"), data={**form_data})
+        response = self.client.post(reverse("student:lesson_search"), data={**form_data})
         form = response.context["form"]
         self.assertFormError(form, errors="کد درس باید 10 کاراکتر باشد", field="query_lesson_code")
         self.assertFormError(form, errors="نام درس معتر نیست", field="query_lesson_name")
@@ -189,5 +192,5 @@ class testLessonSearchForm(TestCase):
         form_data = {
             "query_lesson_name":"something"
         }
-        response = self.client.post(reverse("academic:lesson_search"), data={**form_data})
+        response = self.client.post(reverse("student:lesson_search"), data={**form_data})
         self.assertContains(response, "درسی پیدا نشد")

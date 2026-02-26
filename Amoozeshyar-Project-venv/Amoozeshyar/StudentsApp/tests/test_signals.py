@@ -38,7 +38,7 @@ class testStudentSignals(TestCase):
 
 
 
-    @patch("academic.models.log")
+    @patch("StudentsApp.models.log")
     def test_no_signal_on_user_update(self, mock):
         self.test_student.first_name="no test"
         self.test_student.save()
@@ -48,7 +48,7 @@ class testStudentSignals(TestCase):
 
 
 
-    @patch("academic.models.log")
+    @patch("StudentsApp.models.log")
     def test_both_user_photo_delete(self, mock):
         self.test_student.delete()
         self.assertFalse(student.objects.filter(student_id="0123456789").exists())

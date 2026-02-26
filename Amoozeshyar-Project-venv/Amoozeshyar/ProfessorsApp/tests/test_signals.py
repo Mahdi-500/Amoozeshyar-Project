@@ -35,14 +35,14 @@ class testProfessorSingals(TestCase):
 
 
 
-    @patch("academic.models.log")
+    @patch("ProfessorsApp.models.log")
     def test_no_signals_on_user_update(self, mock):
         self.test_professor.first_name = "no test"
         self.test_professor.save()
         mock.info.assert_called_once_with(msg="set_professor_code; this is an update")
 
 
-    @patch("academic.models.log")
+    @patch("ProfessorsApp.models.log")
     def test_both_user_photo_delete(self, mock):
         self.test_professor.delete()
         self.assertFalse(professor.objects.filter(professor_id="0123456789").exists())

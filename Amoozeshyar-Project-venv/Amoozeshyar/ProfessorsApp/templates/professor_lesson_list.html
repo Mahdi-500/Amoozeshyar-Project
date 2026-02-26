@@ -4,7 +4,7 @@
 {% block content %}
         {% for lesson in list %}
             {% if l_university.code == lesson.university_location.code %}
-                <a href="{% url 'lesson:lesson_detail' lesson.lesson_code.code %}">{{lesson.lesson_code}}</a>
+                <a href="{% url 'professor:professor_lesson_detail' lesson.lesson_code.code %}">{{lesson.lesson_code}}</a>
                 <br>    
             {% endif %}
             

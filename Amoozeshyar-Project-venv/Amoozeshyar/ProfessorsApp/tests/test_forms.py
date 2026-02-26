@@ -20,13 +20,13 @@ class testProfessorForm(TestCase):
         self.test_uni_1 = university.objects.create(name="test", code=500, address="test")
         self.test_uni_2 = university.objects.create(name="test2", code=501, address="test address")
 
-        with open("academic/tests/test_photo.jpg", "rb") as f:
+        with open("ProfessorsApp/tests/test_photo.jpg", "rb") as f:
             self.photo = SimpleUploadedFile(name="test_photo.jpg",
                                     content=f.read(),
                                     content_type="image/jpeg")
 
     def test_help_texts(self):
-        response = self.client.get(reverse("academic:register_professor"))
+        response = self.client.get(reverse("professor:register_professor"))
         self.assertContains(response, "مثال: 09121234567")
         self.assertContains(response, "مثال: 25-05-1357")
 
@@ -45,7 +45,7 @@ class testProfessorForm(TestCase):
             "universities":[self.test_uni_1.pk, self.test_uni_2.pk],
         }
 
-        response = self.client.post(reverse("academic:register_professor"), data={**form_date, "photo":self.photo})
+        response = self.client.post(reverse("professor:register_professor"), data={**form_date, "photo":self.photo})
         form = response.context["form"]
         self.assertFormError(form, errors="فقط حروف الفبا در نام و نام خانوادگی مجاز است", field="first_name")
         self.assertFormError(form, errors="فقط حروف الفبا در نام و نام خانوادگی مجاز است", field="last_name")
@@ -72,14 +72,13 @@ class testProfessorForm(TestCase):
             "phone":"+98811212345678",
             "universities":[self.test_uni_1.pk, self.test_uni_2.pk],
         }
-        response = self.client.post(reverse("academic:register_professor"), data={**form_date, "photo":self.photo})
+        response = self.client.post(reverse("professor:register_professor"), data={**form_date, "photo":self.photo})
         form = response.context["form"]
         self.assertFormError(form, errors="کد ملی را با دقت وارد کنید", field="professor_id")
-    
 
 
     def test_with_correct_data(self):
-        with open("academic/tests/test_photo.jpg", "rb") as f:
+        with open("ProfessorsApp/tests/test_photo.jpg", "rb") as f:
             photo = SimpleUploadedFile(name="test_photo.jpg",
                                     content=f.read(),
                                     content_type="image/jpeg")
@@ -94,7 +93,7 @@ class testProfessorForm(TestCase):
             "phone":"+989121234567",
             "universities":[self.test_uni_1.pk, self.test_uni_2.pk],
         }
-        response = self.client.post(reverse("academic:register_professor"), data={**form_date, "photo":photo}, follow=True)
+        response = self.client.post(reverse("professor:register_professor"), data={**form_date, "photo":photo}, follow=True)
         messages = list(response.context["messages"])
         self.assertRedirects(response, reverse("academic:main"))
         self.assertTrue("ثبت نام موفقیت آمیز بود" == str(messages[0]))
@@ -105,7 +104,7 @@ class testProfessorForm(TestCase):
 class testGradeForm(TestCase):
     def setUp(self):
         # ? creating professor user
-        with open("academic/tests/test_photo.jpg", "rb") as f:
+        with open("ProfessorsApp/tests/test_photo.jpg", "rb") as f:
             photo = SimpleUploadedFile(name="test_photo.jpg",
                                     content=f.read(),
                                     content_type="image/jpeg")
@@ -160,6 +159,7 @@ class testGradeForm(TestCase):
             "group_name":self.test_group,
             "class_start_time":"9:50",
             "class_end_time":"10:50",
+            "exam_date_time":"1404-12-21 16:00",
             "capacity":35,
             "class_code":300,
             "class_number":1212,
@@ -195,7 +195,7 @@ class testGradeForm(TestCase):
         session = self.client.session
         session["p_code"] = self.test_professor.code
         session.save()
-        response = self.client.post(reverse("academic:grade", kwargs={"l_code":self.test_lesson.code, "class_code":self.test_class.class_code}), data={**form_data})
+        response = self.client.post(reverse("professor:grade", kwargs={"l_code":self.test_lesson.code, "class_code":self.test_class.class_code}), data={**form_data})
         formset = response.context["formset"]
         self.assertFormSetError(formset=formset, form_index=0, errors="نمره باید بین 0 تا 20 باشد", field="score")
         self.assertFormSetError(formset=formset, form_index=1, errors="نمره باید بین 0 تا 20 باشد", field="score")
@@ -227,7 +227,7 @@ class testGradeForm(TestCase):
         session = self.client.session
         session["p_code"] = self.test_professor.code
         session.save()
-        response = self.client.post(reverse("academic:grade", kwargs={"l_code":self.test_lesson.code, "class_code":self.test_class.class_code}), data={**form_data}, follow=True)
+        response = self.client.post(reverse("professor:grade", kwargs={"l_code":self.test_lesson.code, "class_code":self.test_class.class_code}), data={**form_data}, follow=True)
         messages = list(response.context["messages"])
         self.assertRedirects(response, reverse("academic:main"))
         self.assertTrue("ثبت نمره با موفقیت انجام شد" == str(messages[0]))

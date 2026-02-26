@@ -61,7 +61,7 @@ def professor_profile_view(request):
         "professor":professor_name,
         "p_university":p_university_list,
     }
-    return render(request, "professor/profile.html", context)
+    return render(request, "profile.html", context)
 
 
 
@@ -74,7 +74,7 @@ def professor_lesson_list_view(request, p_code, u_code):
     seen = set()
     lesson_list = []
     for i in temp_lesson_list:
-        if i.lesson_code in seen:
+        if i.lesson_code in seen: # ? avoids duplicate lesson codes
             continue
         else:
             lesson_list.append(i)
@@ -85,7 +85,7 @@ def professor_lesson_list_view(request, p_code, u_code):
         "l_university":l_university,
     }
 
-    return render(request, "professor/professor_lesson_list.html", context)
+    return render(request, "professor_lesson_list.html", context)
 
 
 

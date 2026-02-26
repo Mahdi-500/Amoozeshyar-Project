@@ -46,46 +46,40 @@ class ProfessorForm(forms.ModelForm):
 
         if student_object:
             self.add_error("professor_id", "کد ملی را با دقت وارد کنید")
-            return clean_data
         
         # ? first name validation
         if not no_space_first_name.isalpha():
             self.add_error("first_name", "فقط حروف الفبا در نام و نام خانوادگی مجاز است")
-            return clean_data
             
 
         # ? last name validation
         if not no_space_last_name.isalpha():
             self.add_error("last_name","فقط حروف الفبا در نام و نام خانوادگی مجاز است")
-            return clean_data
         
 
         # ? address validation
         if not no_space_address.isalpha():
             self.add_error("address", "فقط حروف الفبا مجاز است")
-            return clean_data
 
 
         # ? mobile validation
         if phone_number is None:
-                self.add_error("phone","شماره موبایل باید شامل 11 عدد باشد")
-                return clean_data
+            self.add_error("phone","شماره موبایل باید شامل 11 عدد باشد")
 
 
         # ? major validation
         if not no_space_major.isalpha():
             self.add_error("major", "فقط حروف الفبا مجاز است")
-            return clean_data
         
 
         # ? professor id validation
         if not professor_id.isdigit():
             self.add_error("professor_id", "فقط عدد مجاز است")
-            return clean_data
         
         if len(professor_id) != 10:
             self.add_error("professor_id", "کد ملی باید 10 کاراکتر باشد")
-            return clean_data
+        
+        return clean_data
         
 
     # def save(self, commit=True):

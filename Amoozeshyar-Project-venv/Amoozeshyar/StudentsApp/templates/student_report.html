@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load math_operations %}
+{% load getting_values %}
+
+{% block title %}کارنامه{% endblock title %}
+
+{% block content %}
+
+    <style>
+        .table-container {
+            border-collapse: collapse; /* Remove the default border between cells */
+            width: 50%;
+        }
+        .column {
+            width: 5%;
+            padding: 5px; /* Add some space around the content */
+            box-sizing: border-box; /* Include padding and border in the element's total width */
+            text-align: center; /* Center the text within each cell */
+        }
+
+        .smester-status-table-container {
+            border-collapse: collapse; /* Remove the default border between cells */
+            width: 35%;
+        }
+        .semester-status-column {
+            width: 20%;
+            padding: 10px; /* Add some space around the content */
+            box-sizing: border-box; /* Include padding and border in the element's total width */
+            text-align: center; /* Center the text within each cell */
+        }
+
+        .lesson-type-status-table-container {
+            border-collapse: collapse; /* Remove the default border between cells */
+            width: 20%;
+        }
+        .lesson-type-status-column {
+            width: 10%;
+            padding: 10px; /* Add some space around the content */
+            box-sizing: border-box; /* Include padding and border in the element's total width */
+            text-align: center; /* Center the text within each cell */
+        }
+    </style>
+
+    {% for semester, values in lesson_report.items %}
+        <table class="table-container">
+            <tr>
+                <th>{{semester}}</th>
+            </tr>
+            <tr>
+                <th class="column"> </th>
+                <th class="column">کد درس</th>
+                <th class="column">کد ارائه</th>
+                <th class="column">نام درس</th>
+                <th class="column">تعداد واحد</th>
+                <th class="column">نمره</th>
+                <th class="column">نمره با ضریب</th>
+                <th class="column">وضعیت</th>
+            </tr>
+            {% for i in values %}
+                <tr>
+                    <td class="column"> {{i.0.chosen_class.lesson_code.code}} </td>    <!--shows the lesson code-->
+                    <td class="column"> {{i.0.chosen_class.class_code}} </td>      <!--shows the class code-->
+                    <td class="column"> {{i.0.chosen_class.lesson_code.name}} </td>      <!--shows the lesson name-->
+                    <td class="column"> {{i.0.chosen_class.lesson_code.unit}} </td>    <!--shows the number of unit-->
+
+                    <!--shows the grade-->
+                    <td class="column">    
+                        {% if i.1 == "No mark yet" %}
+                            نمره ای ثبت نشده
+                        {% else %}
+                            {{i.1}}
+                        {% endif %}
+                    </td>
+
+                     <!--grade * unit-->
+                    <td class="column">   
+                        {% if i.1 == "No mark yet" %}
+                            نمره ای ثبت نشده
+                        {% else %}
+                            {% multiply i.0.chosen_class.lesson_code.unit i.1 %}
+                        {% endif %}
+                    </td>
+
+                    <!--status-->
+                    <td class="column">
+                        {% if i.1 >= 10 %}
+                            قبول
+                        {% elif i.1 == "No mark yet" %}
+                            نامعلوم
+                        {% else %}
+                            رد
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <br>
+        <table class="smester-status-table-container">
+            <tr>
+                <td class="semester-status-column"> {% dict_value semester_status semester 0 2 %} </td>
+                <th class="csemester-status-columnn"> معدل ترم </th>
+                
+                <td class="semester-status-column"> {% dict_value semester_status semester 0 0 %} </td>
+                <th class="semester-status-column">  امتیاز ترم </th>
+                
+                <td class="semester-status-column"> {% dict_value semester_status semester 0 1 %} </td>
+                <th class="semester-status-column"> تعداد واحد اخذ شده </th>
+            </tr>
+
+        </table>
+        <hr>
+    {% endfor %}
+
+    <table class="lesson-type-status-table-container">
+        <tr>
+            <td class="lesson-type-status-column"> {{overall_units}} </td>
+            <th class="lesson-type-status-column"> کل واحد </th>
+            {% for i, j in lesson_type_status.items %}
+                <td class="lesson-type-status-column"> {{j}} واحد </td>
+                <th class="lesson-type-status-column"> {{i}} </th>
+            {% endfor %}
+            <td class="lesson-type-status-column"> {{overall_average}} </td>
+            <th class="lesson-type-status-column"> معدل کل </th>
+    </table>
+{% endblock content %}

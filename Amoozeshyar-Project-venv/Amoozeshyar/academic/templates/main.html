@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Main page{% endblock title %}
+{% block title %}صفحه اصلی{% endblock title %}
 
 {% block content %}
 
@@ -20,6 +20,7 @@
     {% if group.name == 'student' %}
         <a href="{% url 'student:lesson_search' %}">جتسجوی کلاس درس</a>
         <a href="{% url 'student:choosing_lesson' %}">انتخاب واحد</a>
+        <a href="{% url 'student:student_report' %}">کارنامه</a>
     {% endif %}
 
     {% if messages %}

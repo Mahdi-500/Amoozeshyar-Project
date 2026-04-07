@@ -96,7 +96,7 @@ class GradeForm(forms.Form):
     first_name = forms.CharField(max_length=100, label="نام")
     last_name = forms.CharField(max_length=150, label="نام خانوادگی")
     student_number = forms.CharField(max_length=12, label="شماره دانشجویی")
-    score = forms.DecimalField(label="نمره", required=True, decimal_places=2 , min_value=0, max_value=20, 
+    mark = forms.DecimalField(label="نمره", required=True, decimal_places=2 , min_value=0, max_value=20, 
                                 error_messages={"max_value":"نمره باید بین 0 تا 20 باشد",
                                                 "min_value":"نمره باید بین 0 تا 20 باشد",
                                                 "max_decimal_places":"فرمت نمره صحیح نیست"},

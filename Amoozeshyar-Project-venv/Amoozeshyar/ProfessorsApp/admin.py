@@ -8,5 +8,5 @@ class ProfessorAdmin(admin.ModelAdmin):
 
 @admin.register(Grade)
 class GradeAdmin(admin.ModelAdmin):
-    list_display = ["student_name", "lesson_name", "score", "created", "modified"]
-    list_editable = ["score"]
+    list_display = ["student_name", "lesson_name", "mark", "created", "modified"]
+    list_editable = ["mark"]

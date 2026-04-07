@@ -181,15 +181,15 @@ class testGradeForm(TestCase):
             "form-0-first_name":self.test_student_1.first_name,
             "form-0-last_name":self.test_student_1.last_name,
             "form-0-student_number":self.test_student_1.student_number,
-            "form-0-score":22,
+            "form-0-mark":22,
             "form-1-first_name":self.test_student_2.first_name,
             "form-1-last_name":self.test_student_2.last_name,
             "form-1-student_number":self.test_student_2.student_number,
-            "form-1-score":-1,
+            "form-1-mark":-1,
             "form-2-first_name":self.test_student_3.first_name,
             "form-2-last_name":self.test_student_3.last_name,
             "form-2-student_number":self.test_student_3.student_number,
-            "form-2-score":12.658
+            "form-2-mark":12.658
         }
 
         session = self.client.session
@@ -197,9 +197,9 @@ class testGradeForm(TestCase):
         session.save()
         response = self.client.post(reverse("professor:grade", kwargs={"l_code":self.test_lesson.code, "class_code":self.test_class.class_code}), data={**form_data})
         formset = response.context["formset"]
-        self.assertFormSetError(formset=formset, form_index=0, errors="نمره باید بین 0 تا 20 باشد", field="score")
-        self.assertFormSetError(formset=formset, form_index=1, errors="نمره باید بین 0 تا 20 باشد", field="score")
-        self.assertFormSetError(formset=formset, form_index=2, errors="فرمت نمره صحیح نیست", field="score")
+        self.assertFormSetError(formset=formset, form_index=0, errors="نمره باید بین 0 تا 20 باشد", field="mark")
+        self.assertFormSetError(formset=formset, form_index=1, errors="نمره باید بین 0 تا 20 باشد", field="mark")
+        self.assertFormSetError(formset=formset, form_index=2, errors="فرمت نمره صحیح نیست", field="mark")
         self.assertFalse(Grade.objects.filter(student_name=self.test_student_1, lesson_name=self.test_class).exists())
         self.assertFalse(Grade.objects.filter(student_name=self.test_student_2, lesson_name=self.test_class).exists())
         self.assertFalse(Grade.objects.filter(student_name=self.test_student_3, lesson_name=self.test_class).exists())
@@ -213,15 +213,15 @@ class testGradeForm(TestCase):
             "form-0-first_name":self.test_student_1.first_name,
             "form-0-last_name":self.test_student_1.last_name,
             "form-0-student_number":self.test_student_1.student_number,
-            "form-0-score":20,
+            "form-0-mark":20,
             "form-1-first_name":self.test_student_2.first_name,
             "form-1-last_name":self.test_student_2.last_name,
             "form-1-student_number":self.test_student_2.student_number,
-            "form-1-score":17.25,
+            "form-1-mark":17.25,
             "form-2-first_name":self.test_student_3.first_name,
             "form-2-last_name":self.test_student_3.last_name,
             "form-2-student_number":self.test_student_3.student_number,
-            "form-2-score":12.75
+            "form-2-mark":12.75
         }
 
         session = self.client.session

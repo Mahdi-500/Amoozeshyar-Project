@@ -54,7 +54,7 @@ class professor(models.Model):
 class Grade(models.Model):
     student_name = models.ForeignKey(student, verbose_name="دانشجو", on_delete=models.CASCADE, related_name="grade")
     lesson_name = models.ForeignKey(lesson_class, verbose_name="درس", on_delete=models.CASCADE, related_name="grade")
-    score = models.DecimalField(max_digits=4, blank=False, decimal_places=2,verbose_name="نمره")
+    mark = models.DecimalField(max_digits=4, blank=False, decimal_places=2,verbose_name="نمره")
     modified = jmodels.jDateTimeField(auto_now=True, verbose_name="تاریخ تغییر")
     created = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
 
@@ -64,7 +64,7 @@ log = logging.getLogger(__name__)
 # todo - professor model functions
 
 @receiver(pre_save, sender=professor)
-def set_professor_code(sender, instance, created=False, **kwargs):
+def set_professor_code(sender, instance, **kwargs):
     if hasattr(instance, "code") and instance.code == "1111111111":
         part_1 = str(instance.date_of_birth)[:4]
         part_2 = str(instance.created)[1:4]

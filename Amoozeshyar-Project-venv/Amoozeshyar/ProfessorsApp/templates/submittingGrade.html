@@ -3,20 +3,6 @@
 {% block title %}ثبت نمره{% endblock title %}
 
 {% block content %}
-    {% comment %} <form method="POST">
-        {% csrf_token %}
-        {{formset.management_form}}
-        {% for form in formset %}
-            {{form.student_id}} {{form.first_name}} {{form.last_name}} {{form.score}}
-            <br>
-            {% if form.errors %}
-                {{form.errors}}
-            {% endif %}
-
-        {% endfor %}
-        <button type="submit">ثبت نمره</button>
-    </form> {% endcomment %}
-
     <form method="POST">
         {% csrf_token %}
         {{formset.management_form}}
@@ -42,7 +28,7 @@
                         <td>{{ form.student_id }}</td>
                         <td>{{ form.first_name }}</td>
                         <td>{{ form.last_name }}</td>
-                        <td>{{ form.score }}</td>
+                        <td>{{ form.mark }}</td>
                     </tr>
                     {% if form.errors %}
                         <tr>

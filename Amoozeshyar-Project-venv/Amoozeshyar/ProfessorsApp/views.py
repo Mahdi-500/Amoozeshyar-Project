@@ -119,7 +119,7 @@ def grade_form_view(request, l_code, class_code):
             "first_name":j.student_name.first_name,
             "last_name":j.student_name.last_name,
             "student_number":j.student_name.student_number,
-            "score":0
+            "mark":0
         }
         initail_data.append(student_data)
 
@@ -130,12 +130,12 @@ def grade_form_view(request, l_code, class_code):
         if formset.is_valid():
             for i in formset:
                 student_info = student.objects.get(student_number=i.cleaned_data["student_number"])
-                submitted_score = i.cleaned_data["score"]
+                submitted_mark = i.cleaned_data["mark"]
 
                 Grade.objects.create(
                     student_name=student_info,
                     lesson_name=lesson_class_data,
-                    score=submitted_score
+                    mark=submitted_mark
                 )
             messages.success(request, "ثبت نمره با موفقیت انجام شد")
             return redirect("academic:main")

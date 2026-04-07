@@ -128,4 +128,4 @@ class StudentLessonSearchForm(forms.Form):
 class ChoosingLessonForm(forms.Form):
     today_date_year = semester()
     #lesson_semester= forms.CharField(label="نیمسال", initial= today_date_year, required=False, widget=forms.TextInput(attrs={"readonly":"readonly"}))
-    chosen_lesson = forms.ChoiceField(label="کلاس ها", widget=forms.RadioSelect, choices=[("default", "select")])
+    chosen_class = forms.ChoiceField(label="کلاس ها", widget=forms.RadioSelect, choices=[("default", "select")])

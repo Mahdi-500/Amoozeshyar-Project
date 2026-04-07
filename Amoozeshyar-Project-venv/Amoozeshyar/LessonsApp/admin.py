@@ -11,4 +11,4 @@ class LessonAdmin(admin.ModelAdmin):
 
 @admin.register(lesson_class)
 class LessonClassAdmin(admin.ModelAdmin):
-    list_display = ["lesson_code", "professor_name", "university_location", "group_name", "created", "modified"]
+    list_display = ["id" ,"lesson_code", "professor_name", "university_location", "group_name", "created", "modified"]

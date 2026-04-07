@@ -46,7 +46,7 @@ class student(models.Model):
     last_year = models.PositiveSmallIntegerField(verbose_name="آخرین سال تحصیل", null=True, blank=True)     # ? autofill - entrance year + 5
     major = models.ForeignKey("academic.major",on_delete=models.DO_NOTHING, related_name="student", default=None, verbose_name="رشته", blank=False)  
     # credit =  # ! auto calculate
-    # average_score =   # ! auto calculate
+    # average_mark =   # ! auto calculate
     role = models.CharField(max_length=10, default="student")
     university = models.ForeignKey("academic.university",on_delete=models.DO_NOTHING, related_name="student", default=None, verbose_name="دانشگاه", blank=False)
     status = models.CharField(max_length=5, blank=True, choices=status_choices, default=status_choices.STUDYING, verbose_name="وضعیت تحصیل")

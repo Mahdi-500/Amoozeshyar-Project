@@ -24,7 +24,27 @@
     {% else %}
         <form method="POST" action="{% url 'student:save' %}">
             {% csrf_token %}
-            {{form_choosing.as_p}}
+            <table>
+                <tr>
+                    <th> زمان برگزاری </th>
+                    <th> روز برگزاری </th>
+                    <th> نام استاد </th>
+                    <th> نام درس </th>
+                    <th> کد درس </th>
+                    <th>  </th>
+                </tr>
+                {% for i, j in available_classes.items %}
+                    <tr>
+                        <td> {{j.5}} </td>
+                        <td> {{j.4}} </td>
+                        <td> {{j.2}} </td>
+                        <td> {{j.1}} </td>
+                        <td> {{j.3}} </td>
+                        <th>  <input type="radio" id="{{ i }}" name="chosen_class" value="{{ j.0 }}"> </th>
+                    </tr>
+
+                {% endfor %}
+            </table>
             <button type="submit">انتخاب</button>
         </form>
     {% endif %}

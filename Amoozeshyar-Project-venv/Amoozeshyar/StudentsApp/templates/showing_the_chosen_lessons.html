@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2> دروس انتخاب شده </h2>
+    {% if chosen_classes %}
+        <table>
+            <tr>
+                <th> زمان برگزاری </th>
+                <th> روز برگزاری </th>
+                <th> نام استاد </th>
+                <th> نام درس </th>
+                <th> کد درس </th>
+            </tr>
+            {% for i,j in chosen_classes.items %}
+                <tr>
+                    <td> {{j.4}} </td>
+                    <td> {{j.3}} </td>
+                    <td> {{j.1}} </td>
+                    <td> {{j.0}} </td>
+                    <td> {{j.2}} </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <button onclick="window.location.href='{% url 'student:submit' %}';">ذخیره</button>
+        <br><br>
+    {% else %}
+        هنوز درسی انتخاب نکرید
+    {% endif %}
+{% endblock content %}

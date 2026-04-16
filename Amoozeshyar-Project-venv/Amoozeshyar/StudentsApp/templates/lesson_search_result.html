@@ -10,6 +10,11 @@
         <button type="Submit">جتسجو</button>
     </form>
 
+    {% if request.path == "/choosing_lesson" %}
+        {% include "showing_the_chosen_lessons.html" with chosen_classes=chosen_classes %}
+    {% endif %}
+    <br><br>
+
     {% if flag %}
         {% if result %}
             {% for r in result  %}

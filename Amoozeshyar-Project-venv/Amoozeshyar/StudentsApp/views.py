@@ -100,6 +100,9 @@ def student_lesson_search_view(request):
 
 @login_required(login_url=settings.LOGIN_URL)
 def choosing_lesson_form_view(request):
+    chosen_classes = showing_the_chosen_lesson_before_saving(class_info_id=request.session['chosen_classes'])
+    print(request.path == "/choosing_lesson")
+
     if request.method == "POST":
         form_searching = StudentLessonSearchForm(data=request.POST)
 
@@ -116,7 +119,6 @@ def choosing_lesson_form_view(request):
                 "lesson_type":form_searching.cleaned_data["query_lesson_type"],
                 "lesson_major":student_info.major
             }
-
             filters = {
                 key: value
                 for key, value in data.items()
@@ -141,24 +143,39 @@ def choosing_lesson_form_view(request):
 
                 request.session["semester"] = set_semester()
 
-                
+            
+
             context = {
                 "form_searching": form_searching,
                 "available_classes":available_classes,
-                "flag":flag
+                "flag":flag,
+                "chosen_classes":chosen_classes
             }
             return render(request, "choosing_lesson.html", context)
     
     else:
         form_searching = StudentLessonSearchForm()
 
-    return render(request, "lesson_search_result.html", {"form":form_searching})
+    return render(request, "lesson_search_result.html", {"form":form_searching, "chosen_classes":chosen_classes})
 
 
 
-# todo - this is for saving the chosen lesson in previous view
+def showing_the_chosen_lesson_before_saving(class_info_id):
+    chosen_classes = {}
+    loop_couner = 1
+    for i in class_info_id:
+        obj = lesson_class.objects.get(id=i)
+        chosen_classes[loop_couner] = [obj.lesson_code.name, obj.professor_name, obj.lesson_code.code, 
+                                        obj.class_day, f"{obj.class_end_time} تا {obj.class_start_time}"]
+        loop_couner += 1
+    
+    return chosen_classes
+
+
+
+# todo - the function saves the chosen lessons in session temporarely
 @login_required(login_url=settings.LOGIN_URL)
-def saving_chosen_lesson_view(request):
+def temporarely_saving_chosen_lesson_view(request):
     if request.method == "POST":
         form = ChoosingLessonForm(data=request.POST)
         form.fields["chosen_class"].choices = [(request.POST.get("chosen_class"), "the chosen class")]
@@ -166,6 +183,7 @@ def saving_chosen_lesson_view(request):
         if form.is_valid():
             student_info = student.objects.get(student_number = request.user.username)
             class_info = lesson_class.objects.get(id=form.cleaned_data["chosen_class"])
+            request.session['chosen_classes'] = []
 
             try:
                 student_choosing_lesson.objects.get(student_name=student_info, chosen_class=class_info, semester=request.session.get("semester"))
@@ -207,9 +225,7 @@ def saving_chosen_lesson_view(request):
                         messages.error(request, f"تعداد واحد انتخابی از سقف تعداد واحد مجاز ({max_unit}) بیشتر است")    # ! error
                         return redirect("student:choosing_lesson")
                     else:
-                        student_choosing_lesson.objects.create(student_name=student_info,
-                                                                chosen_class=class_info,
-                                                                semester=request.session.get("semester"))
+                        request.session['chosen_classes'].append(class_info.id)
                         messages.success(request, "درس با موفقیت انتخاب شد")    # + success
                         return redirect("student:choosing_lesson")
 
@@ -239,9 +255,7 @@ def saving_chosen_lesson_view(request):
                         messages.error(request, f"تعداد واحد انتخابی از سقف تعداد واحد مجاز ({max_unit}) بیشتر است")    # ! error
                         return redirect("student:choosing_lesson")
                     else:
-                        student_choosing_lesson.objects.create(student_name=student_info,
-                                                                chosen_class=class_info,
-                                                                semester=request.session.get("semester"))
+                        request.session['chosen_classes'].append(class_info.id)
                         messages.success(request, "درس با موفقیت انتخاب شد")    # + success
                         return redirect("student:choosing_lesson")
                     
@@ -271,13 +285,25 @@ def saving_chosen_lesson_view(request):
                         messages.error(request, f"تعداد واحد انتخابی از سقف تعداد واحد مجاز ({max_unit}) بیشتر است")    # ! error
                         return redirect("student:choosing_lesson")
 
-                    else:
-                        student_choosing_lesson.objects.create(student_name=student_info,
-                                                                chosen_class=class_info,
-                                                                semester=request.session.get("semester"))
+                    else:                        
+                        request.session['chosen_classes'].append(class_info.id)
                         messages.success(request, "درس با موفقیت انتخاب شد")    # + success
                         return redirect("student:choosing_lesson")
             
+    return redirect("student:choosing_lesson")
+
+
+
+@login_required(login_url=settings.LOGIN_URL)
+def submiting_the_chosen_lesson(request):
+    student_info = student.objects.get(student_number = request.user.username)
+    class_info_id = request.session['chosen_classes']
+    for i in class_info_id:
+        class_info = lesson_class.objects.get(id=i)
+        student_choosing_lesson.objects.create(student_name=student_info,
+                                                chosen_class=class_info,
+                                                semester=request.session.get("semester"))
+    messages.success(request, "درس های انتخابی با موفقیت ذخیره شدند")   # + success
     return redirect("student:choosing_lesson")
 
 
@@ -376,7 +402,7 @@ def check_lesson_requirements_status(class_info, student_info) -> bool:
         return passed
     
     # ? if lesson has no requirements
-    if requirements == "":
+    if len(requirements) == 0:
         return True
     else:
         for i in requirements:
@@ -397,3 +423,6 @@ def check_lesson_requirements_status(class_info, student_info) -> bool:
                     passed &= False
             
     return passed
+
+def testview(request):
+    print("hello world")

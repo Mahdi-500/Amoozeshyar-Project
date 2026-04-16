@@ -18,11 +18,15 @@
         <button>جستجو</button>
     </form>
     <br><br>
+
+    {% include "showing_the_chosen_lessons.html" with chosen_classes=chosen_classes %}
+
+    <h2> نتیجه جستجو </h2>
     {% if flag %}
         <h2>درسی پیدا نشد</h2>
     
     {% else %}
-        <form method="POST" action="{% url 'student:save' %}">
+        <form method="POST" action="{% url 'student:pre_save' %}">
             {% csrf_token %}
             <table>
                 <tr>
@@ -47,6 +51,7 @@
             </table>
             <button type="submit">انتخاب</button>
         </form>
+
     {% endif %}
         
 {% endblock content %}

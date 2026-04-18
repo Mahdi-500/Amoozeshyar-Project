@@ -101,7 +101,6 @@ def student_lesson_search_view(request):
 @login_required(login_url=settings.LOGIN_URL)
 def choosing_lesson_form_view(request):
     chosen_classes = showing_the_chosen_lesson_before_saving(class_info_id=request.session['chosen_classes'])
-    print(request.path == "/choosing_lesson")
 
     if request.method == "POST":
         form_searching = StudentLessonSearchForm(data=request.POST)
@@ -131,11 +130,11 @@ def choosing_lesson_form_view(request):
                         if i.classes.all()[j].semester == semester:
                             result.append(i.classes.all()[j])
 
+            available_classes = {}
             if result == []:
                 flag = True
             else:
                 flag = False
-                available_classes = {}
                 loop_couner = 1
                 for i in result:
                     available_classes[loop_couner] = [i.id, i.lesson_code.name, i.professor_name, i.lesson_code.code, i.class_day, f"{i.class_end_time} تا {i.class_start_time}"]
@@ -156,7 +155,7 @@ def choosing_lesson_form_view(request):
     else:
         form_searching = StudentLessonSearchForm()
 
-    return render(request, "lesson_search_result.html", {"form":form_searching, "chosen_classes":chosen_classes})
+    return render(request, "choosing_lesson.html", {"form_searching":form_searching, "chosen_classes":chosen_classes})
 
 
 
@@ -183,7 +182,6 @@ def temporarely_saving_chosen_lesson_view(request):
         if form.is_valid():
             student_info = student.objects.get(student_number = request.user.username)
             class_info = lesson_class.objects.get(id=form.cleaned_data["chosen_class"])
-            request.session['chosen_classes'] = []
 
             try:
                 student_choosing_lesson.objects.get(student_name=student_info, chosen_class=class_info, semester=request.session.get("semester"))
@@ -191,7 +189,6 @@ def temporarely_saving_chosen_lesson_view(request):
 
             except student_choosing_lesson.DoesNotExist:
                 temp = student_choosing_lesson.objects.filter(student_name=student_info)
-                flag = True
             
 
                 # ? checking for duplicate lesson
@@ -213,83 +210,29 @@ def temporarely_saving_chosen_lesson_view(request):
                     return redirect("student:choosing_lesson")
                 
 
-                ### ? checking the maximum units allowed
-                
+                ## ? checking the maximum units allowed
 
-                # ?? for summer semester
-                semester = request.session.get("semester")
-                max_unit = 8
-                if semester[3] == "3":
-                    flag = maximum_unit_allowed(request, student_info, class_info, max_unit)
-                    if flag:
-                        messages.error(request, f"تعداد واحد انتخابی از سقف تعداد واحد مجاز ({max_unit}) بیشتر است")    # ! error
-                        return redirect("student:choosing_lesson")
-                    else:
+                max_unit = maximum_unit_allowed(student_info)
+                is_maximum_units_limit_passed = check_overall_unit_picked(request, student_info, max_unit, class_info)
+
+                if is_maximum_units_limit_passed:
+                    messages.error(request, f"تعداد واحد انتخابی از سقف تعداد واحد مجاز ({max_unit}) بیشتر است")    # ! error
+                    return redirect("student:choosing_lesson")
+                else:
+                    try:
+                        request.session["chosen_classes"]
+                    except KeyError:
+                        request.session['chosen_classes'] = []
                         request.session['chosen_classes'].append(class_info.id)
                         messages.success(request, "درس با موفقیت انتخاب شد")    # + success
                         return redirect("student:choosing_lesson")
-
-
-                # ?? for fall semester
-                max_unit = 20
-                if semester[3] == "1":
-                    new_semester = str(int(semester) - 9)    # ? privious semester (spring)
-                    try:
-                        privious_semester_student_classes = student_choosing_lesson.objects.filter(student_name=student_info, semester=new_semester)
-                        unit = 0
-                        mark = 0
-                        for i in privious_semester_student_classes:
-                            for j in Grade.objects.filter(student_name=student_info, lesson_name=i):
-                                if j.mark >= 10:
-                                    mark += j.mark
-                                    unit += j.lesson_name.lesson_code.unit
-
-                        if mark / unit >= 17.00:
-                            max_unit = 24
-                        
-                    except student_choosing_lesson.DoesNotExist:
-                        pass
-
-                    flag = maximum_unit_allowed(request, student_info, class_info, max_unit)
-                    if flag:
-                        messages.error(request, f"تعداد واحد انتخابی از سقف تعداد واحد مجاز ({max_unit}) بیشتر است")    # ! error
-                        return redirect("student:choosing_lesson")
                     else:
-                        request.session['chosen_classes'].append(class_info.id)
+                        temp = request.session['chosen_classes']
+                        temp.append(class_info.id)
+                        request.session['chosen_classes'] = temp
                         messages.success(request, "درس با موفقیت انتخاب شد")    # + success
                         return redirect("student:choosing_lesson")
                     
-                    
-                # ?? for spring semester
-                elif semester[3] == "2":
-                    new_semester = str(int(semester) - 1)    # ? privious semester (spring)
-                    try:
-                        privious_semester_student_classes = student_choosing_lesson.objects.filter(student_name=student_info, semester=new_semester)
-                        unit = 0
-                        mark = 0
-                        for i in privious_semester_student_classes:
-                            for j in Grade.objects.filter(student_name=student_info, lesson_name=i):
-                                if j.mark >= 10:
-                                    mark += j.mark
-                                    unit += j.lesson_name.lesson_code.unit
-
-                        if unit != 0:
-                            if mark / unit >= 17.00:
-                                max_unit = 24
-                        
-                    except student_choosing_lesson.DoesNotExist:
-                        pass
-
-                    flag = maximum_unit_allowed(request, student_info, class_info, max_unit)
-                    if flag:
-                        messages.error(request, f"تعداد واحد انتخابی از سقف تعداد واحد مجاز ({max_unit}) بیشتر است")    # ! error
-                        return redirect("student:choosing_lesson")
-
-                    else:                        
-                        request.session['chosen_classes'].append(class_info.id)
-                        messages.success(request, "درس با موفقیت انتخاب شد")    # + success
-                        return redirect("student:choosing_lesson")
-            
     return redirect("student:choosing_lesson")
 
 
@@ -372,24 +315,63 @@ def student_lesson_type_status(request) -> dict:
     return student_lesson_type_status
 
 """
-todo - these function are for validating different things before a student can choose a class
+todo - these functions below are for validating different things before a student can choose a class
 """
-def maximum_unit_allowed(request, student_info, class_info, max_unit) -> bool:
-    try:
-        student_classes = student_choosing_lesson.objects.filter(student_name=student_info, semester=semester())
-        overall_units = 0
-        for i in student_classes:
-            overall_units += i.chosen_class.lesson_code.unit
+def maximum_unit_allowed(student_info) -> int:
+    current_semester = semester()
+    if current_semester[3] == '2' or current_semester[3] == '3':
+        previous_semester = str(int(current_semester) - 1)
+    else:
+        previous_semester = str(int(current_semester[:3]) - 1) + '2'
+
+    
+    if student_choosing_lesson.objects.filter(student_name=student_info).exists():
+        if current_semester[3] == "3":
+            return 8
+        elif student_choosing_lesson.objects.filter(student_name=student_info, semester=previous_semester).exists():
+            student_last_semster_lessons = student_choosing_lesson.objects.filter(student_name=student_info, semester=previous_semester)
+            
+            average_semester_score = 0
+            score_x_unit = 0
+            unit = 0
+            for i in student_last_semster_lessons:
+                grade_obj = Grade.objects.filter(student_name=student_info, lesson_name=i.chosen_class).order_by("modified").last()
+                unit += i.chosen_class.lesson_code.unit
+                score_x_unit += (grade_obj.mark * i.chosen_class.lesson_code.unit)
+            average_semester_score = score_x_unit / unit
+
+            if average_semester_score >= 17:
+                return 24
+            elif average_semester_score <= 12:
+                return 12
+            else:
+                return 20
+        else:
+            return 20
+    else:
+        return -1
 
 
-            if overall_units + class_info.lesson_code.unit > max_unit:
-                return True
 
-    except student_choosing_lesson.DoesNotExist:
-        student_choosing_lesson.objects.create(student_name=student_info,
-                                                            chosen_class=class_info,
-                                                            semester=request.session.get("semester"))
-    return False
+"""
+? False means student still can choose class / True means the student will exceed the limit
+"""
+def check_overall_unit_picked(request, student_info, max_unit, chosen_class) -> bool:
+    if request.session["chosen_classes"] == []:
+        return False
+    else:
+        overall_unit = 0
+        for i in request.session["chosen_classes"]:
+            class_info = lesson_class.objects.get(id=i)
+            overall_unit += class_info.lesson_code.unit
+        
+        overall_unit += chosen_class.lesson_code.unit
+        
+        if overall_unit > max_unit:
+            return True
+        else:
+            return False
+
 
 
 def check_lesson_requirements_status(class_info, student_info) -> bool:

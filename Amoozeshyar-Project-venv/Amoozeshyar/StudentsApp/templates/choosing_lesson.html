@@ -1,57 +1,149 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}انتخاب واحد{% endblock title %}
 
 {% block content %}
-
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-    
-    <form method="POST">
-        {% csrf_token %}
-        {{form_searching.as_p}}
-        <button>جستجو</button>
-    </form>
-    <br><br>
-
-    {% include "showing_the_chosen_lessons.html" with chosen_classes=chosen_classes %}
-
-    <h2> نتیجه جستجو </h2>
-    {% if flag %}
-        <h2>درسی پیدا نشد</h2>
-    
-    {% else %}
-        <form method="POST" action="{% url 'student:pre_save' %}">
-            {% csrf_token %}
-            <table>
-                <tr>
-                    <th> زمان برگزاری </th>
-                    <th> روز برگزاری </th>
-                    <th> نام استاد </th>
-                    <th> نام درس </th>
-                    <th> کد درس </th>
-                    <th>  </th>
-                </tr>
-                {% for i, j in available_classes.items %}
-                    <tr>
-                        <td> {{j.5}} </td>
-                        <td> {{j.4}} </td>
-                        <td> {{j.2}} </td>
-                        <td> {{j.1}} </td>
-                        <td> {{j.3}} </td>
-                        <th>  <input type="radio" id="{{ i }}" name="chosen_class" value="{{ j.0 }}"> </th>
-                    </tr>
-
-                {% endfor %}
-            </table>
-            <button type="submit">انتخاب</button>
-        </form>
-
-    {% endif %}
+    <link rel="stylesheet" href="{% static 'choosing_lesson.css' %}">
+    <div class="content-wrapper">
         
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                        <span class="message-icon">
+                            {% if message.tags == 'success' %}✓
+                            {% elif message.tags == 'error' %}✗
+                            {% elif message.tags == 'warning' %}⚠
+                            {% elif message.tags == 'info' %}ℹ
+                            {% endif %}
+                        </span>
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        
+        <div class="search-section">
+            <h3 class="search-title">جستجوی درس</h3>
+            <form method="POST" class="search-form">
+                {% csrf_token %}
+                <div class="form-grid">
+                    {{ form_searching.as_p }}
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-search">
+                        <span class="btn-icon">🔍</span>
+                        جستجو
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        {% include "showing_the_chosen_lessons.html" with chosen_classes=chosen_classes %}
+
+        <div class="results-section">
+            <h2 class="section-title">
+                <span class="title-icon">📚</span>
+                نتیجه جستجو
+            </h2>
+            
+            {% if flag %}
+                <div class="no-results">
+                    <div class="no-results-icon">🔍</div>
+                    <h3>درسی پیدا نشد</h3>
+                    <p>لطفاً معیارهای جستجوی خود را تغییر دهید</p>
+                </div>
+            {% else %}
+                <form method="POST" action="{% url 'student:pre_save' %}" class="selection-form">
+                    {% csrf_token %}
+                    <div class="table-responsive">
+                        <table class="courses-table">
+                            <thead>
+                                <tr>
+                                    <th>انتخاب</th>
+                                    <th>کد درس</th>
+                                    <th>نام درس</th>
+                                    <th>نام استاد</th>
+                                    <th>روز برگزاری</th>
+                                    <th>زمان برگزاری</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i, j in available_classes.items %}
+                                    <tr class="course-row">
+                                        <td class="radio-cell">
+                                            <input type="radio" 
+                                                id="class_{{ i }}" 
+                                                name="chosen_class" 
+                                                value="{{ j.0 }}"
+                                                class="course-radio">
+                                        </td>
+                                        <td>
+                                            <span class="code-badge">{{ j.3 }}</span>
+                                        </td>
+                                        <td class="course-name">{{ j.1 }}</td>
+                                        <td class="professor-name">
+                                            <span class="professor-icon">👨‍🏫</span>
+                                            {{ j.2 }}
+                                        </td>
+                                        <td>
+                                            <span class="day-badge">{{ j.4 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="time-icon">🕐</span>
+                                            {{ j.5 }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">
+                            <span class="btn-icon">✓</span>
+                            انتخاب درس
+                        </button>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const rows = document.querySelectorAll('.course-row');
+            const radios = document.querySelectorAll('.course-radio');
+            
+            // Make entire row clickable
+            rows.forEach(row => {
+                row.addEventListener('click', function(e) {
+                    if (e.target.type !== 'radio') {
+                        const radio = this.querySelector('.course-radio');
+                        if (radio) {
+                            radio.checked = true;
+                            radio.dispatchEvent(new Event('change'));
+                        }
+                    }
+                });
+            });
+            
+            // Add visual feedback when radio is selected
+            radios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    rows.forEach(row => row.classList.remove('selected-row'));
+                    if (this.checked) {
+                        this.closest('.course-row').classList.add('selected-row');
+                    }
+                });
+            });
+            
+            // Initialize selected row if any
+            const checkedRadio = document.querySelector('.course-radio:checked');
+            if (checkedRadio) {
+                checkedRadio.closest('.course-row').classList.add('selected-row');
+            }
+        });
+    </script>
 {% endblock content %}

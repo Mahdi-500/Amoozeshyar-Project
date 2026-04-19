@@ -1,36 +1,143 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}جستجوی درس{% endblock title %}
 
 {% block content %}
+    <link rel="stylesheet" href="{% static 'lesson_search_result.css' %}">
+    <div class="content-wrapper">
+        
+        <h1 class="page-title">
+            <span class="page-title-icon">🔍</span>
+            جستجوی درس
+        </h1>
+        
+        <div class="search-form-container">
+            <div class="search-form-title">
+                <span class="search-form-title-icon">📝</span>
+                فیلترهای جستجو
+            </div>
+            
+            <form method="POST" enctype="multipart/form-data" class="search-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn-search-submit">
+                    <span class="btn-search-submit-icon">🔎</span>
+                    جستجو
+                </button>
+            </form>
+        </div>
 
-    <form method="POST", enctype="multipart/form-data">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="Submit">جتسجو</button>
-    </form>
-
-    {% if request.path == "/choosing_lesson" %}
-        {% include "showing_the_chosen_lessons.html" with chosen_classes=chosen_classes %}
-    {% endif %}
-    <br><br>
-
-    {% if flag %}
-        {% if result %}
-            {% for r in result  %}
-                کد درس: {{r.lesson_code}}  &nbsp;&nbsp;  نام استاد: {{r.professor_name}}  &nbsp;&nbsp;  روز تشکیل: {{r.class_day}}  &nbsp;&nbsp;  مکان برگزاری: {{r.university_location}}
-                <br><br>
-            {% endfor %}
-        {% else %}
-            <h2>درسی پیدا نشد</h2>
+        {% if flag %}
+            <div class="results-section">
+                <div class="results-title">
+                    <span class="results-title-icon">📊</span>
+                    نتایج جستجو
+                    {% if result %}
+                        <span class="results-count">{{ result|length }} نتیجه</span>
+                    {% endif %}
+                </div>
+                
+                <div class="results-container">
+                    {% if result %}
+                        {% for r in result %}
+                            <div class="result-card">
+                                <div class="result-header">
+                                    <span class="course-code-badge">{{ r.lesson_code.code }}</span>
+                                    <span class="course-name-header">{{ r.lesson_code.name }}</span>
+                                </div>
+                                
+                                <div class="result-info-grid">
+                                    <div class="result-info-item">
+                                        <span class="result-info-icon">👨‍🏫</span>
+                                        <span class="result-info-label">نام استاد:</span>
+                                        <span class="result-info-value professor-name">{{ r.professor_name }}</span>
+                                    </div>
+                                    
+                                    <div class="result-info-item">
+                                        <span class="result-info-icon">📅</span>
+                                        <span class="result-info-label">روز تشکیل:</span>
+                                        <span class="result-info-value">
+                                            <span class="day-badge">{{ r.class_day }}</span>
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="result-info-item">
+                                        <span class="result-info-icon">📍</span>
+                                        <span class="result-info-label">مکان برگزاری:</span>
+                                        <span class="result-info-value location-text">{{ r.university_location }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-results">
+                            <div class="no-results-icon">📭</div>
+                            <h2>درسی پیدا نشد</h2>
+                            <p>لطفاً معیارهای جستجوی دیگری را امتحان کنید</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         {% endif %}
-    {% endif %}
 
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation delay to result cards
+            const cards = document.querySelectorAll('.result-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.05}s`;
+            });
+            
+            // Form validation visual feedback
+            const form = document.querySelector('.search-form');
+            const inputs = form.querySelectorAll('input, select, textarea');
+            
+            inputs.forEach(input => {
+                input.addEventListener('invalid', function(e) {
+                    this.style.borderColor = '#dc2626';
+                });
+                
+                input.addEventListener('input', function() {
+                    if (this.validity.valid) {
+                        this.style.borderColor = '#cbd5e1';
+                    }
+                });
+            });
+            
+            // Add loading state to submit button
+            form.addEventListener('submit', function() {
+                const btn = this.querySelector('.btn-search-submit');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span class="btn-search-submit-icon">⏳</span> در حال جستجو...';
+                btn.disabled = true;
+                btn.style.opacity = '0.8';
+                
+                // Re-enable after 5 seconds (fallback)
+                setTimeout(() => {
+                    if (btn.disabled) {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        btn.style.opacity = '1';
+                    }
+                }, 5000);
+            });
+            
+            // Print result count in console (for debugging)
+            const resultCount = document.querySelector('.results-count');
+            if (resultCount) {
+                console.log(`Number of search results: ${resultCount.textContent}`);
+            }
+        });
+    </script>
 {% endblock content %}

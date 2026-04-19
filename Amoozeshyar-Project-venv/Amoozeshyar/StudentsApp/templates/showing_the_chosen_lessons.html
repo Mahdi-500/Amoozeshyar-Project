@@ -1,29 +1,99 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-    <h2> دروس انتخاب شده </h2>
-    {% if chosen_classes %}
-        <table>
-            <tr>
-                <th> زمان برگزاری </th>
-                <th> روز برگزاری </th>
-                <th> نام استاد </th>
-                <th> نام درس </th>
-                <th> کد درس </th>
-            </tr>
-            {% for i,j in chosen_classes.items %}
-                <tr>
-                    <td> {{j.4}} </td>
-                    <td> {{j.3}} </td>
-                    <td> {{j.1}} </td>
-                    <td> {{j.0}} </td>
-                    <td> {{j.2}} </td>
-                </tr>
-            {% endfor %}
-        </table>
-        <button onclick="window.location.href='{% url 'student:submit' %}';">ذخیره</button>
-        <br><br>
-    {% else %}
-        هنوز درسی انتخاب نکرید
-    {% endif %}
+
+    <link rel="stylesheet" href="{% static 'showing_the_chosen_lessons.css' %}">
+
+    <div class="chosen-lessons-section">
+        <h2 class="chosen-title">
+            <span class="chosen-title-icon">✅</span>
+            دروس انتخاب شده
+            {% if chosen_classes %}
+                <span class="chosen-count">{{ chosen_classes|length }} درس</span>
+            {% endif %}
+        </h2>
+        
+        {% if chosen_classes %}
+            <div class="chosen-table-wrapper">
+                <table class="chosen-table">
+                    <thead>
+                        <tr>
+                            <th>کد درس</th>
+                            <th>نام درس</th>
+                            <th>نام استاد</th>
+                            <th>روز برگزاری</th>
+                            <th>زمان برگزاری</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i, j in chosen_classes.items %}
+                            <tr class="chosen-row">
+                                <td>
+                                    <span class="code-badge-chosen">{{ j.2 }}</span>
+                                </td>
+                                <td class="course-name-cell">{{ j.0 }}</td>
+                                <td class="professor-name-chosen">
+                                    <span class="professor-icon-chosen">👨‍🏫</span>
+                                    {{ j.1 }}
+                                </td>
+                                <td>
+                                    <span class="day-badge-chosen">{{ j.3 }}</span>
+                                </td>
+                                <td>
+                                    <span class="time-icon-chosen">🕐</span>
+                                    {{ j.4 }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="chosen-actions">
+                <button onclick="window.location.href='{% url 'student:submit' %}'" class="btn-save">
+                    <span class="btn-save-icon">💾</span>
+                    ذخیره نهایی
+                </button>
+            </div>
+            
+        {% else %}
+            <div class="empty-chosen">
+                <div class="empty-icon">📋</div>
+                <p>هنوز درسی انتخاب نکردید</p>
+                <p style="font-size: 14px; margin-top: 8px;">از بخش جستجو، دروس مورد نظر خود را انتخاب کنید</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effect to rows
+            const rows = document.querySelectorAll('.chosen-row');
+            rows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transition = 'all 0.3s ease';
+                });
+            });
+            
+            // Animate count badge
+            const countBadge = document.querySelector('.chosen-count');
+            if (countBadge) {
+                countBadge.style.animation = 'slideIn 0.5s ease-out';
+            }
+            
+            // Confirm before save (optional)
+            const saveBtn = document.querySelector('.btn-save');
+            if (saveBtn) {
+                saveBtn.addEventListener('click', function(e) {
+                    const confirmed = confirm('آیا از ذخیره دروس انتخاب شده اطمینان دارید؟');
+                    if (!confirmed) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    }
+                });
+            }
+        });
+    </script>
 {% endblock content %}

@@ -1,0 +1,693 @@
+/* static/css/lesson_search.css */
+
+/* ============================================
+   UNIVERSITY LESSON SEARCH PAGE STYLES
+   For Students, Professors, and Staff
+   ============================================ */
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Vazirmatn', 'Segoe UI', 'Tahoma', 'Helvetica Neue', sans-serif;
+    direction: rtl;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 24px;
+    color: #1a2b3c;
+    line-height: 1.6;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 20, 40, 0.08);
+    padding: 32px;
+    border-top: 4px solid #1e3a5f;
+}
+
+/* Page Title */
+.page-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #1e3a5f;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #cbd5e1;
+}
+
+.page-title-icon {
+    font-size: 28px;
+    color: #2563eb;
+}
+
+/* ============================================
+   SEARCH FORM STYLES
+   ============================================ */
+.search-form-container {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 32px;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.search-form-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #1e3a5f;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 24px;
+}
+
+.search-form-title-icon {
+    font-size: 22px;
+    color: #2563eb;
+}
+
+.search-form {
+    width: 100%;
+}
+
+/* Form Fields Styling */
+.search-form p {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-form label {
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-form label::before {
+    content: "📋";
+    font-size: 16px;
+    opacity: 0.7;
+}
+
+.search-form input,
+.search-form select,
+.search-form textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: inherit;
+    background-color: #ffffff;
+    transition: all 0.25s ease;
+    color: #1e293b;
+}
+
+.search-form input:hover,
+.search-form select:hover,
+.search-form textarea:hover {
+    border-color: #94a3b8;
+}
+
+.search-form input:focus,
+.search-form select:focus,
+.search-form textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+    background-color: #ffffff;
+}
+
+.search-form input::placeholder,
+.search-form textarea::placeholder {
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+/* File Input Specific Styling */
+.search-form input[type="file"] {
+    padding: 10px 12px;
+    background-color: #f8fafc;
+    cursor: pointer;
+}
+
+.search-form input[type="file"]::-webkit-file-upload-button {
+    background: #1e3a5f;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    margin-left: 16px;
+    transition: all 0.25s ease;
+}
+
+.search-form input[type="file"]::-webkit-file-upload-button:hover {
+    background: #2563eb;
+}
+
+/* Help Text and Error Messages */
+.search-form .helptext {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.search-form .errorlist {
+    list-style: none;
+    margin-top: 6px;
+    padding: 0;
+}
+
+.search-form .errorlist li {
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.search-form .errorlist li::before {
+    content: "⚠️";
+    font-size: 14px;
+}
+
+/* Submit Button */
+.btn-search-submit {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    padding: 16px 36px;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    box-shadow: 0 6px 18px rgba(30, 58, 95, 0.25);
+    letter-spacing: 0.5px;
+}
+
+.btn-search-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+    background: linear-gradient(135deg, #2563eb 0%, #1e3a5f 100%);
+}
+
+.btn-search-submit:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+}
+
+.btn-search-submit-icon {
+    font-size: 20px;
+}
+
+/* ============================================
+   SEARCH RESULTS STYLES
+   ============================================ */
+.results-section {
+    margin-top: 32px;
+}
+
+.results-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #1e3a5f;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.results-title-icon {
+    font-size: 24px;
+    color: #2563eb;
+}
+
+.results-count {
+    background-color: #1e3a5f;
+    color: white;
+    padding: 4px 14px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 600;
+    margin-right: 12px;
+}
+
+/* Results List Container */
+.results-container {
+    background-color: #f8fafc;
+    border-radius: 14px;
+    padding: 24px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Individual Result Card */
+.result-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    border-right: 5px solid #2563eb;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.25s ease;
+    border: 1px solid #e2e8f0;
+    border-right: 5px solid #2563eb;
+}
+
+.result-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    transform: translateX(-4px);
+    border-right-color: #1e3a5f;
+}
+
+.result-card:last-child {
+    margin-bottom: 0;
+}
+
+/* Result Header - Course Title Section */
+.result-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed #cbd5e1;
+}
+
+.course-code-badge {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+    color: white;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 16px;
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+    min-width: 120px;
+    text-align: center;
+}
+
+.course-name-header {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.course-name-header::before {
+    content: "📖";
+    font-size: 20px;
+}
+
+/* Result Information Grid */
+.result-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px 24px;
+}
+
+.result-info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.result-info-icon {
+    font-size: 20px;
+    min-width: 24px;
+    text-align: center;
+    color: #2563eb;
+}
+
+.result-info-label {
+    font-weight: 600;
+    color: #64748b;
+    min-width: 90px;
+    font-size: 14px;
+}
+
+.result-info-value {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 16px;
+}
+
+/* Professor Name */
+.professor-name {
+    color: #1e3a5f;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Day Badge */
+.day-badge {
+    background-color: #334155;
+    color: white;
+    padding: 5px 14px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 14px;
+    display: inline-block;
+}
+
+/* Location */
+.location-text {
+    color: #475569;
+    font-weight: 500;
+}
+
+/* No Results Styling */
+.no-results {
+    text-align: center;
+    padding: 56px 24px;
+    background-color: #f8fafc;
+    border-radius: 14px;
+    border: 2px dashed #cbd5e1;
+}
+
+.no-results-icon {
+    font-size: 72px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+    color: #64748b;
+}
+
+.no-results h2 {
+    color: #334155;
+    font-size: 24px;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.no-results p {
+    color: #64748b;
+    font-size: 16px;
+}
+
+/* ============================================
+   MESSAGES STYLES
+   ============================================ */
+.messages {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0 0 0;
+}
+
+.messages li {
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.messages li::before {
+    font-size: 20px;
+}
+
+.messages .success {
+    background-color: #dcfce7;
+    color: #166534;
+    border-right: 5px solid #16a34a;
+}
+
+.messages .success::before {
+    content: "✅";
+}
+
+.messages .error {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border-right: 5px solid #dc2626;
+}
+
+.messages .error::before {
+    content: "❌";
+}
+
+.messages .warning {
+    background-color: #fef3c7;
+    color: #92400e;
+    border-right: 5px solid #d97706;
+}
+
+.messages .warning::before {
+    content: "⚠️";
+}
+
+.messages .info {
+    background-color: #dbeafe;
+    color: #1e40af;
+    border-right: 5px solid #2563eb;
+}
+
+.messages .info::before {
+    content: "ℹ️";
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result-card {
+    animation: slideInUp 0.4s ease-out;
+}
+
+.result-card:nth-child(1) { animation-delay: 0.05s; }
+.result-card:nth-child(2) { animation-delay: 0.10s; }
+.result-card:nth-child(3) { animation-delay: 0.15s; }
+.result-card:nth-child(4) { animation-delay: 0.20s; }
+.result-card:nth-child(5) { animation-delay: 0.25s; }
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+    body {
+        padding: 16px;
+    }
+    
+    .content-wrapper {
+        padding: 24px 18px;
+    }
+    
+    .page-title {
+        font-size: 22px;
+    }
+    
+    .search-form-container {
+        padding: 20px 16px;
+    }
+    
+    .search-form-title {
+        font-size: 18px;
+    }
+    
+    .btn-search-submit {
+        padding: 14px 24px;
+        font-size: 16px;
+    }
+    
+    .result-card {
+        padding: 16px;
+    }
+    
+    .result-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .course-code-badge {
+        min-width: auto;
+        font-size: 15px;
+        padding: 6px 16px;
+    }
+    
+    .course-name-header {
+        font-size: 16px;
+    }
+    
+    .result-info-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .result-info-item {
+        flex-wrap: wrap;
+    }
+    
+    .result-info-label {
+        min-width: 80px;
+    }
+    
+    .no-results {
+        padding: 40px 20px;
+    }
+    
+    .no-results-icon {
+        font-size: 56px;
+    }
+    
+    .no-results h2 {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content-wrapper {
+        padding: 20px 14px;
+    }
+    
+    .search-form label {
+        font-size: 14px;
+    }
+    
+    .search-form input,
+    .search-form select,
+    .search-form textarea {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+    
+    .result-card {
+        padding: 14px;
+    }
+    
+    .course-code-badge {
+        font-size: 14px;
+        padding: 5px 12px;
+    }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+    body {
+        background-color: white;
+        padding: 0;
+    }
+    
+    .content-wrapper {
+        box-shadow: none;
+        border-top: 2px solid #1e3a5f;
+        padding: 20px;
+    }
+    
+    .search-form-container,
+    .btn-search-submit,
+    .messages {
+        display: none;
+    }
+    
+    .result-card {
+        break-inside: avoid;
+        border: 1px solid #ccc;
+        box-shadow: none;
+        page-break-inside: avoid;
+    }
+    
+    .result-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .course-code-badge {
+        background: #1e3a5f !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .day-badge {
+        background: #334155 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High Contrast Focus Indicators */
+*:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #94a3b8;
+    border-radius: 10px;
+    border: 2px solid #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}

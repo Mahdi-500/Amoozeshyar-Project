@@ -1,0 +1,664 @@
+/* static/css/transcript.css */
+
+/* ============================================
+   UNIVERSITY TRANSCRIPT / GRADE REPORT STYLES
+   For Students - Academic Record Display
+   ============================================ */
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Vazirmatn', 'Segoe UI', 'Tahoma', 'Helvetica Neue', sans-serif;
+    direction: rtl;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 24px;
+    color: #1a2b3c;
+    line-height: 1.6;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 20, 40, 0.08);
+    padding: 32px;
+    border-top: 4px solid #1e3a5f;
+}
+
+/* Page Title */
+.page-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #1e3a5f;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid #2563eb;
+}
+
+.page-title-icon {
+    font-size: 32px;
+    color: #2563eb;
+}
+
+/* ============================================
+   SEMESTER SECTION STYLES
+   ============================================ */
+.semester-section {
+    margin-bottom: 40px;
+    background-color: #ffffff;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.semester-section:last-child {
+    margin-bottom: 0;
+}
+
+/* Semester Header */
+.semester-header {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2d5a8a 100%);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.semester-header-icon {
+    font-size: 24px;
+}
+
+.semester-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* ============================================
+   COURSES TABLE STYLES
+   ============================================ */
+.courses-table-wrapper {
+    overflow-x: auto;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+}
+
+.courses-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1000px;
+}
+
+.courses-table thead tr {
+    background: linear-gradient(135deg, #334155 0%, #475569 100%);
+}
+
+.courses-table th {
+    color: white;
+    padding: 14px 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.courses-table th:first-child {
+    border-radius: 0 0 0 0;
+}
+
+.courses-table th:last-child {
+    border-radius: 0 0 0 0;
+}
+
+.courses-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+    color: #1e293b;
+    font-size: 14px;
+}
+
+.courses-table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.courses-table tbody tr:hover {
+    background-color: #eef2ff;
+}
+
+.courses-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Course Code Badge */
+.course-code-cell {
+    font-weight: 600;
+    color: #2563eb;
+}
+
+.class-code-cell {
+    font-weight: 500;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.course-name-cell {
+    font-weight: 600;
+    color: #1e293b;
+    text-align: right !important;
+}
+
+.unit-cell {
+    font-weight: 600;
+    color: #334155;
+}
+
+/* Grade Styling */
+.grade-cell {
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.grade-pass {
+    color: #16a34a;
+    background-color: #dcfce7;
+    padding: 4px 8px;
+    border-radius: 20px;
+    display: inline-block;
+    font-weight: 700;
+}
+
+.grade-fail {
+    color: #dc2626;
+    background-color: #fee2e2;
+    padding: 4px 8px;
+    border-radius: 20px;
+    display: inline-block;
+    font-weight: 700;
+}
+
+.grade-pending {
+    color: #d97706;
+    background-color: #fef3c7;
+    padding: 4px 8px;
+    border-radius: 20px;
+    display: inline-block;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+/* Weighted Grade Cell */
+.weighted-grade-cell {
+    font-weight: 600;
+    color: #1e3a5f;
+}
+
+/* Status Badge */
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 13px;
+    display: inline-block;
+}
+
+.status-pass {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.status-fail {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.status-unknown {
+    background-color: #f1f5f9;
+    color: #64748b;
+}
+
+/* ============================================
+   SEMESTER SUMMARY CARD
+   ============================================ */
+.semester-summary {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-top: none;
+    padding: 20px 24px;
+    border-radius: 0 0 12px 12px;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.summary-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 12px 20px;
+    background-color: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.summary-label {
+    font-weight: 600;
+    color: #64748b;
+    font-size: 15px;
+}
+
+.summary-value {
+    font-weight: 700;
+    font-size: 20px;
+    color: #1e3a5f;
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.summary-value-small {
+    font-size: 16px;
+    color: #334155;
+    font-weight: 600;
+}
+
+/* Semester Divider */
+.semester-divider {
+    margin: 32px 0;
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #cbd5e1 50%, transparent 100%);
+}
+
+/* ============================================
+   OVERALL SUMMARY SECTION
+   ============================================ */
+.overall-section {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 3px solid #2563eb;
+}
+
+.overall-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #1e3a5f;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.overall-title-icon {
+    font-size: 26px;
+    color: #2563eb;
+}
+
+.overall-summary-container {
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+    border-radius: 16px;
+    padding: 28px;
+    border: 1px solid #cbd5e1;
+}
+
+.overall-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+.overall-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px 16px;
+    background-color: white;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e2e8f0;
+    transition: all 0.25s ease;
+}
+
+.overall-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.12);
+    border-color: #2563eb;
+}
+
+.overall-item-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+    color: #2563eb;
+}
+
+.overall-item-label {
+    font-weight: 600;
+    color: #64748b;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.overall-item-value {
+    font-weight: 800;
+    font-size: 28px;
+    color: #1e3a5f;
+}
+
+.overall-item-value-small {
+    font-weight: 700;
+    font-size: 18px;
+    color: #334155;
+}
+
+/* Main Overall Average - Highlighted */
+.overall-item-highlight {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+    border-color: #1e3a5f;
+}
+
+.overall-item-highlight .overall-item-icon,
+.overall-item-highlight .overall-item-label {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.overall-item-highlight .overall-item-value {
+    color: white;
+    font-size: 32px;
+}
+
+/* Lesson Type Categories */
+.lesson-type-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.lesson-type-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 18px;
+    background-color: white;
+    border-radius: 10px;
+    border-right: 4px solid #2563eb;
+}
+
+.lesson-type-name {
+    font-weight: 600;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.lesson-type-name::before {
+    content: "📚";
+    font-size: 16px;
+}
+
+.lesson-type-units {
+    font-weight: 700;
+    color: #1e3a5f;
+    background-color: #dbeafe;
+    padding: 4px 14px;
+    border-radius: 30px;
+    font-size: 15px;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+.empty-state {
+    text-align: center;
+    padding: 60px 24px;
+    background-color: #f8fafc;
+    border-radius: 14px;
+    border: 2px dashed #cbd5e1;
+}
+
+.empty-state-icon {
+    font-size: 72px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+    color: #64748b;
+}
+
+.empty-state h3 {
+    color: #334155;
+    font-size: 22px;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.empty-state p {
+    color: #64748b;
+    font-size: 16px;
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+    body {
+        background-color: white;
+        padding: 0;
+    }
+    
+    .content-wrapper {
+        box-shadow: none;
+        border-top: 2px solid #1e3a5f;
+        padding: 20px;
+    }
+    
+    .semester-header {
+        background: #1e3a5f !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .courses-table thead tr {
+        background: #334155 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .grade-pass,
+    .grade-fail,
+    .grade-pending,
+    .status-badge {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .overall-item-highlight {
+        background: #1e3a5f !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .semester-section {
+        page-break-inside: avoid;
+    }
+    
+    .overall-item:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+    body {
+        padding: 16px;
+    }
+    
+    .content-wrapper {
+        padding: 24px 18px;
+    }
+    
+    .page-title {
+        font-size: 24px;
+    }
+    
+    .semester-header h2 {
+        font-size: 18px;
+    }
+    
+    .semester-header {
+        padding: 12px 18px;
+    }
+    
+    .summary-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .summary-item {
+        justify-content: space-between;
+        padding: 12px 16px;
+    }
+    
+    .overall-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .lesson-type-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .overall-summary-container {
+        padding: 20px 16px;
+    }
+    
+    .overall-item-value {
+        font-size: 24px;
+    }
+    
+    .overall-item-highlight .overall-item-value {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content-wrapper {
+        padding: 20px 14px;
+    }
+    
+    .page-title {
+        font-size: 20px;
+    }
+    
+    .semester-header h2 {
+        font-size: 16px;
+    }
+    
+    .courses-table th,
+    .courses-table td {
+        padding: 8px 6px;
+        font-size: 12px;
+    }
+    
+    .summary-value {
+        font-size: 18px;
+    }
+    
+    .overall-item-label {
+        font-size: 14px;
+    }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.semester-section {
+    animation: fadeInUp 0.4s ease-out;
+}
+
+.semester-section:nth-child(1) { animation-delay: 0.05s; }
+.semester-section:nth-child(2) { animation-delay: 0.10s; }
+.semester-section:nth-child(3) { animation-delay: 0.15s; }
+.semester-section:nth-child(4) { animation-delay: 0.20s; }
+
+.overall-item {
+    animation: fadeInUp 0.3s ease-out;
+    animation-fill-mode: both;
+}
+
+.overall-item:nth-child(1) { animation-delay: 0.25s; }
+.overall-item:nth-child(2) { animation-delay: 0.30s; }
+.overall-item:nth-child(3) { animation-delay: 0.35s; }
+.overall-item:nth-child(4) { animation-delay: 0.40s; }
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+*:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #94a3b8;
+    border-radius: 10px;
+    border: 2px solid #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}

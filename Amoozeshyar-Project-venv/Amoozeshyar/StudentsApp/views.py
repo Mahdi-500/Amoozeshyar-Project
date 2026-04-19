@@ -405,6 +405,3 @@ def check_lesson_requirements_status(class_info, student_info) -> bool:
                     passed &= False
             
     return passed
-
-def testview(request):
-    print("hello world")

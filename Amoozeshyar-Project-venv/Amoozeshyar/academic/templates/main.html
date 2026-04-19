@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}صفحه اصلی{% endblock title %}
+{% comment %} {% block title %}صفحه اصلی{% endblock title %}
 
 {% block content %}
 
@@ -31,4 +32,212 @@
         </ul>
     {% endif %}
     
+{% endblock content %} {% endcomment %}
+
+
+{% block title %}صفحه اصلی{% endblock title %}
+
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+    <div class="content-wrapper">
+        
+        <div class="welcome-header">
+            <span class="university-logo">🎓</span>
+            <h1 class="welcome-title">سامانه آموزش دانشگاه</h1>
+            <p class="welcome-subtitle">به پورتال آموزشی خوش آمدید</p>
+            
+            {% if group.name == 'admin' %}
+                <span class="role-badge admin">👑 پنل مدیریت</span>
+            {% elif group.name == 'professor' %}
+                <span class="role-badge professor">👨‍🏫 پنل استاد</span>
+            {% elif group.name == 'student' %}
+                <span class="role-badge student">👨‍🎓 پنل دانشجو</span>
+            {% endif %}
+        </div>
+        
+        {% if group.name == 'admin' %}
+            <div class="welcome-message">
+                <div class="welcome-message-icon">🏛️</div>
+                <h3>مدیریت سیستم آموزشی</h3>
+                <p>از طریق گزینه‌های زیر می‌توانید کاربران و دروس را مدیریت نمایید</p>
+            </div>
+            
+            <div class="section-header">
+                <span class="section-icon">⚙️</span>
+                <h2 class="section-title admin">مدیریت کاربران</h2>
+            </div>
+            
+            <div class="dashboard-grid">
+                <a href="{% url 'student:register_student' %}" class="dashboard-card admin-card">
+                    <span class="card-icon">👨‍🎓</span>
+                    <span class="card-title">ثبت نام دانشجو</span>
+                    <span class="card-description">ایجاد حساب کاربری جدید برای دانشجویان</span>
+                </a>
+                
+                <a href="{% url 'professor:register_professor' %}" class="dashboard-card admin-card">
+                    <span class="card-icon">👨‍🏫</span>
+                    <span class="card-title">ثبت نام استاد</span>
+                    <span class="card-description">ایجاد حساب کاربری جدید برای اساتید</span>
+                </a>
+            </div>
+            
+            <div class="section-header">
+                <span class="section-icon">📚</span>
+                <h2 class="section-title admin">مدیریت دروس</h2>
+            </div>
+            
+            <div class="dashboard-grid">
+                <a href="{% url 'lesson:create_lesson' %}" class="dashboard-card admin-card">
+                    <span class="card-icon">📖</span>
+                    <span class="card-title">ایجاد درس</span>
+                    <span class="card-description">تعریف درس جدید در سیستم</span>
+                </a>
+                
+                <a href="{% url 'lesson:lesson_class' %}" class="dashboard-card admin-card">
+                    <span class="card-icon">🏫</span>
+                    <span class="card-title">ایجاد کلاس</span>
+                    <span class="card-description">تشکیل کلاس برای دروس تعریف شده</span>
+                </a>
+                
+                <a href="{% url 'student:lesson_search' %}" class="dashboard-card admin-card">
+                    <span class="card-icon">🔍</span>
+                    <span class="card-title">جستجوی کلاس درس</span>
+                    <span class="card-description">مشاهده و جستجو در کلاس‌های موجود</span>
+                </a>
+            </div>
+            
+        {% elif group.name == 'professor' %}
+            <div class="welcome-message">
+                <div class="welcome-message-icon">📝</div>
+                <h3>استاد گرامی، خوش آمدید</h3>
+                <p>از طریق پروفایل خود می‌توانید اطلاعات شخصی و دروس تدریسی را مشاهده نمایید</p>
+            </div>
+            
+            <div class="section-header">
+                <span class="section-icon">👤</span>
+                <h2 class="section-title professor">پروفایل استاد</h2>
+            </div>
+            
+            <div class="dashboard-grid">
+                <a href="{% url 'professor:professor_profile' %}" class="dashboard-card professor-card">
+                    <span class="card-icon">📋</span>
+                    <span class="card-title">پروفایل</span>
+                    <span class="card-description">مشاهده و ویرایش اطلاعات شخصی و دروس تدریسی</span>
+                </a>
+            </div>
+            
+        {% elif group.name == 'student' %}
+            <div class="welcome-message">
+                <div class="welcome-message-icon">🎯</div>
+                <h3>دانشجوی گرامی، خوش آمدید</h3>
+                <p>از طریق گزینه‌های زیر می‌توانید امور آموزشی خود را مدیریت نمایید</p>
+            </div>
+            
+            <div class="section-header">
+                <span class="section-icon">📅</span>
+                <h2 class="section-title student">امور آموزشی</h2>
+            </div>
+            
+            <div class="dashboard-grid">
+                <a href="{% url 'student:lesson_search' %}" class="dashboard-card student-card">
+                    <span class="card-icon">🔍</span>
+                    <span class="card-title">جستجوی کلاس درس</span>
+                    <span class="card-description">جستجو و مشاهده کلاس‌های درسی موجود</span>
+                </a>
+                
+                <a href="{% url 'student:choosing_lesson' %}" class="dashboard-card student-card">
+                    <span class="card-icon">✅</span>
+                    <span class="card-title">انتخاب واحد</span>
+                    <span class="card-description">انتخاب دروس برای ترم تحصیلی جاری</span>
+                </a>
+                
+                <a href="{% url 'student:student_report' %}" class="dashboard-card student-card">
+                    <span class="card-icon">📜</span>
+                    <span class="card-title">کارنامه</span>
+                    <span class="card-description">مشاهده نمرات و سوابق تحصیلی</span>
+                </a>
+            </div>
+            
+        {% else %}
+            <div class="empty-actions">
+                <div class="empty-actions-icon">🔒</div>
+                <h3>نقش کاربری مشخص نشده است</h3>
+                <p>لطفاً با مدیر سیستم تماس بگیرید</p>
+            </div>
+        {% endif %}
+        
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-hide messages after 5 seconds
+            const messages = document.querySelectorAll('.messages li');
+            messages.forEach((message, index) => {
+                setTimeout(() => {
+                    message.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                    message.style.opacity = '0';
+                    message.style.transform = 'translateX(100px)';
+                    setTimeout(() => {
+                        if (message.parentNode) {
+                            message.remove();
+                        }
+                    }, 400);
+                }, 5000 + (index * 500));
+            });
+            
+            // Add click ripple effect to cards (optional)
+            const cards = document.querySelectorAll('.dashboard-card');
+            cards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    ripple.style.cssText = `
+                        position: absolute;
+                        background: rgba(255, 255, 255, 0.5);
+                        border-radius: 50%;
+                        pointer-events: none;
+                        width: 100px;
+                        height: 100px;
+                        transform: translate(-50%, -50%) scale(0);
+                        animation: ripple 0.6s ease-out;
+                    `;
+                    
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    
+                    this.style.position = 'relative';
+                    this.style.overflow = 'hidden';
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => ripple.remove(), 600);
+                });
+            });
+        });
+        
+        // Add ripple animation dynamically
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: translate(-50%, -50%) scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 {% endblock content %}

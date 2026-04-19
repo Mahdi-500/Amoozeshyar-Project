@@ -1,0 +1,582 @@
+/* static/css/home.css */
+
+/* ============================================
+   UNIVERSITY HOME PAGE / DASHBOARD STYLES
+   For Students, Professors, and Admin Staff
+   ============================================ */
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Vazirmatn', 'Segoe UI', 'Tahoma', 'Helvetica Neue', sans-serif;
+    direction: rtl;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+    min-height: 100vh;
+    margin: 0;
+    padding: 24px;
+    color: #1a2b3c;
+    line-height: 1.6;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Welcome Header */
+.welcome-header {
+    text-align: center;
+    margin-bottom: 48px;
+    animation: fadeInDown 0.6s ease-out;
+}
+
+.university-logo {
+    font-size: 64px;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.welcome-title {
+    font-size: 36px;
+    font-weight: 800;
+    color: #1e3a5f;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.welcome-subtitle {
+    font-size: 18px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Role Badge */
+.role-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+    color: white;
+    padding: 8px 24px;
+    border-radius: 40px;
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 16px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.role-badge.admin {
+    background: linear-gradient(135deg, #7c2d12 0%, #ea580c 100%);
+    box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);
+}
+
+.role-badge.professor {
+    background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+}
+
+.role-badge.student {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+/* ============================================
+   DASHBOARD CARDS GRID
+   ============================================ */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+/* Dashboard Card */
+.dashboard-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px 24px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.5s ease-out;
+    animation-fill-mode: both;
+}
+
+.dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.dashboard-card:hover::before {
+    transform: scaleX(1);
+}
+
+.dashboard-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    border-color: #2563eb;
+}
+
+/* Card Variations by Role */
+.dashboard-card.admin-card::before {
+    background: linear-gradient(135deg, #7c2d12 0%, #ea580c 100%);
+}
+
+.dashboard-card.admin-card:hover {
+    border-color: #ea580c;
+}
+
+.dashboard-card.professor-card::before {
+    background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+}
+
+.dashboard-card.professor-card:hover {
+    border-color: #059669;
+}
+
+.dashboard-card.student-card::before {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+}
+
+.dashboard-card.student-card:hover {
+    border-color: #2563eb;
+}
+
+/* Card Icon */
+.card-icon {
+    font-size: 56px;
+    margin-bottom: 20px;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.dashboard-card:hover .card-icon {
+    transform: scale(1.1);
+}
+
+/* Card Title */
+.card-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+/* Card Description */
+.card-description {
+    font-size: 14px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+/* ============================================
+   SECTION HEADERS
+   ============================================ */
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 40px 0 24px 0;
+}
+
+.section-header:first-of-type {
+    margin-top: 0;
+}
+
+.section-icon {
+    font-size: 28px;
+    color: #2563eb;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e3a5f;
+}
+
+.section-title.admin {
+    color: #7c2d12;
+}
+
+.section-title.professor {
+    color: #064e3b;
+}
+
+.section-title.student {
+    color: #1e3a5f;
+}
+
+/* ============================================
+   QUICK ACTIONS / STATS BAR
+   ============================================ */
+.quick-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e2e8f0;
+}
+
+.stat-number {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1e3a5f;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* ============================================
+   MESSAGES STYLES
+   ============================================ */
+.messages {
+    list-style: none;
+    padding: 0;
+    margin: 32px 0 0 0;
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    max-width: 400px;
+    z-index: 1000;
+}
+
+.messages li {
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    animation: slideInRight 0.4s ease-out;
+    backdrop-filter: blur(8px);
+}
+
+.messages li::before {
+    font-size: 20px;
+}
+
+.messages .success {
+    background-color: rgba(220, 252, 231, 0.95);
+    color: #166534;
+    border-right: 5px solid #16a34a;
+}
+
+.messages .success::before {
+    content: "✅";
+}
+
+.messages .error {
+    background-color: rgba(254, 226, 226, 0.95);
+    color: #991b1b;
+    border-right: 5px solid #dc2626;
+}
+
+.messages .error::before {
+    content: "❌";
+}
+
+.messages .warning {
+    background-color: rgba(254, 243, 199, 0.95);
+    color: #92400e;
+    border-right: 5px solid #d97706;
+}
+
+.messages .warning::before {
+    content: "⚠️";
+}
+
+.messages .info {
+    background-color: rgba(219, 234, 254, 0.95);
+    color: #1e40af;
+    border-right: 5px solid #2563eb;
+}
+
+.messages .info::before {
+    content: "ℹ️";
+}
+
+/* ============================================
+   WELCOME MESSAGE FOR EACH ROLE
+   ============================================ */
+.welcome-message {
+    background: white;
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 32px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+}
+
+.welcome-message-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.welcome-message h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.welcome-message p {
+    color: #64748b;
+    font-size: 16px;
+}
+
+/* ============================================
+   EMPTY STATE (No Actions)
+   ============================================ */
+.empty-actions {
+    text-align: center;
+    padding: 48px 24px;
+    background: white;
+    border-radius: 20px;
+    border: 2px dashed #cbd5e1;
+}
+
+.empty-actions-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.empty-actions h3 {
+    color: #334155;
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.empty-actions p {
+    color: #64748b;
+    font-size: 15px;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Animation Delays for Cards */
+.dashboard-card:nth-child(1) { animation-delay: 0.05s; }
+.dashboard-card:nth-child(2) { animation-delay: 0.10s; }
+.dashboard-card:nth-child(3) { animation-delay: 0.15s; }
+.dashboard-card:nth-child(4) { animation-delay: 0.20s; }
+.dashboard-card:nth-child(5) { animation-delay: 0.25s; }
+.dashboard-card:nth-child(6) { animation-delay: 0.30s; }
+.dashboard-card:nth-child(7) { animation-delay: 0.35s; }
+.dashboard-card:nth-child(8) { animation-delay: 0.40s; }
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+    body {
+        padding: 16px;
+    }
+    
+    .welcome-title {
+        font-size: 28px;
+    }
+    
+    .welcome-subtitle {
+        font-size: 16px;
+    }
+    
+    .role-badge {
+        font-size: 16px;
+        padding: 6px 18px;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .dashboard-card {
+        padding: 20px 18px;
+    }
+    
+    .card-icon {
+        font-size: 44px;
+    }
+    
+    .card-title {
+        font-size: 18px;
+    }
+    
+    .section-title {
+        font-size: 20px;
+    }
+    
+    .messages {
+        left: 16px;
+        bottom: 16px;
+        right: 16px;
+        max-width: none;
+    }
+    
+    .welcome-message {
+        padding: 24px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-title {
+        font-size: 24px;
+    }
+    
+    .university-logo {
+        font-size: 48px;
+    }
+    
+    .section-header {
+        margin: 30px 0 18px 0;
+    }
+    
+    .quick-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+    body {
+        background: white;
+        padding: 0;
+    }
+    
+    .dashboard-card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        break-inside: avoid;
+    }
+    
+    .dashboard-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .messages {
+        display: none;
+    }
+    
+    .role-badge {
+        background: #1e3a5f !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+*:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+}
+
+.dashboard-card:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 4px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #94a3b8;
+    border-radius: 10px;
+    border: 2px solid #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}

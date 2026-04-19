@@ -1,0 +1,245 @@
+/* static/css/chosen_lessons.css */
+
+/* Chosen Lessons Section */
+.chosen-lessons-section {
+    margin: 30px 0;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid #e9ecef;
+}
+
+.chosen-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #2c3e50;
+    font-size: 22px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #27ae60;
+}
+
+.chosen-title-icon {
+    font-size: 24px;
+}
+
+/* Table Styling */
+.chosen-table-wrapper {
+    overflow-x: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    margin-bottom: 20px;
+}
+
+.chosen-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    min-width: 700px;
+}
+
+.chosen-table thead tr {
+    background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+}
+
+.chosen-table th {
+    color: white;
+    padding: 14px 12px;
+    text-align: right;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.chosen-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e9ecef;
+    text-align: right;
+    color: #2c3e50;
+}
+
+.chosen-table tbody tr:hover {
+    background-color: #f0fff4;
+}
+
+.chosen-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Table Cell Styling */
+.course-name-cell {
+    font-weight: 600;
+    color: #27ae60;
+}
+
+.course-code-cell {
+    font-weight: 500;
+}
+
+.code-badge-chosen {
+    background-color: #27ae60;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.day-badge-chosen {
+    background-color: #7f8c8d;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.professor-name-chosen {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.professor-icon-chosen,
+.time-icon-chosen {
+    opacity: 0.7;
+    font-size: 14px;
+}
+
+/* Empty State */
+.empty-chosen {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: white;
+    border-radius: 10px;
+    border: 2px dashed #dee2e6;
+}
+
+.empty-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+.empty-chosen p {
+    color: #6c757d;
+    font-size: 16px;
+    margin: 0;
+}
+
+/* Save Button */
+.chosen-actions {
+    text-align: left;
+    margin-top: 20px;
+}
+
+.btn-save {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+}
+
+.btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
+    background: linear-gradient(135deg, #229954 0%, #1e8449 100%);
+}
+
+.btn-save:active {
+    transform: translateY(0);
+}
+
+.btn-save-icon {
+    font-size: 18px;
+}
+
+/* Counter Badge */
+.chosen-count {
+    background-color: #27ae60;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+/* Animation */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chosen-table tbody tr {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .chosen-lessons-section {
+        padding: 20px 15px;
+    }
+    
+    .chosen-title {
+        font-size: 20px;
+    }
+    
+    .btn-save {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .chosen-table {
+        font-size: 13px;
+    }
+    
+    .chosen-table th,
+    .chosen-table td {
+        padding: 10px 8px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .chosen-lessons-section {
+        background-color: white;
+        border: 1px solid #ddd;
+        box-shadow: none;
+    }
+    
+    .btn-save {
+        display: none;
+    }
+    
+    .chosen-table thead tr {
+        background: #f1f1f1 !important;
+        color: black;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .chosen-table th {
+        color: black !important;
+        border-bottom: 2px solid #333;
+    }
+}

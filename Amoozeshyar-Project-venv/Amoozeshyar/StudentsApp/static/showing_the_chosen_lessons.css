@@ -1,5 +1,3 @@
-/* static/css/chosen_lessons.css */
-
 /* Chosen Lessons Section */
 .chosen-lessons-section {
     margin: 30px 0;
@@ -36,7 +34,7 @@
     width: 100%;
     border-collapse: collapse;
     background-color: white;
-    min-width: 700px;
+    min-width: 800px;
 }
 
 .chosen-table thead tr {
@@ -53,6 +51,10 @@
     letter-spacing: 0.5px;
 }
 
+.chosen-table th:last-child {
+    text-align: center;
+}
+
 .chosen-table td {
     padding: 12px;
     border-bottom: 1px solid #e9ecef;
@@ -66,6 +68,112 @@
 
 .chosen-table tbody tr:last-child td {
     border-bottom: none;
+}
+
+/* Action Cell */
+.action-cell {
+    text-align: center !important;
+    vertical-align: middle;
+}
+
+.btn-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-delete:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+}
+
+.btn-delete:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+}
+
+.delete-icon {
+    font-size: 14px;
+}
+
+/* Table Footer - Summary Rows */
+.chosen-table tfoot {
+    border-top: 3px solid #27ae60;
+}
+
+.chosen-table tfoot tr:first-child td {
+    padding-top: 16px;
+}
+
+.summary-row {
+    background-color: #f8fcf9;
+    transition: all 0.2s ease;
+}
+
+.summary-row:hover {
+    background-color: #e8f5e9;
+}
+
+.summary-label-cell {
+    font-weight: 700;
+    color: #1e3a5f;
+    font-size: 15px;
+    text-align: right !important;
+    padding: 14px 12px !important;
+    border-bottom: 1px solid #d4e6d8;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.summary-icon {
+    font-size: 18px;
+    display: inline-block;
+    width: 24px;
+    text-align: center;
+}
+
+.summary-value-cell {
+    font-weight: 800;
+    font-size: 16px;
+    text-align: center !important;
+    padding: 14px 12px !important;
+    border-bottom: 1px solid #d4e6d8;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+
+.max-units-row .summary-value-cell {
+    color: #1e40af;
+    border-right: 3px solid #3b82f6;
+}
+
+.taken-units-row .summary-value-cell {
+    color: #166534;
+    border-right: 3px solid #16a34a;
+}
+
+.taken-units-row td {
+    border-bottom: none;
+}
+
+.summary-placeholder {
+    color: #94a3b8;
+    font-weight: 500;
+    font-size: 18px;
 }
 
 /* Table Cell Styling */
@@ -211,11 +319,62 @@
     
     .chosen-table {
         font-size: 13px;
+        min-width: 700px;
     }
     
     .chosen-table th,
     .chosen-table td {
-        padding: 10px 8px;
+        padding: 10px 6px;
+    }
+    
+    .btn-delete {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .delete-icon {
+        font-size: 12px;
+    }
+    
+    .summary-label-cell {
+        font-size: 14px;
+        padding: 12px 8px !important;
+    }
+    
+    .summary-value-cell {
+        font-size: 15px;
+        padding: 12px 8px !important;
+    }
+    
+    .summary-icon {
+        font-size: 16px;
+        width: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-delete span {
+        display: none;
+    }
+    
+    .btn-delete {
+        padding: 8px;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+    }
+    
+    .delete-icon {
+        font-size: 16px;
+        margin: 0;
+    }
+    
+    .summary-label-cell {
+        gap: 6px;
+    }
+    
+    .summary-placeholder {
+        font-size: 16px;
     }
 }
 
@@ -227,7 +386,14 @@
         box-shadow: none;
     }
     
-    .btn-save {
+    .btn-save,
+    .btn-delete,
+    .action-cell {
+        display: none;
+    }
+    
+    .chosen-table th:last-child,
+    .chosen-table td:last-child {
         display: none;
     }
     
@@ -241,5 +407,21 @@
     .chosen-table th {
         color: black !important;
         border-bottom: 2px solid #333;
+    }
+    
+    .chosen-table tfoot {
+        border-top: 2px solid #333;
+    }
+    
+    .summary-row {
+        background-color: #f9f9f9 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .summary-value-cell {
+        background: #f0f0f0 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 }

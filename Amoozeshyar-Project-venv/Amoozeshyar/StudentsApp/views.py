@@ -101,6 +101,11 @@ def student_lesson_search_view(request):
 @login_required(login_url=settings.LOGIN_URL)
 def choosing_lesson_form_view(request):
     chosen_classes = showing_the_chosen_lesson_before_saving(class_info_id=request.session['chosen_classes'])
+    student_info = student.objects.get(student_number=request.user.username)
+    max_unit = maximum_unit_allowed(student_info)
+    sum_of_the_chosen_units = 0
+    for i,j in chosen_classes.items():
+        sum_of_the_chosen_units += int(j[5])
 
     if request.method == "POST":
         form_searching = StudentLessonSearchForm(data=request.POST)
@@ -109,7 +114,6 @@ def choosing_lesson_form_view(request):
         temp = []
         if form_searching.is_valid():
 
-            student_info = student.objects.get(student_number=request.user.username)
             semester = int(set_semester())
             data = {
                 "name": form_searching.cleaned_data["query_lesson_name"],
@@ -142,20 +146,30 @@ def choosing_lesson_form_view(request):
 
                 request.session["semester"] = set_semester()
 
-            
+            sum_of_the_chosen_units = 0
+            for i,j in chosen_classes.items():
+                sum_of_the_chosen_units += int(j[5])
 
             context = {
                 "form_searching": form_searching,
                 "available_classes":available_classes,
                 "flag":flag,
-                "chosen_classes":chosen_classes
+                "chosen_classes":chosen_classes,
+                "max_unit":max_unit,
+                "sum_of_the_chosen_units":sum_of_the_chosen_units,
             }
             return render(request, "choosing_lesson.html", context)
     
     else:
         form_searching = StudentLessonSearchForm()
+        context = {
+            "form_searching":form_searching,
+            "chosen_classes":chosen_classes,
+            "max_unit":max_unit,
+            "sum_of_the_chosen_units":sum_of_the_chosen_units,
+        }
 
-    return render(request, "choosing_lesson.html", {"form_searching":form_searching, "chosen_classes":chosen_classes})
+    return render(request, "choosing_lesson.html", context)
 
 
 
@@ -165,7 +179,7 @@ def showing_the_chosen_lesson_before_saving(class_info_id):
     for i in class_info_id:
         obj = lesson_class.objects.get(id=i)
         chosen_classes[loop_couner] = [obj.lesson_code.name, obj.professor_name, obj.lesson_code.code, 
-                                        obj.class_day, f"{obj.class_end_time} تا {obj.class_start_time}"]
+                                        obj.class_day, f"{obj.class_end_time} تا {obj.class_start_time}", obj.lesson_code.unit, i]
         loop_couner += 1
     
     return chosen_classes
@@ -247,6 +261,18 @@ def submiting_the_chosen_lesson(request):
                                                 chosen_class=class_info,
                                                 semester=request.session.get("semester"))
     messages.success(request, "درس های انتخابی با موفقیت ذخیره شدند")   # + success
+    return redirect("student:choosing_lesson")
+
+
+
+def deleting_chosen_lesson(request, lesson_class_id):
+    current_semester = set_semester()
+    if student_choosing_lesson.objects.filter(semester=current_semester, chosen_class=lesson_class_id).exists():
+        student_choosing_lesson.objects.filter(semester=current_semester, chosen_class=lesson_class_id).delete()
+    chosen_classes = request.session["chosen_classes"]
+    chosen_classes.remove(lesson_class_id)
+    request.session["chosen_classes"] = chosen_classes
+    messages.success(request, "درس با موفقیت حذف شد")
     return redirect("student:choosing_lesson")
 
 

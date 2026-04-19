@@ -24,6 +24,7 @@
                             <th>نام استاد</th>
                             <th>روز برگزاری</th>
                             <th>زمان برگزاری</th>
+                            <th>عملیات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,9 +45,35 @@
                                     <span class="time-icon-chosen">🕐</span>
                                     {{ j.4 }}
                                 </td>
+                                <td class="action-cell">
+                                    <a href="{% url 'student:delete_lesson' j.6 %}" class="btn-delete" title="حذف درس">
+                                        <span class="delete-icon">🗑️</span>
+                                        حذف
+                                    </a>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
+                    <tfoot>
+                        <tr class="summary-row max-units-row" id="max-units-row">
+                            <td colspan="5" class="summary-label-cell">
+                                <span class="summary-icon">📊</span>
+                                حداکثر واحد مجاز
+                            </td>
+                            <td class="summary-value-cell" id="max-units-value">
+                                <span class="summary-placeholder"> {{max_unit}} </span>
+                            </td>
+                        </tr>
+                        <tr class="summary-row taken-units-row" id="taken-units-row">
+                            <td colspan="5" class="summary-label-cell">
+                                <span class="summary-icon">📚</span>
+                                تعداد واحد اخذ شده
+                            </td>
+                            <td class="summary-value-cell" id="taken-units-value">
+                                <span class="summary-placeholder"> {{sum_of_the_chosen_units}} </span>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
             
@@ -94,6 +121,19 @@
                     }
                 });
             }
+            
+            // Confirm before delete
+            const deleteBtns = document.querySelectorAll('.btn-delete');
+            deleteBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const confirmed = confirm('آیا از حذف این درس اطمینان دارید؟');
+                    if (!confirmed) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    }
+                });
+            });
         });
     </script>
 {% endblock content %}

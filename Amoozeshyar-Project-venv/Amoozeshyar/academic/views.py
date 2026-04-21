@@ -1,22 +1,30 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from StudentsApp.models import student
 from .forms import *
 
 # Create your views here.
 @login_required(login_url=settings.LOGIN_URL)
 def MainView(request):
-    user = User.objects.get(username=request.user.username)
-    user_group = user.groups.get()
-    return render(request, "main.html", {"group":user_group, "user":user})
+    user_info = User.objects.get(username=request.user.username)
+    user_group = user_info.groups.get()
+    student_info = ""
+    if str(user_group) == "student":
+        student_info = student.objects.get(user=user_info)
+    context = {
+        "group":user_group,
+        "user":user_info,
+        "student":student_info
+    }
+    return render(request, "main.html", context)
     
 
 
 def login_form_view(request):
-
     if request.method == "POST":
         form = LoginForm(request.POST)
 
@@ -42,3 +50,10 @@ def login_form_view(request):
         form=LoginForm()
 
     return render(request, "Login.html", {'form':form})
+
+
+
+@login_required(login_url=settings.LOGIN_URL)
+def user_logout(request):
+    logout(request)
+    return redirect("academic:login")

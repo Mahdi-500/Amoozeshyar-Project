@@ -1,27 +1,7 @@
-/* static/css/home.css */
-
 /* ============================================
    UNIVERSITY HOME PAGE / DASHBOARD STYLES
    For Students, Professors, and Admin Staff
    ============================================ */
-
-/* Reset and Base Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Vazirmatn', 'Segoe UI', 'Tahoma', 'Helvetica Neue', sans-serif;
-    direction: rtl;
-    background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
-    min-height: 100vh;
-    margin: 0;
-    padding: 24px;
-    color: #1a2b3c;
-    line-height: 1.6;
-}
 
 /* Content Wrapper */
 .content-wrapper {
@@ -32,7 +12,7 @@ body {
 /* Welcome Header */
 .welcome-header {
     text-align: center;
-    margin-bottom: 48px;
+    margin-bottom: 32px;
     animation: fadeInDown 0.6s ease-out;
 }
 
@@ -56,32 +36,94 @@ body {
     font-weight: 500;
 }
 
-/* Role Badge */
-.role-badge {
+/* ============================================
+   USER INFO CARD
+   ============================================ */
+.user-info-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px 28px;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.user-info-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.user-info-icon {
+    font-size: 48px;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.user-info-title {
+    flex: 1;
+}
+
+.user-role-badge {
     display: inline-block;
-    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
-    color: white;
-    padding: 8px 24px;
+    padding: 6px 20px;
     border-radius: 40px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
-    margin-top: 16px;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    color: white;
 }
 
-.role-badge.admin {
+.user-role-badge.admin {
     background: linear-gradient(135deg, #7c2d12 0%, #ea580c 100%);
-    box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);
 }
 
-.role-badge.professor {
+.user-role-badge.professor {
     background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
-    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
 }
 
-.role-badge.student {
+.user-role-badge.student {
     background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.user-info-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px 24px;
+}
+
+.user-info-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #64748b;
+    min-width: 80px;
+}
+
+.info-icon {
+    font-size: 18px;
+    opacity: 0.7;
+}
+
+.info-value {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 16px;
 }
 
 /* ============================================
@@ -227,35 +269,61 @@ body {
 }
 
 /* ============================================
-   QUICK ACTIONS / STATS BAR
+   WELCOME MESSAGE FOR EACH ROLE
    ============================================ */
-.quick-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 16px;
-    margin-bottom: 32px;
-}
-
-.stat-card {
+.welcome-message {
     background: white;
-    border-radius: 16px;
-    padding: 20px;
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 32px;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     border: 1px solid #e2e8f0;
 }
 
-.stat-number {
-    font-size: 32px;
-    font-weight: 800;
-    color: #1e3a5f;
-    margin-bottom: 4px;
+.welcome-message-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
 }
 
-.stat-label {
-    font-size: 14px;
+.welcome-message h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.welcome-message p {
     color: #64748b;
-    font-weight: 500;
+    font-size: 16px;
+}
+
+/* ============================================
+   EMPTY STATE (No Actions)
+   ============================================ */
+.empty-actions {
+    text-align: center;
+    padding: 48px 24px;
+    background: white;
+    border-radius: 20px;
+    border: 2px dashed #cbd5e1;
+}
+
+.empty-actions-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.empty-actions h3 {
+    color: #334155;
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.empty-actions p {
+    color: #64748b;
+    font-size: 15px;
 }
 
 /* ============================================
@@ -331,64 +399,6 @@ body {
 }
 
 /* ============================================
-   WELCOME MESSAGE FOR EACH ROLE
-   ============================================ */
-.welcome-message {
-    background: white;
-    border-radius: 20px;
-    padding: 32px;
-    margin-bottom: 32px;
-    text-align: center;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-    border: 1px solid #e2e8f0;
-}
-
-.welcome-message-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-}
-
-.welcome-message h3 {
-    font-size: 24px;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 8px;
-}
-
-.welcome-message p {
-    color: #64748b;
-    font-size: 16px;
-}
-
-/* ============================================
-   EMPTY STATE (No Actions)
-   ============================================ */
-.empty-actions {
-    text-align: center;
-    padding: 48px 24px;
-    background: white;
-    border-radius: 20px;
-    border: 2px dashed #cbd5e1;
-}
-
-.empty-actions-icon {
-    font-size: 64px;
-    margin-bottom: 20px;
-    opacity: 0.5;
-}
-
-.empty-actions h3 {
-    color: #334155;
-    font-size: 20px;
-    margin-bottom: 8px;
-}
-
-.empty-actions p {
-    color: #64748b;
-    font-size: 15px;
-}
-
-/* ============================================
    ANIMATIONS
    ============================================ */
 @keyframes fadeInDown {
@@ -438,10 +448,6 @@ body {
    RESPONSIVE DESIGN
    ============================================ */
 @media (max-width: 768px) {
-    body {
-        padding: 16px;
-    }
-    
     .welcome-title {
         font-size: 28px;
     }
@@ -450,9 +456,24 @@ body {
         font-size: 16px;
     }
     
-    .role-badge {
-        font-size: 16px;
-        padding: 6px 18px;
+    .user-info-card {
+        padding: 20px 16px;
+    }
+    
+    .user-info-icon {
+        font-size: 36px;
+        width: 55px;
+        height: 55px;
+    }
+    
+    .user-role-badge {
+        font-size: 14px;
+        padding: 4px 16px;
+    }
+    
+    .user-info-details {
+        grid-template-columns: 1fr;
+        gap: 12px;
     }
     
     .dashboard-grid {
@@ -497,12 +518,23 @@ body {
         font-size: 48px;
     }
     
-    .section-header {
-        margin: 30px 0 18px 0;
+    .user-info-header {
+        flex-direction: column;
+        text-align: center;
     }
     
-    .quick-stats {
-        grid-template-columns: 1fr;
+    .user-info-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    
+    .info-label {
+        min-width: auto;
+    }
+    
+    .section-header {
+        margin: 30px 0 18px 0;
     }
 }
 
@@ -510,11 +542,6 @@ body {
    PRINT STYLES
    ============================================ */
 @media print {
-    body {
-        background: white;
-        padding: 0;
-    }
-    
     .dashboard-card {
         box-shadow: none;
         border: 1px solid #ccc;
@@ -530,7 +557,7 @@ body {
         display: none;
     }
     
-    .role-badge {
+    .user-role-badge {
         background: #1e3a5f !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
@@ -558,25 +585,4 @@ body {
 .dashboard-card:focus-visible {
     outline: 3px solid #2563eb;
     outline-offset: 4px;
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #94a3b8;
-    border-radius: 10px;
-    border: 2px solid #f1f5f9;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #64748b;
 }

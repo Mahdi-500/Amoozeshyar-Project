@@ -1,42 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% comment %} {% block title %}صفحه اصلی{% endblock title %}
-
-{% block content %}
-
-    {% if group.name == 'admin' %}
-        <a href="{% url 'student:register_student' %}">ثبت نام دانشجو</a>
-        <a href="{% url 'professor:register_professor' %}">ثبت نام استاد</a>
-        <a href="{% url 'lesson:create_lesson' %}">ایجاد درس</a>
-        <a href="{% url 'lesson:lesson_class' %}">ایجاد کلاس</a>
-        <a href="{% url 'student:lesson_search' %}">جتسجوی کلاس درس</a>
-
-    {% endif %}
-
-    {% if group.name == 'professor' %}
-        <a href="{% url 'professor:professor_profile' %}">پروفایل</a>
-    {% endif %}
-
-    {% if group.name == 'student' %}
-        <a href="{% url 'student:lesson_search' %}">جتسجوی کلاس درس</a>
-        <a href="{% url 'student:choosing_lesson' %}">انتخاب واحد</a>
-        <a href="{% url 'student:student_report' %}">کارنامه</a>
-    {% endif %}
-
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-    
-{% endblock content %} {% endcomment %}
-
-
 {% block title %}صفحه اصلی{% endblock title %}
-
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'main.css' %}">
@@ -46,15 +11,71 @@
             <span class="university-logo">🎓</span>
             <h1 class="welcome-title">سامانه آموزش دانشگاه</h1>
             <p class="welcome-subtitle">به پورتال آموزشی خوش آمدید</p>
-            
-            {% if group.name == 'admin' %}
-                <span class="role-badge admin">👑 پنل مدیریت</span>
-            {% elif group.name == 'professor' %}
-                <span class="role-badge professor">👨‍🏫 پنل استاد</span>
-            {% elif group.name == 'student' %}
-                <span class="role-badge student">👨‍🎓 پنل دانشجو</span>
-            {% endif %}
         </div>
+        
+        <!-- User Info Card -->
+        {% if user.is_authenticated %}
+            <div class="user-info-card">
+                <div class="user-info-header">
+                    <span class="user-info-icon">
+                        {% if group.name == 'admin' %}👑
+                        {% elif group.name == 'professor' %}👨‍🏫
+                        {% elif group.name == 'student' %}👨‍🎓
+                        {% else %}🔰{% endif %}
+                    </span>
+                    <div class="user-info-title">
+                        <span class="user-role-badge 
+                            {% if group.name == 'admin' %}admin
+                            {% elif group.name == 'professor' %}professor
+                            {% elif group.name == 'student' %}student{% endif %}
+                        ">
+                            {% if group.name == 'admin' %}
+                                مدیریت کل
+                            {% elif group.name == 'professor' %}
+                                استاد
+                            {% elif group.name == 'student' %}
+                                دانشجو
+                            {% else %}
+                                کاربر
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                <div class="user-info-details">
+                    <div class="user-info-row">
+                        <span class="info-label">
+                            <span class="info-icon">👤</span>
+                            نام:
+                        </span>
+                        <span class="info-value">{{ user.get_full_name|default:user.username }}</span>
+                    </div>
+                    <div class="user-info-row">
+                        <span class="info-label">
+                            <span class="info-icon">🆔</span>
+                            کد:
+                        </span>
+                        <span class="info-value">{{ user.username }}</span>
+                    </div>
+                    
+                    {% if group.name == 'student' %}
+                        <div class="user-info-row">
+                            <span class="info-label">
+                                <span class="info-icon">📚</span>
+                                رشته:
+                            </span>
+                            <span class="info-value">{{ student.major|default:'—' }}</span>
+                        </div>
+                        {% comment %} <div class="user-info-row">
+                            <span class="info-label">
+                                <span class="info-icon">👥</span>
+                                گروه:
+                            </span>
+                            <span class="info-value">{{ student.group|default:'—' }}</span>
+                        </div> {% endcomment %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
         
         {% if group.name == 'admin' %}
             <div class="welcome-message">
@@ -181,7 +202,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Auto-hide messages after 5 seconds
             const messages = document.querySelectorAll('.messages li');
             messages.forEach((message, index) => {
                 setTimeout(() => {
@@ -196,7 +216,6 @@
                 }, 5000 + (index * 500));
             });
             
-            // Add click ripple effect to cards (optional)
             const cards = document.querySelectorAll('.dashboard-card');
             cards.forEach(card => {
                 card.addEventListener('click', function(e) {
@@ -228,7 +247,6 @@
             });
         });
         
-        // Add ripple animation dynamically
         const style = document.createElement('style');
         style.textContent = `
             @keyframes ripple {

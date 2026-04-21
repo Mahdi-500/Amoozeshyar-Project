@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}عدم دسترسی{% endblock title %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'forbidden.css' %}">
+    <div class="content-wrapper">
+        <div class="access-denied-container">
+            
+            <div class="denied-icon-wrapper">
+                <span class="denied-icon">🚫</span>
+                <div class="denied-icon-bg"></div>
+            </div>
+            
+            <h1 class="denied-title">
+                <span class="denied-title-accent">دسترسی</span>
+                غیرمجاز
+            </h1>
+            
+            <div class="denied-message">
+                <p class="denied-main-message">
+                    <span class="message-icon">⚠️</span>
+                    شما اجازه دسترسی به این بخش را ندارید
+                </p>
+                <p class="denied-sub-message">
+                    برای دسترسی به این بخش نیاز به مجوزهای بالاتری می‌باشید
+                </p>
+            </div>
+            
+            <div class="denied-divider"></div>
+            
+            <div class="return-link-wrapper">
+                <a href="{% url 'academic:main' %}" class="btn-return">
+                    <span class="btn-icon">🏠</span>
+                    بازگشت به صفحه اصلی
+                </a>
+            </div>
+            
+            {% comment %} <div class="help-section">
+                <p class="help-text">نیاز به راهنمایی دارید؟</p>
+                <p class="help-contact">
+                    با <a href="#">پشتیبانی دانشگاه</a> تماس بگیرید
+                </p>
+            </div> {% endcomment %}
+            
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add subtle animation to the icon on hover
+            const icon = document.querySelector('.denied-icon');
+            const container = document.querySelector('.access-denied-container');
+            
+            container.addEventListener('mouseenter', function() {
+                icon.style.transition = 'transform 0.3s ease';
+                icon.style.transform = 'scale(1.05)';
+            });
+            
+            container.addEventListener('mouseleave', function() {
+                icon.style.transform = 'scale(1)';
+            });
+            
+            // Log access denied for analytics (optional)
+            console.warn('Access Denied: User attempted to access restricted page');
+        });
+    </script>
+{% endblock content %}

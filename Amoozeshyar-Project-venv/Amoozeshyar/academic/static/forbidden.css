@@ -1,0 +1,450 @@
+/* static/css/access_denied.css */
+
+/* ============================================
+   UNIVERSITY ACCESS DENIED PAGE STYLES
+   For Students, Professors, and Staff
+   ============================================ */
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Vazirmatn', 'Segoe UI', 'Tahoma', 'Helvetica Neue', sans-serif;
+    direction: rtl;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    color: #1a2b3c;
+    line-height: 1.6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+    max-width: 700px;
+    width: 90%;
+    margin: 40px auto;
+    background-color: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 20, 40, 0.12);
+    padding: 48px 40px;
+    text-align: center;
+    border-top: 6px solid #dc2626;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Access Denied Container */
+.access-denied-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Icon Section */
+.denied-icon-wrapper {
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.denied-icon {
+    font-size: 100px;
+    display: block;
+    animation: shake 0.5s ease-in-out;
+}
+
+.denied-icon-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(circle, rgba(220, 38, 38, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+/* Main Title */
+.denied-title {
+    font-size: 42px;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 16px;
+    line-height: 1.3;
+}
+
+.denied-title-accent {
+    color: #dc2626;
+    position: relative;
+    display: inline-block;
+}
+
+.denied-title-accent::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 0%, #dc2626 50%, transparent 100%);
+}
+
+/* Message Section */
+.denied-message {
+    margin-bottom: 32px;
+}
+
+.denied-main-message {
+    font-size: 22px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.message-icon {
+    font-size: 24px;
+}
+
+.denied-sub-message {
+    font-size: 16px;
+    color: #64748b;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Divider */
+.denied-divider {
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #cbd5e1 50%, transparent 100%);
+    margin: 24px 0;
+}
+
+/* Return Button */
+.return-link-wrapper {
+    margin-top: 8px;
+}
+
+.btn-return {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+    color: white;
+    text-decoration: none;
+    padding: 16px 36px;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 700;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-return:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(37, 99, 235, 0.35);
+    background: linear-gradient(135deg, #2563eb 0%, #1e3a5f 100%);
+}
+
+.btn-return:active {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+.btn-icon {
+    font-size: 22px;
+    transition: transform 0.3s ease;
+}
+
+.btn-return:hover .btn-icon {
+    transform: translateX(-6px);
+}
+
+/* Alternative Simple Link Style */
+.return-link-simple {
+    display: inline-block;
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 30px;
+    background-color: #eff6ff;
+    transition: all 0.25s ease;
+}
+
+.return-link-simple:hover {
+    background-color: #dbeafe;
+    color: #1e3a5f;
+    transform: translateY(-2px);
+}
+
+/* Help Section */
+.help-section {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.help-text {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-bottom: 8px;
+}
+
+.help-contact {
+    font-size: 15px;
+    color: #64748b;
+}
+
+.help-contact a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.help-contact a:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-8px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(8px);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+.denied-icon-bg {
+    animation: pulse 3s ease-in-out infinite;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+    .content-wrapper {
+        padding: 36px 28px;
+        width: 95%;
+        margin: 24px auto;
+    }
+    
+    .denied-icon {
+        font-size: 80px;
+    }
+    
+    .denied-icon-bg {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .denied-title {
+        font-size: 32px;
+    }
+    
+    .denied-main-message {
+        font-size: 18px;
+    }
+    
+    .denied-sub-message {
+        font-size: 14px;
+    }
+    
+    .btn-return {
+        padding: 14px 28px;
+        font-size: 16px;
+    }
+    
+    .btn-icon {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content-wrapper {
+        padding: 32px 20px;
+    }
+    
+    .denied-icon {
+        font-size: 70px;
+    }
+    
+    .denied-icon-bg {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .denied-title {
+        font-size: 28px;
+    }
+    
+    .denied-main-message {
+        font-size: 16px;
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .btn-return {
+        padding: 12px 24px;
+        font-size: 15px;
+        width: 100%;
+    }
+    
+    .help-section {
+        margin-top: 24px;
+        padding-top: 20px;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+*:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+}
+
+.btn-return:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 4px;
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+    body {
+        background: white;
+        display: block;
+        padding: 20px;
+    }
+    
+    .content-wrapper {
+        box-shadow: none;
+        border: 2px solid #dc2626;
+        padding: 30px;
+    }
+    
+    .btn-return {
+        background: #1e3a5f !important;
+        color: white !important;
+        box-shadow: none;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .denied-icon-bg {
+        display: none;
+    }
+}
+
+/* ============================================
+   DARK MODE SUPPORT (Optional)
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    }
+    
+    .content-wrapper {
+        background-color: #1e293b;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .denied-title {
+        color: #f1f5f9;
+    }
+    
+    .denied-main-message {
+        color: #cbd5e1;
+    }
+    
+    .denied-sub-message {
+        color: #94a3b8;
+    }
+    
+    .denied-divider {
+        background: linear-gradient(90deg, transparent 0%, #475569 50%, transparent 100%);
+    }
+    
+    .help-section {
+        border-top-color: #334155;
+    }
+    
+    .help-text {
+        color: #64748b;
+    }
+    
+    .help-contact {
+        color: #94a3b8;
+    }
+    
+    .help-contact a {
+        color: #60a5fa;
+    }
+    
+    .return-link-simple {
+        background-color: #1e3a5f;
+        color: #93c5fd;
+    }
+    
+    .return-link-simple:hover {
+        background-color: #1e40af;
+        color: white;
+    }
+}

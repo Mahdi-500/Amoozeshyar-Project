@@ -6,12 +6,14 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from LessonsApp.models import lesson_class, lesson
 from ProfessorsApp.models import Grade
+from Amoozeshyar.decorators import is_user_authorized
 from .forms import *
 from .forms import semester as set_semester
 from .models import *
 
 # Create your views here.
 @login_required(login_url=settings.LOGIN_URL)
+@is_user_authorized(role_name="admin")
 def student_form_view(request):
     if request.method == "POST":
         form = StudentForm(request.POST, request.FILES)
@@ -48,6 +50,7 @@ def student_form_view(request):
 
 
 @login_required(login_url=settings.LOGIN_URL)
+@is_user_authorized(role_name="student")
 def student_lesson_search_view(request):
     flag = False
     if request.method == "POST":
@@ -99,6 +102,7 @@ def student_lesson_search_view(request):
 
 
 @login_required(login_url=settings.LOGIN_URL)
+@is_user_authorized(role_name="student")
 def choosing_lesson_form_view(request):
     chosen_classes = showing_the_chosen_lesson_before_saving(class_info_id=request.session['chosen_classes'])
     student_info = student.objects.get(student_number=request.user.username)
@@ -188,6 +192,7 @@ def showing_the_chosen_lesson_before_saving(class_info_id):
 
 # todo - the function saves the chosen lessons in session temporarely
 @login_required(login_url=settings.LOGIN_URL)
+@is_user_authorized(role_name="student")
 def temporarely_saving_chosen_lesson_view(request):
     if request.method == "POST":
         form = ChoosingLessonForm(data=request.POST)
@@ -252,6 +257,7 @@ def temporarely_saving_chosen_lesson_view(request):
 
 
 @login_required(login_url=settings.LOGIN_URL)
+@is_user_authorized(role_name="student")
 def submiting_the_chosen_lesson(request):
     student_info = student.objects.get(student_number = request.user.username)
     class_info_id = request.session['chosen_classes']
@@ -278,6 +284,7 @@ def deleting_chosen_lesson(request, lesson_class_id):
 
 
 @login_required(login_url=settings.LOGIN_URL)
+@is_user_authorized(role_name="student")
 def student_report_view(request):
     student_info = student.objects.get(student_number = request.user.username)
     semester_list = student_info.lessons.all().values_list("semester").distinct("semester")
@@ -327,6 +334,8 @@ def student_report_view(request):
 
 
 
+@login_required(login_url=settings.LOGIN_URL)
+@is_user_authorized(role_name="student")
 def student_lesson_type_status(request) -> dict:
     student_info = student.objects.get(student_number=request.user.username)
     student_lesson_type_status = {

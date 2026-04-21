@@ -5,10 +5,12 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from .models import *
 from .forms import *
+from Amoozeshyar.decorators import is_user_authorized
 
 # Create your views here.
 
 @login_required(login_url=settings.LOGIN_URL)
+@is_user_authorized(role_name="admin")
 def lesson_form_view(request):
     if request.method == "POST":
         form = LessonForm(request.POST)
@@ -33,6 +35,7 @@ def lesson_form_view(request):
 
 
 @login_required(login_url=settings.LOGIN_URL)
+@is_user_authorized(role_name="admin")
 def lesson_class_form_view(request):
     if request.method == "POST":
         form = LessonClassFrom(request.POST)
@@ -64,25 +67,6 @@ def lesson_class_form_view(request):
                 form = LessonClassFrom(request.POST)
                 messages.error(request, f"زمان و روز برگزاری این کلاس با  {classes[0]}  تداخل دارد")
                 return render(request, "add_lesson_class.html", {'form':form})
-        
-            # ? alternative way for checking class overlap
-            #classes = lesson_class.objects.all()
-            # for i in classes:
-            #     if i.semester == semester:
-            #         if i.class_day == day:
-            #             if i.lesson_time == time:
-            #                 if i.class_number == class_number:
-            #                     flag = True
-            
-            # if not flag:
-            #     form.save()
-            #     messages.success(request, "کلاس با موفقیت ایجاد شد")
-            #     return redirect("academic:main")
-            # else:
-            #     form = LessonClassFrom(request.POST)
-            #     messages.error(request, "زمان و روز برگزاری این کلاس با یک کلاس دیگر تداخل دارد")
-            #     messages.info(request, i)
-            #     return render(request, "add_lesson_class.html", {'form':form})
             
             try:
                 form.save(commit=True)

@@ -4,14 +4,17 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from ProfessorsApp.models import professor
-from academic.models import university, group
+from academic.models import university
 from LessonsApp.models import lesson_class, lesson
 from StudentsApp.models import student_choosing_lesson, student
 from .forms import *
 from .models import *
+from Amoozeshyar.decorators import is_user_authorized
+
 # Create your views here.
 
 @login_required(login_url=settings.LOGIN_URL)
+@is_user_authorized(role_name="admin")
 def professor_form_view(request):
 
     if request.method == "POST":
@@ -19,7 +22,6 @@ def professor_form_view(request):
         if form.is_valid():
             new_professor = form.save(commit=False)
 
-            #set_created(professor, new_professor, created=True)
             set_professor_code(professor, new_professor)
 
 
@@ -52,6 +54,7 @@ def professor_form_view(request):
 
 
 @login_required(login_url=settings.LOGIN_URL)
+@is_user_authorized(role_name="professor")
 def professor_profile_view(request):
     username = User.objects.get(username=request.user.username)
     professor_name = username.professor
@@ -66,6 +69,7 @@ def professor_profile_view(request):
 
 
 @login_required(login_url=settings.LOGIN_URL)
+@is_user_authorized(role_name="professor")
 def professor_lesson_list_view(request, p_code, u_code):
     professor_name = professor.objects.get(code=p_code)
     l_university = university.objects.get(code=u_code)
@@ -90,6 +94,7 @@ def professor_lesson_list_view(request, p_code, u_code):
 
 
 @login_required(login_url=settings.LOGIN_URL)
+@is_user_authorized(role_name="professor")
 def professor_lesson_details(request, l_code):
     professor_name = professor.objects.get(code=request.session["p_code"])
     assigned_lessons = lesson_class.objects.filter(lesson_code=l_code, professor_name=professor_name)
@@ -106,6 +111,7 @@ def professor_lesson_details(request, l_code):
 
 
 @login_required(login_url=settings.LOGIN_URL)
+@is_user_authorized(role_name="professor")
 def grade_form_view(request, l_code, class_code):
     initail_data = []
     student_data = {}

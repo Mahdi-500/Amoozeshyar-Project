@@ -1,5 +1,70 @@
-<title>{% block title %}{% endblock title %}</title>
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}سامانه دانشگاه{% endblock title %}</title>
+    <link rel="stylesheet" href="{% static 'base.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+    <body>
+        
+        <header class="university-header">
+            <div class="header-container">
+                <div class="university-brand">
+                    <span class="brand-logo">🎓</span>
+                    <div class="brand-text">
+                        <a href="{% url 'academic:main' %}" class="brand-name">سامانه آموزش دانشگاه</a>
+                        <span class="brand-subtitle">پرتال جامع آموزشی</span>
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <a href="{% url 'academic:main' %}" class="nav-btn btn-home">
+                        <span class="btn-icon">🏠</span>
+                        <span>خانه</span>
+                    </a>
+                    <a href="{% url 'academic:logout' %}" class="nav-btn btn-logout">
+                        <span class="btn-icon">🚪</span>
+                        <span>خروج</span>
+                    </a>
+                </div>
+            </div>
+        </header>
 
-<body>
-    {% block content %}{% endblock content %}
-</body>
+        <main class="main-content">
+            {% block content %}{% endblock content %}
+        </main>
+
+        <footer class="university-footer">
+            <div class="footer-container">
+                <div class="footer-copyright">
+                    <span>©</span>
+                    <span>۱۴۰۳ - سامانه جامع آموزش دانشگاه</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">قوانین و مقررات</a>
+                    <a href="#" class="footer-link">راهنما</a>
+                    <a href="#" class="footer-link">پشتیبانی</a>
+                    <a href="#" class="footer-link">درباره ما</a>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const logoutBtn = document.querySelector('.btn-logout');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', function(e) {
+                        const confirmed = confirm('آیا از خروج از حساب کاربری خود اطمینان دارید؟');
+                        if (!confirmed) {
+                            e.preventDefault();
+                        }
+                    });
+                }
+            });
+        </script>
+        
+    </body>
+</html>

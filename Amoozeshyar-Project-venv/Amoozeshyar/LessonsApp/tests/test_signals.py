@@ -23,7 +23,7 @@ class testLessonSignals(TestCase):
     
 
 
-    @patch("academic.models.log")
+    @patch("LessonsApp.models.log")
     def test_no_signal_on_lesson_update(self, mock):
         self.test_lesson.name = "no test"
         self.test_lesson.save()
@@ -31,7 +31,7 @@ class testLessonSignals(TestCase):
 
 
 
-class testLesson_classSiganl(TestCase):
+class testLessonClassSiganl(TestCase):
     def setUp(self):
         # ? creating university
         self.test_uni = university.objects.create(name="test", code=200, address="test address")
@@ -79,6 +79,7 @@ class testLesson_classSiganl(TestCase):
             "group_name":self.test_group,
             "class_start_time":"9:50",
             "class_end_time":"11:50",
+            "exam_date_time":"1405-03-25 11:00",
             "capacity":35,
             "class_code":300,
             "class_number":1212,
@@ -93,7 +94,7 @@ class testLesson_classSiganl(TestCase):
     
 
 
-    @patch("academic.models.log")
+    @patch("LessonsApp.models.log")
     def test_no_signal_on_lesson_class_update(self, mock):
         self.test_lesson_class.class_number = 1210
         self.test_lesson_class.save()

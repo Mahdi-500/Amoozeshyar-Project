@@ -5,6 +5,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from ProfessorsApp.models import professor
 from ..models import *
 from ..forms import *
+
 class testLessonForm(TestCase):
     def setUp(self):
         admin = User.objects.create_user(username="testadmin", password="test")
@@ -200,6 +201,45 @@ class testLessonClassForm(TestCase):
         self.assertFalse(lesson_class.objects.filter(class_code=300, class_number=1212).exists())
 
 
+
+    def test_overlapping_classes(self):
+        first_class_data = {
+            "lesson_code":self.test_lesson,
+            "professor_name":self.test_professor,
+            "university_location":self.test_uni,
+            "group_name":self.test_group,
+            "class_day":"شنبه",
+            "class_start_time":"9:50",
+            "class_end_time":"10:50",
+            "exam_date_time":"1405-03-01 19:52",
+            "capacity":35,
+            "class_code":300,
+            "class_number":1212,
+            "semester":4032,
+        }
+        first_class = lesson_class.objects.create(**first_class_data)
+
+        second_class_data = {
+            "lesson_code":self.test_lesson.pk,
+            "professor_name":self.test_professor.pk,
+            "university_location":self.test_uni.pk,
+            "group_name":self.test_group.pk,
+            "class_day":"شنبه",
+            "class_start_time":"9:50",
+            "class_end_time":"10:50",
+            "exam_date_time":"1405-03-01T19:52",
+            "capacity":35,
+            "class_code":301,
+            "class_number":1212,
+            "semester":4032,
+        }
+
+        response = self.client.post(reverse("lesson:lesson_class"), data={**second_class_data}, follow=True)
+        message = [str(i) for i in response.context["messages"]]
+        self.assertEqual(message[0], f"زمان و روز برگزاری این کلاس با  {first_class}  تداخل دارد")
+
+
+
     def test_with_correct_data(self):
         form_data = {
             "lesson_code":self.test_lesson.pk,
@@ -208,7 +248,7 @@ class testLessonClassForm(TestCase):
             "group_name":self.test_group.pk,
             "class_start_time":"9:50",
             "class_end_time":"10:50",
-            "exam_date_time":"1404-12-01T19:52",
+            "exam_date_time":"1405-03-01T19:52",
             "capacity":35,
             "class_code":300,
             "class_number":1212,

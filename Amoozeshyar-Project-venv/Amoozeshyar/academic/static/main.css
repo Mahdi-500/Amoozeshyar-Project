@@ -231,6 +231,39 @@
     margin-top: 4px;
 }
 
+/* Disabled card style */
+.dashboard-card.disabled,
+.dashboard-card.disabled-link {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none; /* Prevents clicking */
+    filter: grayscale(0.2);
+    background-color: #f0f0f0;
+}
+
+/* If you want to keep pointer-events but just style it differently */
+.dashboard-card.disabled-link {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.dashboard-card.disabled-link:active,
+.dashboard-card.disabled-link:focus {
+    pointer-events: none;
+}
+
+/* Optional: Show tooltip on hover */
+.dashboard-card.disabled-link:hover::after {
+    content: "این گزینه در حال حاضر غیرفعال است";
+    position: absolute;
+    background: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    margin-top: -30px;
+}
+
 /* ============================================
    SECTION HEADERS
    ============================================ */

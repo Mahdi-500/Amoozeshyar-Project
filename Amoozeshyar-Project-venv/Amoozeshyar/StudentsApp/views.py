@@ -11,6 +11,7 @@ from .forms import *
 from .forms import semester as set_semester
 from .models import *
 
+
 # Create your views here.
 @login_required(login_url=settings.LOGIN_URL)
 @is_user_authorized(role_name="admin")
@@ -104,76 +105,80 @@ def student_lesson_search_view(request):
 @login_required(login_url=settings.LOGIN_URL)
 @is_user_authorized(role_name="student")
 def choosing_lesson_form_view(request):
-    chosen_classes = showing_the_chosen_lesson_before_saving(class_info_id=request.session['chosen_classes'])
     student_info = student.objects.get(student_number=request.user.username)
-    max_unit = maximum_unit_allowed(student_info)
-    sum_of_the_chosen_units = 0
-    for i,j in chosen_classes.items():
-        sum_of_the_chosen_units += int(j[5])
+    if student_info.status == "مشغول":
+        chosen_classes = showing_the_chosen_lesson_before_saving(class_info_id=request.session['chosen_classes'])
+        max_unit = maximum_unit_allowed(student_info)
+        sum_of_the_chosen_units = 0
+        for i,j in chosen_classes.items():
+            sum_of_the_chosen_units += int(j[5])
 
-    if request.method == "POST":
-        form_searching = StudentLessonSearchForm(data=request.POST)
+        if request.method == "POST":
+            form_searching = StudentLessonSearchForm(data=request.POST)
 
-        result = []
-        temp = []
-        if form_searching.is_valid():
+            result = []
+            temp = []
+            if form_searching.is_valid():
 
-            semester = int(set_semester())
-            data = {
-                "name": form_searching.cleaned_data["query_lesson_name"],
-                "code":form_searching.cleaned_data["query_lesson_code"],
-                "unit_type":form_searching.cleaned_data["query_unit_type"],
-                "lesson_type":form_searching.cleaned_data["query_lesson_type"],
-                "lesson_major":student_info.major
-            }
-            filters = {
-                key: value
-                for key, value in data.items()
-                if value is not None
-            }
-            temp = lesson.objects.filter(**filters)
-            for i in temp:
-                if i.classes.all().exists():
-                    for j in range(0, len(i.classes.all())):
-                        if i.classes.all()[j].semester == semester:
-                            result.append(i.classes.all()[j])
+                semester = int(set_semester())
+                data = {
+                    "name": form_searching.cleaned_data["query_lesson_name"],
+                    "code":form_searching.cleaned_data["query_lesson_code"],
+                    "unit_type":form_searching.cleaned_data["query_unit_type"],
+                    "lesson_type":form_searching.cleaned_data["query_lesson_type"],
+                    "lesson_major":student_info.major
+                }
+                filters = {
+                    key: value
+                    for key, value in data.items()
+                    if value is not None
+                }
+                temp = lesson.objects.filter(**filters)
+                for i in temp:
+                    if i.classes.all().exists():
+                        for j in range(0, len(i.classes.all())):
+                            if i.classes.all()[j].semester == semester:
+                                result.append(i.classes.all()[j])
 
-            available_classes = {}
-            if result == []:
-                flag = True
-            else:
-                flag = False
-                loop_couner = 1
-                for i in result:
-                    available_classes[loop_couner] = [i.id, i.lesson_code.name, i.professor_name, i.lesson_code.code, i.class_day, f"{i.class_end_time} تا {i.class_start_time}"]
-                    loop_couner += 1
+                available_classes = {}
+                if result == []:
+                    flag = True
+                else:
+                    flag = False
+                    loop_couner = 1
+                    for i in result:
+                        available_classes[loop_couner] = [i.id, i.lesson_code.name, i.professor_name, i.lesson_code.code, i.class_day, f"{i.class_end_time} تا {i.class_start_time}"]
+                        loop_couner += 1
 
-                request.session["semester"] = set_semester()
+                    request.session["semester"] = set_semester()
 
-            sum_of_the_chosen_units = 0
-            for i,j in chosen_classes.items():
-                sum_of_the_chosen_units += int(j[5])
+                sum_of_the_chosen_units = 0
+                for i,j in chosen_classes.items():
+                    sum_of_the_chosen_units += int(j[5])
 
+                context = {
+                    "form_searching": form_searching,
+                    "available_classes":available_classes,
+                    "flag":flag,
+                    "chosen_classes":chosen_classes,
+                    "max_unit":max_unit,
+                    "sum_of_the_chosen_units":sum_of_the_chosen_units,
+                }
+                return render(request, "choosing_lesson.html", context)
+        
+        else:
+            form_searching = StudentLessonSearchForm()
             context = {
-                "form_searching": form_searching,
-                "available_classes":available_classes,
-                "flag":flag,
+                "form_searching":form_searching,
                 "chosen_classes":chosen_classes,
                 "max_unit":max_unit,
                 "sum_of_the_chosen_units":sum_of_the_chosen_units,
             }
-            return render(request, "choosing_lesson.html", context)
+
+        return render(request, "choosing_lesson.html", context)
     
     else:
-        form_searching = StudentLessonSearchForm()
-        context = {
-            "form_searching":form_searching,
-            "chosen_classes":chosen_classes,
-            "max_unit":max_unit,
-            "sum_of_the_chosen_units":sum_of_the_chosen_units,
-        }
-
-    return render(request, "choosing_lesson.html", context)
+        return render(request, "forbidden.html")
 
 
 

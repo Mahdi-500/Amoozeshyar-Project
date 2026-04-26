@@ -14,68 +14,66 @@
         </div>
         
         <!-- User Info Card -->
-        {% if user.is_authenticated %}
-            <div class="user-info-card">
-                <div class="user-info-header">
-                    <span class="user-info-icon">
-                        {% if group.name == 'admin' %}👑
-                        {% elif group.name == 'professor' %}👨‍🏫
-                        {% elif group.name == 'student' %}👨‍🎓
-                        {% else %}🔰{% endif %}
+        <div class="user-info-card">
+            <div class="user-info-header">
+                <span class="user-info-icon">
+                    {% if group.name == 'admin' %}👑
+                    {% elif group.name == 'professor' %}👨‍🏫
+                    {% elif group.name == 'student' %}👨‍🎓
+                    {% else %}🔰{% endif %}
+                </span>
+                <div class="user-info-title">
+                    <span class="user-role-badge 
+                        {% if group.name == 'admin' %}admin
+                        {% elif group.name == 'professor' %}professor
+                        {% elif group.name == 'student' %}student{% endif %}
+                    ">
+                        {% if group.name == 'admin' %}
+                            مدیریت کل
+                        {% elif group.name == 'professor' %}
+                            استاد
+                        {% elif group.name == 'student' %}
+                            دانشجو
+                        {% else %}
+                            کاربر
+                        {% endif %}
                     </span>
-                    <div class="user-info-title">
-                        <span class="user-role-badge 
-                            {% if group.name == 'admin' %}admin
-                            {% elif group.name == 'professor' %}professor
-                            {% elif group.name == 'student' %}student{% endif %}
-                        ">
-                            {% if group.name == 'admin' %}
-                                مدیریت کل
-                            {% elif group.name == 'professor' %}
-                                استاد
-                            {% elif group.name == 'student' %}
-                                دانشجو
-                            {% else %}
-                                کاربر
-                            {% endif %}
-                        </span>
-                    </div>
-                </div>
-                <div class="user-info-details">
-                    <div class="user-info-row">
-                        <span class="info-label">
-                            <span class="info-icon">👤</span>
-                            نام:
-                        </span>
-                        <span class="info-value">{{ user.get_full_name|default:user.username }}</span>
-                    </div>
-                    <div class="user-info-row">
-                        <span class="info-label">
-                            <span class="info-icon">🆔</span>
-                            کد:
-                        </span>
-                        <span class="info-value">{{ user.username }}</span>
-                    </div>
-                    
-                    {% if group.name == 'student' %}
-                        <div class="user-info-row">
-                            <span class="info-label">
-                                <span class="info-icon">📚</span>
-                                رشته:
-                            </span>
-                            <span class="info-value">{{ student.major|default:'—' }}</span>
-                        </div>
-                        {% comment %} <div class="user-info-row">
-                            <span class="info-label">
-                                <span class="info-icon">👥</span>
-                                گروه:
-                            </span>
-                            <span class="info-value">{{ student.group|default:'—' }}</span>
-                        </div> {% endcomment %}
-                    {% endif %}
                 </div>
             </div>
-        {% endif %}
+            <div class="user-info-details">
+                <div class="user-info-row">
+                    <span class="info-label">
+                        <span class="info-icon">👤</span>
+                        نام:
+                    </span>
+                    <span class="info-value">{{ user.get_full_name|default:user.username }}</span>
+                </div>
+                <div class="user-info-row">
+                    <span class="info-label">
+                        <span class="info-icon">🆔</span>
+                        کد:
+                    </span>
+                    <span class="info-value">{{ user.username }}</span>
+                </div>
+                
+                {% if group.name == 'student' %}
+                    <div class="user-info-row">
+                        <span class="info-label">
+                            <span class="info-icon">📚</span>
+                            رشته:
+                        </span>
+                        <span class="info-value">{{ student.major|default:'—' }}</span>
+                    </div>
+                    {% comment %} <div class="user-info-row">
+                        <span class="info-label">
+                            <span class="info-icon">👥</span>
+                            گروه:
+                        </span>
+                        <span class="info-value">{{ student.group|default:'—' }}</span>
+                    </div> {% endcomment %}
+                {% endif %}
+            </div>
+        </div>
         
         {% if group.name == 'admin' %}
             <div class="welcome-message">
@@ -167,7 +165,8 @@
                     <span class="card-description">جستجو و مشاهده کلاس‌های درسی موجود</span>
                 </a>
                 
-                <a href="{% url 'student:choosing_lesson' %}" class="dashboard-card student-card">
+                <a href="{% url 'student:choosing_lesson' %}" 
+                    class="dashboard-card student-card {% if not student_status_flag %}disabled{% endif %}">
                     <span class="card-icon">✅</span>
                     <span class="card-title">انتخاب واحد</span>
                     <span class="card-description">انتخاب دروس برای ترم تحصیلی جاری</span>

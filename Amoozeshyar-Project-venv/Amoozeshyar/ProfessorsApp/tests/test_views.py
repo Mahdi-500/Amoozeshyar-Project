@@ -9,8 +9,13 @@ class testProfessorViews(TestCase):
 
     def setUp(self):
         test_professor = User.objects.create_user(username="testprofessor", password="test")
+        test_admin = User.objects.create_user(username="testadmin", password="test")
+
         Group.objects.create(name="professor")
+        Group.objects.create(name="admin")
+
         test_professor.groups.add(Group.objects.get(name="professor"))
+        test_admin.groups.add(Group.objects.get(name="admin"))
 
         # ? assigning uni to professor
         self.professor_obj = professor.objects.create(user=test_professor, first_name="test", last_name="test",
@@ -67,7 +72,7 @@ class testProfessorViews(TestCase):
         self.assertTemplateNotUsed(response, "register_professor.html")
 
         # ? after login
-        self.client.login(username="testprofessor", password="test")
+        self.client.login(username="testadmin", password="test")
         respone_after_login = self.client.get(reverse("professor:register_professor"))
         self.assertEqual(respone_after_login.status_code, 200)
         self.assertTemplateUsed(respone_after_login, "register_professor.html")

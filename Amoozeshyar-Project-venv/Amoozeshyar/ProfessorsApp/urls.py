@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 
 app_name = "professor"
@@ -10,3 +12,4 @@ urlpatterns = [
     path('professor/lesson/details/<str:l_code>', views.professor_lesson_details, name="professor_lesson_detail"),
     path("professor/lesson/details/<str:l_code>/<int:class_code>/submitting_grade", views.grade_form_view, name="grade")
 ]
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

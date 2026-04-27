@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ثبت نمره{% endblock title %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'submitting_grade.css' %}">
+    <div class="grade-page-wrapper">
+        
+        <div class="page-header-card">
+            <div class="page-header-icon">📝</div>
+            <div class="page-header-info">
+                <h1 class="page-title">ثبت نمرات دانشجویان</h1>
+                <p class="page-subtitle">نمرات را وارد کرده و ثبت نمایید</p>
+            </div>
+            <span class="student-count-badge">{{ formset.total_form_count }} دانشجو</span>
+        </div>
+        
+        <div class="grade-form-section">
+            <form method="POST" class="grade-form">
+                {% csrf_token %}
+                {{ formset.management_form }}
+                
+                <div class="grade-table-wrapper">
+                    <table class="grade-table">
+                        <thead>
+                            <tr>
+                                <th>شماره دانشجویی</th>
+                                <th>نام</th>
+                                <th>نام خانوادگی</th>
+                                <th>نمره</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for form in formset %}
+                                <tr class="grade-row">
+                                    {% for hidden in form.hidden_fields %}
+                                        {{ hidden }}
+                                    {% endfor %}
+                                    
+                                    <td>{{ form.student_number }}</td>
+                                    <td>{{ form.first_name }}</td>
+                                    <td>{{ form.last_name }}</td>
+                                    <td>{{ form.mark }}</td>
+                                </tr>
+                                {% if form.errors %}
+                                    <tr class="error-row">
+                                        <td colspan="4">
+                                            <div class="error">{{ form.errors }}</div>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4">
+                                        <div class="empty-state">
+                                            <span class="empty-state-icon">👨‍🎓</span>
+                                            <h3>دانشجویی یافت نشد</h3>
+                                            <p>هیچ دانشجویی برای این کلاس ثبت نام نکرده است</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                {% if formset.total_form_count > 0 %}
+                    <div class="form-actions">
+                        <a href="javascript:history.back()" class="btn-cancel">
+                            <span>↩️</span>
+                            بازگشت
+                        </a>
+                        <button type="submit" class="btn-submit-grade">
+                            <span class="btn-submit-icon">✅</span>
+                            ثبت نمرات
+                        </button>
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+        
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const gradeInputs = document.querySelectorAll('.grade-table input[type="text"], .grade-table input[type="number"]');
+            
+            // Color coding for grades
+            gradeInputs.forEach(input => {
+                // Set initial color
+                updateGradeColor(input);
+                
+                input.addEventListener('input', function() {
+                    updateGradeColor(this);
+                });
+                
+                input.addEventListener('change', function() {
+                    updateGradeColor(this);
+                });
+            });
+            
+            function updateGradeColor(input) {
+                const value = parseFloat(input.value);
+                
+                // Remove existing grade classes
+                input.classList.remove('grade-high', 'grade-medium', 'grade-low');
+                
+                if (isNaN(value)) {
+                    input.style.borderColor = '#e2e8f0';
+                    input.style.backgroundColor = '#f8fafc';
+                    return;
+                }
+                
+                if (value >= 17) {
+                    input.classList.add('grade-high');
+                } else if (value >= 10) {
+                    input.classList.add('grade-medium');
+                } else if (value >= 0) {
+                    input.classList.add('grade-low');
+                }
+            }
+            
+            // Confirm before submit
+            const form = document.querySelector('.grade-form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const emptyGrades = [];
+                    gradeInputs.forEach((input, index) => {
+                        if (!input.value.trim()) {
+                            const row = input.closest('tr');
+                            const studentName = row ? row.querySelector('td:nth-child(2)').textContent.trim() : '';
+                            emptyGrades.push(studentName || `ردیف ${index + 1}`);
+                        }
+                    });
+                    
+                    if (emptyGrades.length > 0) {
+                        const confirmed = confirm(
+                            `⚠️ ${emptyGrades.length} دانشجو بدون نمره هستند:\n\n` +
+                            emptyGrades.slice(0, 5).join('\n') +
+                            (emptyGrades.length > 5 ? `\n... و ${emptyGrades.length - 5} نفر دیگر` : '') +
+                            '\n\nآیا مطمئن هستید که می‌خواهید ثبت کنید؟'
+                        );
+                        
+                        if (!confirmed) {
+                            e.preventDefault();
+                            return;
+                        }
+                    }
+                    
+                    // Add loading state
+                    const btn = this.querySelector('.btn-submit-grade');
+                    if (btn) {
+                        const originalText = btn.innerHTML;
+                        btn.innerHTML = '<span style="display: inline-block; animation: spin 1s linear infinite;">⏳</span> در حال ثبت...';
+                        btn.disabled = true;
+                        btn.style.opacity = '0.85';
+                        btn.style.cursor = 'wait';
+                        
+                        setTimeout(() => {
+                            if (btn.disabled) {
+                                btn.innerHTML = originalText;
+                                btn.disabled = false;
+                                btn.style.opacity = '1';
+                                btn.style.cursor = 'pointer';
+                            }
+                        }, 10000);
+                    }
+                });
+            }
+            
+            // Add row hover effect for better UX
+            const rows = document.querySelectorAll('.grade-row');
+            rows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = '#f0fdf4';
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = '';
+                });
+            });
+        });
+        
+        const spinStyle = document.createElement('style');
+        spinStyle.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(spinStyle);
+    </script>
+{% endblock content %}

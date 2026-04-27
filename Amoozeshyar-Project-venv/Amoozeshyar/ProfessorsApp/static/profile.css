@@ -1,0 +1,471 @@
+/* static/css/profile.css */
+
+/* ============================================
+   UNIVERSITY PROFESSOR PROFILE STYLES
+   For Professors
+   ============================================ */
+
+/* Profile Page Container */
+.profile-page-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 24px 0;
+}
+
+/* ============================================
+   PROFILE HEADER CARD
+   ============================================ */
+.profile-header-card {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 32px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    box-shadow: 0 8px 30px rgba(6, 78, 59, 0.2);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    flex-shrink: 0;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-name {
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0 0 4px 0;
+    line-height: 1.3;
+}
+
+.profile-code {
+    font-size: 15px;
+    color: #a7f3d0;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.profile-code::before {
+    content: "🆔";
+    font-size: 16px;
+}
+
+.profile-role-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================
+   UNIVERSITIES SECTION
+   ============================================ */
+.universities-section {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 20, 40, 0.08);
+    padding: 32px;
+    border: 1px solid #e2e8f0;
+    animation: fadeInUp 0.5s ease-out;
+    animation-delay: 0.1s;
+    animation-fill-mode: both;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.section-icon {
+    font-size: 36px;
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+}
+
+.section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #064e3b;
+    margin: 0;
+}
+
+.section-subtitle {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+    margin: 2px 0 0 0;
+}
+
+/* University Cards Grid */
+.university-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* University Card */
+.university-card {
+    background: linear-gradient(135deg, #f8fafc 0%, #f0fdf4 100%);
+    border-radius: 16px;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.4s ease-out;
+    animation-fill-mode: both;
+}
+
+.university-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.university-card:hover::before {
+    transform: scaleX(1);
+}
+
+.university-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(6, 78, 59, 0.12);
+    border-color: #059669;
+    background: white;
+}
+
+.university-card:active {
+    transform: translateY(-2px);
+}
+
+/* University Card Icon */
+.university-card-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.university-card:hover .university-card-icon {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+/* University Card Content */
+.university-card-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.university-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #064e3b;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+.university-action {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.university-action::after {
+    content: "←";
+    font-size: 16px;
+    transition: transform 0.3s ease;
+}
+
+.university-card:hover .university-action::after {
+    transform: translateX(-4px);
+}
+
+/* Arrow indicator */
+.university-arrow {
+    font-size: 20px;
+    color: #059669;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+}
+
+.university-card:hover .university-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+.empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    background-color: #f8fafc;
+    border-radius: 16px;
+    border: 2px dashed #e2e8f0;
+    grid-column: 1 / -1;
+}
+
+.empty-state-icon {
+    font-size: 56px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    color: #334155;
+    font-size: 18px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.empty-state p {
+    color: #64748b;
+    font-size: 14px;
+}
+
+/* ============================================
+   STATS SECTION (Optional if needed later)
+   ============================================ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e2e8f0;
+}
+
+.stat-number {
+    font-size: 28px;
+    font-weight: 800;
+    color: #064e3b;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animation Delays for Cards */
+.university-card:nth-child(1) { animation-delay: 0.15s; }
+.university-card:nth-child(2) { animation-delay: 0.20s; }
+.university-card:nth-child(3) { animation-delay: 0.25s; }
+.university-card:nth-child(4) { animation-delay: 0.30s; }
+.university-card:nth-child(5) { animation-delay: 0.35s; }
+.university-card:nth-child(6) { animation-delay: 0.40s; }
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+    .profile-header-card {
+        padding: 28px 24px;
+        flex-direction: column;
+        text-align: center;
+        gap: 18px;
+    }
+    
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        font-size: 38px;
+    }
+    
+    .profile-name {
+        font-size: 24px;
+    }
+    
+    .universities-section {
+        padding: 24px 20px;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .section-icon {
+        width: 52px;
+        height: 52px;
+        font-size: 28px;
+    }
+    
+    .section-title {
+        font-size: 20px;
+    }
+    
+    .university-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .university-card {
+        padding: 20px;
+    }
+    
+    .university-name {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-header-card {
+        padding: 24px 18px;
+        border-radius: 16px;
+    }
+    
+    .profile-avatar {
+        width: 64px;
+        height: 64px;
+        font-size: 32px;
+    }
+    
+    .profile-name {
+        font-size: 20px;
+    }
+    
+    .profile-code {
+        font-size: 14px;
+    }
+    
+    .universities-section {
+        padding: 20px 16px;
+        border-radius: 16px;
+    }
+    
+    .university-card {
+        padding: 16px;
+        gap: 14px;
+        border-radius: 14px;
+    }
+    
+    .university-card-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 22px;
+        border-radius: 12px;
+    }
+    
+    .university-name {
+        font-size: 15px;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY & PRINT
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+*:focus-visible {
+    outline: 3px solid #059669;
+    outline-offset: 2px;
+}
+
+.university-card:focus-visible {
+    outline: 3px solid #059669;
+    outline-offset: 3px;
+}
+
+@media print {
+    .profile-header-card {
+        background: #064e3b !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .university-card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        break-inside: avoid;
+    }
+    
+    .university-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .university-card::before {
+        display: none;
+    }
+}

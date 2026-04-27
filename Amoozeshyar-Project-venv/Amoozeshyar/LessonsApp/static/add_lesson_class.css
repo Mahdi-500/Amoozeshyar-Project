@@ -1,0 +1,607 @@
+/* static/css/add_lesson_class.css */
+
+/* ============================================
+   UNIVERSITY CLASS CREATION FORM STYLES
+   For Admin Staff
+   ============================================ */
+
+/* Registration Page Container */
+.register-page-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 0;
+}
+
+.register-container {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0, 20, 40, 0.08);
+    padding: 40px;
+    border-top: 5px solid #1e3a5f;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Page Header */
+.register-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 36px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.register-header-icon {
+    font-size: 44px;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+}
+
+.register-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: #1e3a5f;
+    margin: 0 0 4px 0;
+}
+
+.register-subtitle {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* ============================================
+   CLASS FORM STYLES
+   ============================================ */
+.class-form {
+    width: 100%;
+}
+
+/* Form Grid Layout */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+/* Full width fields */
+.form-grid .full-width {
+    grid-column: 1 / -1;
+}
+
+/* Form Paragraph (Each field container) */
+.class-form p {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Labels */
+.class-form label {
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Label Icons based on field name */
+.class-form label[for*="lesson"]::before,
+.class-form label[for*="نام درس"]::before {
+    content: "📖";
+    font-size: 16px;
+}
+
+.class-form label[for*="professor"]::before,
+.class-form label[for*="استاد"]::before {
+    content: "👨‍🏫";
+    font-size: 16px;
+}
+
+.class-form label[for*="location"]::before,
+.class-form label[for*="مکان"]::before {
+    content: "📍";
+    font-size: 16px;
+}
+
+.class-form label[for*="group"]::before,
+.class-form label[for*="گروه"]::before {
+    content: "👥";
+    font-size: 16px;
+}
+
+.class-form label[for*="day"]::before,
+.class-form label[for*="روز"]::before {
+    content: "📅";
+    font-size: 16px;
+}
+
+.class-form label[for*="start"]::before,
+.class-form label[for*="شروع"]::before {
+    content: "⏰";
+    font-size: 16px;
+}
+
+.class-form label[for*="end"]::before,
+.class-form label[for*="پایان"]::before {
+    content: "⏱️";
+    font-size: 16px;
+}
+
+.class-form label[for*="exam"]::before,
+.class-form label[for*="امتحان"]::before {
+    content: "📝";
+    font-size: 16px;
+}
+
+.class-form label[for*="degree"]::before,
+.class-form label[for*="مقطع"]::before {
+    content: "🎓";
+    font-size: 16px;
+}
+
+.class-form label[for*="capacity"]::before,
+.class-form label[for*="ظرفیت"]::before {
+    content: "🧑‍🤝‍🧑";
+    font-size: 16px;
+}
+
+.class-form label[for*="class_code"]::before,
+.class-form label[for*="کد ارائه"]::before {
+    content: "🏷️";
+    font-size: 16px;
+}
+
+.class-form label[for*="class_number"]::before,
+.class-form label[for*="شماره کلاس"]::before {
+    content: "🚪";
+    font-size: 16px;
+}
+
+.class-form label[for*="semester"]::before,
+.class-form label[for*="نیمسال"]::before {
+    content: "📆";
+    font-size: 16px;
+}
+
+/* Text Inputs */
+.class-form input[type="text"],
+.class-form input[type="number"],
+.class-form input[type="datetime-local"] {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: inherit;
+    background-color: #f8fafc;
+    transition: all 0.3s ease;
+    color: #1e293b;
+}
+
+.class-form input[type="text"]:hover,
+.class-form input[type="number"]:hover,
+.class-form input[type="datetime-local"]:hover {
+    border-color: #94a3b8;
+    background-color: #ffffff;
+}
+
+.class-form input[type="text"]:focus,
+.class-form input[type="number"]:focus,
+.class-form input[type="datetime-local"]:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    background-color: #ffffff;
+}
+
+.class-form input::placeholder {
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+/* Number Input Specific */
+.class-form input[type="number"] {
+    -moz-appearance: textfield;
+    -webkit-appearance: none;
+    appearance: textfield;
+    direction: ltr;
+    text-align: left;
+}
+
+.class-form input[type="number"]::-webkit-inner-spin-button,
+.class-form input[type="number"]::-webkit-outer-spin-button {
+    opacity: 1;
+    height: 30px;
+}
+
+/* DateTime Input */
+.class-form input[type="datetime-local"] {
+    direction: ltr;
+    text-align: left;
+    font-family: inherit;
+}
+
+/* Select Fields */
+.class-form select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: inherit;
+    background-color: #f8fafc;
+    transition: all 0.3s ease;
+    color: #1e293b;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 16px center;
+    padding-left: 44px;
+}
+
+.class-form select:hover {
+    border-color: #94a3b8;
+    background-color: #ffffff;
+}
+
+.class-form select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    background-color: #ffffff;
+}
+
+/* Checkbox Fields */
+.class-form input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #2563eb;
+    cursor: pointer;
+    margin-left: 8px;
+    flex-shrink: 0;
+}
+
+/* Checkbox Wrapper */
+.class-form .checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background-color: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.class-form .checkbox-wrapper:hover {
+    border-color: #94a3b8;
+    background-color: #ffffff;
+}
+
+.class-form .checkbox-wrapper:focus-within {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    background-color: #ffffff;
+}
+
+.class-form .checkbox-wrapper label {
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.class-form .checkbox-wrapper label::before {
+    display: none;
+}
+
+/* Error Messages */
+.class-form .errorlist {
+    list-style: none;
+    margin-top: 8px;
+    padding: 10px 14px;
+    background-color: #fef2f2;
+    border-radius: 10px;
+    border-right: 4px solid #ef4444;
+}
+
+.class-form .errorlist li {
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.class-form .errorlist li::before {
+    content: "⚠️";
+    font-size: 16px;
+}
+
+/* Help Text */
+.class-form .helptext {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+/* Messages Styling */
+.messages {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 28px 0;
+}
+
+.messages li {
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    animation: slideInRight 0.4s ease-out;
+}
+
+.messages li::before {
+    font-size: 20px;
+}
+
+.messages .success {
+    background-color: #dcfce7;
+    color: #166534;
+    border-right: 5px solid #16a34a;
+}
+
+.messages .success::before {
+    content: "✅";
+}
+
+.messages .error {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border-right: 5px solid #dc2626;
+}
+
+.messages .error::before {
+    content: "❌";
+}
+
+.messages .warning {
+    background-color: #fef3c7;
+    color: #92400e;
+    border-right: 5px solid #d97706;
+}
+
+.messages .warning::before {
+    content: "⚠️";
+}
+
+.messages .info {
+    background-color: #dbeafe;
+    color: #1e40af;
+    border-right: 5px solid #2563eb;
+}
+
+.messages .info::before {
+    content: "ℹ️";
+}
+
+/* Submit Button */
+.form-actions {
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 2px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+}
+
+.btn-register-submit {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    padding: 16px 40px;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+    font-family: inherit;
+}
+
+.btn-register-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(37, 99, 235, 0.35);
+    background: linear-gradient(135deg, #2563eb 0%, #1e3a5f 100%);
+}
+
+.btn-register-submit:active {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+.btn-register-icon {
+    font-size: 22px;
+}
+
+.btn-cancel {
+    background-color: #f1f5f9;
+    color: #64748b;
+    border: 2px solid #e2e8f0;
+    padding: 16px 32px;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-cancel:hover {
+    background-color: #e2e8f0;
+    color: #334155;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+    .register-container {
+        padding: 28px 24px;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .register-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+    
+    .register-header-icon {
+        width: 64px;
+        height: 64px;
+        font-size: 36px;
+    }
+    
+    .register-title {
+        font-size: 22px;
+    }
+    
+    .class-form input[type="text"],
+    .class-form input[type="number"],
+    .class-form input[type="datetime-local"],
+    .class-form select {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-register-submit,
+    .btn-cancel {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .register-container {
+        padding: 24px 18px;
+        border-radius: 16px;
+    }
+    
+    .register-title {
+        font-size: 20px;
+    }
+    
+    .class-form label {
+        font-size: 14px;
+    }
+    
+    .class-form input[type="text"],
+    .class-form input[type="number"],
+    .class-form input[type="datetime-local"],
+    .class-form select {
+        padding: 10px 12px;
+        font-size: 13px;
+        border-radius: 10px;
+    }
+    
+    .btn-register-submit {
+        font-size: 16px;
+        padding: 14px 20px;
+    }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(80px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY & PRINT
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+*:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+}
+
+@media print {
+    .register-container {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+    
+    .btn-register-submit,
+    .btn-cancel {
+        display: none;
+    }
+    
+    .class-form input,
+    .class-form select {
+        border: 1px solid #ccc;
+        background: white;
+    }
+    
+    .messages {
+        display: none;
+    }
+}

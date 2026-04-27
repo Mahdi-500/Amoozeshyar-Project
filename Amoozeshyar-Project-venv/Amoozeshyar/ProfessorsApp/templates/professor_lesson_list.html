@@ -1,13 +1,87 @@
 {% extends "base.html" %}
-{% block title %}لیست کلاس ها{% endblock title %}
+{% load static %}
+
+{% block title %}لیست کلاس‌ها{% endblock title %}
 
 {% block content %}
-        {% for lesson in list %}
-            {% if l_university.code == lesson.university_location.code %}
-                <a href="{% url 'professor:professor_lesson_detail' lesson.lesson_code.code %}">{{lesson.lesson_code}}</a>
-                <br>    
-            {% endif %}
+    <link rel="stylesheet" href="{% static 'professor_lesson_list.css' %}">
+    <div class="lesson-list-page-wrapper">
+        
+        <div class="page-header-card">
+            <div class="page-header-icon">📚</div>
+            <div class="page-header-info">
+                <h1 class="page-title">لیست دروس</h1>
+                <p class="page-subtitle">{{ l_university.name }}</p>
+            </div>
+            {% with lesson_count=list|length %}
+                <span class="lesson-count-badge">{{ lesson_count }} درس</span>
+            {% endwith %}
+        </div>
+        
+        <div class="lessons-section">
+            <div class="section-header">
+                <span class="section-icon">📖</span>
+                <div>
+                    <h2 class="section-title">دروس تدریسی</h2>
+                    <p class="section-subtitle">برای مشاهده جزئیات هر درس کلیک کنید</p>
+                </div>
+            </div>
             
-        {% endfor %}    
-    
+            {% if list %}
+                <div class="lessons-list">
+                    {% for lesson in list %}
+                        {% if l_university.code == lesson.university_location.code %}
+                            <a href="{% url 'professor:professor_lesson_detail' lesson.lesson_code.code %}" class="lesson-item">
+                                <div class="lesson-icon">📝</div>
+                                <div class="lesson-content">
+                                    <div class="lesson-code">{{ lesson.lesson_code }}</div>
+                                    <div class="lesson-meta">کد درس: {{ lesson.lesson_code.code }}</div>
+                                </div>
+                                <span class="lesson-arrow">→</span>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <span class="empty-state-icon">📭</span>
+                    <h3>درسی یافت نشد</h3>
+                    <p>در حال حاضر هیچ درسی در این دانشگاه برای شما ثبت نشده است</p>
+                    <a href="{% url 'professor:professor_profile' %}" class="btn-back">
+                        <span>↩️</span>
+                        بازگشت به پروفایل
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const items = document.querySelectorAll('.lesson-item');
+            
+            items.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    const icon = this.querySelector('.lesson-icon');
+                    if (icon) {
+                        icon.style.transform = 'scale(1.1) rotate(-5deg)';
+                    }
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    const icon = this.querySelector('.lesson-icon');
+                    if (icon) {
+                        icon.style.transform = 'scale(1) rotate(0deg)';
+                    }
+                });
+            });
+            
+            // Log lesson count
+            const countBadge = document.querySelector('.lesson-count-badge');
+            if (countBadge) {
+                console.log(`Total lessons: ${countBadge.textContent}`);
+            }
+        });
+    </script>
 {% endblock content %}

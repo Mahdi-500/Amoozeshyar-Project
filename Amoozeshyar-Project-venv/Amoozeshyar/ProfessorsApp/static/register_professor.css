@@ -1,0 +1,659 @@
+/* static/css/register_professor.css */
+
+/* ============================================
+   UNIVERSITY PROFESSOR REGISTRATION FORM STYLES
+   For Admin Staff
+   ============================================ */
+
+/* Registration Page Container */
+.register-page-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 0;
+}
+
+.register-container {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0, 20, 40, 0.08);
+    padding: 40px;
+    border-top: 5px solid #064e3b;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Page Header */
+.register-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 36px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.register-header-icon {
+    font-size: 44px;
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+}
+
+.register-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: #064e3b;
+    margin: 0 0 4px 0;
+}
+
+.register-subtitle {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* ============================================
+   REGISTRATION FORM STYLES
+   ============================================ */
+.register-form {
+    width: 100%;
+}
+
+/* Form Grid Layout */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+/* Full width fields */
+.form-grid .full-width {
+    grid-column: 1 / -1;
+}
+
+/* Form Paragraph (Each field container) */
+.register-form p {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Labels */
+.register-form label {
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Label Icons based on field name */
+.register-form label[for="id_first_name"]::before,
+.register-form label[for*="first_name"]::before,
+.register-form label[for*="نام"]:not([for*="خانوادگی"]):not([for*="درس"]):not([for*="دانشگاه"])::before {
+    content: "👤";
+    font-size: 16px;
+}
+
+.register-form label[for="id_last_name"]::before,
+.register-form label[for*="last_name"]::before,
+.register-form label[for*="خانوادگی"]::before {
+    content: "👥";
+    font-size: 16px;
+}
+
+.register-form label[for="id_birth_date"]::before,
+.register-form label[for*="birth_date"]::before,
+.register-form label[for*="تاریخ"]::before {
+    content: "🎂";
+    font-size: 16px;
+}
+
+.register-form label[for="id_national_code"]::before,
+.register-form label[for*="national_code"]::before,
+.register-form label[for*="کد ملی"]::before {
+    content: "🆔";
+    font-size: 16px;
+}
+
+.register-form label[for="id_marital_status"]::before,
+.register-form label[for*="marital"]::before,
+.register-form label[for*="وضعیت تاهل"]::before {
+    content: "💍";
+    font-size: 16px;
+}
+
+.register-form label[for="id_phone"]::before,
+.register-form label[for*="mobile"]::before,
+.register-form label[for*="موبایل"]::before,
+.register-form label[for*="phone"]::before {
+    content: "📱";
+    font-size: 16px;
+}
+
+.register-form label[for="id_address"]::before,
+.register-form label[for*="address"]::before,
+.register-form label[for*="آدرس"]::before {
+    content: "📍";
+    font-size: 16px;
+}
+
+.register-form label[for="id_gender"]::before,
+.register-form label[for*="gender"]::before,
+.register-form label[for*="جنسیت"]::before {
+    content: "⚧";
+    font-size: 16px;
+}
+
+.register-form label[for="id_field_of_study"]::before,
+.register-form label[for*="field_of_study"]::before,
+.register-form label[for*="رشته تحصیلی"]::before {
+    content: "📚";
+    font-size: 16px;
+}
+
+.register-form label[for="id_email"]::before,
+.register-form label[for*="email"]::before,
+.register-form label[for*="ایمیل"]::before {
+    content: "📧";
+    font-size: 16px;
+}
+
+.register-form label[for="id_photo"]::before,
+.register-form label[for*="photo"]::before,
+.register-form label[for*="عکس"]::before {
+    content: "📷";
+    font-size: 16px;
+}
+
+.register-form label[for*="university"]::before,
+.register-form label[for*="دانشگاه"]::before {
+    content: "🏛️";
+    font-size: 16px;
+}
+
+/* Text Inputs */
+.register-form input[type="text"],
+.register-form input[type="number"],
+.register-form input[type="tel"],
+.register-form input[type="email"],
+.register-form input[type="date"] {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: inherit;
+    background-color: #f8fafc;
+    transition: all 0.3s ease;
+    color: #1e293b;
+}
+
+.register-form input[type="text"]:hover,
+.register-form input[type="number"]:hover,
+.register-form input[type="tel"]:hover,
+.register-form input[type="email"]:hover,
+.register-form input[type="date"]:hover {
+    border-color: #94a3b8;
+    background-color: #ffffff;
+}
+
+.register-form input[type="text"]:focus,
+.register-form input[type="number"]:focus,
+.register-form input[type="tel"]:focus,
+.register-form input[type="email"]:focus,
+.register-form input[type="date"]:focus {
+    outline: none;
+    border-color: #059669;
+    box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.12);
+    background-color: #ffffff;
+}
+
+.register-form input::placeholder {
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+/* Date Input Specific */
+.register-form input[type="date"] {
+    direction: ltr;
+    text-align: left;
+    font-family: inherit;
+}
+
+/* Email Input */
+.register-form input[type="email"] {
+    direction: ltr;
+    text-align: left;
+    font-family: inherit;
+}
+
+/* Select Fields */
+.register-form select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: inherit;
+    background-color: #f8fafc;
+    transition: all 0.3s ease;
+    color: #1e293b;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 16px center;
+    padding-left: 44px;
+}
+
+.register-form select:hover {
+    border-color: #94a3b8;
+    background-color: #ffffff;
+}
+
+.register-form select:focus {
+    outline: none;
+    border-color: #059669;
+    box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.12);
+    background-color: #ffffff;
+}
+
+/* Textarea (Address) */
+.register-form textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: inherit;
+    background-color: #f8fafc;
+    transition: all 0.3s ease;
+    color: #1e293b;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.register-form textarea:hover {
+    border-color: #94a3b8;
+    background-color: #ffffff;
+}
+
+.register-form textarea:focus {
+    outline: none;
+    border-color: #059669;
+    box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.12);
+    background-color: #ffffff;
+}
+
+.register-form textarea::placeholder {
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+/* File Input (Photo) */
+.register-form input[type="file"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: inherit;
+    background-color: #f8fafc;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #64748b;
+}
+
+.register-form input[type="file"]:hover {
+    border-color: #94a3b8;
+    background-color: #ffffff;
+}
+
+.register-form input[type="file"]::file-selector-button {
+    background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 16px;
+    transition: all 0.25s ease;
+}
+
+.register-form input[type="file"]::file-selector-button:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+/* Checkbox Fields (Marital Status, Universities) */
+.register-form input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #059669;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+/* Checkbox Groups */
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+/* Radio Buttons (Gender) */
+.register-form input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #059669;
+    cursor: pointer;
+    margin-left: 6px;
+}
+
+.register-form ul[id*="gender"] {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.register-form ul[id*="gender"] li {
+    display: flex;
+    align-items: center;
+}
+
+.register-form ul[id*="gender"] label {
+    margin-bottom: 0;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Multiple Checkbox List (Universities) */
+.register-form ul[id*="university"],
+.register-form ul[id*="دانشگاه"] {
+    list-style: none;
+    padding: 12px 16px;
+    background-color: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    margin: 0;
+}
+
+.register-form ul[id*="university"] li,
+.register-form ul[id*="دانشگاه"] li {
+    display: flex;
+    align-items: center;
+}
+
+.register-form ul[id*="university"] label,
+.register-form ul[id*="دانشگاه"] label {
+    margin-bottom: 0;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Error Messages */
+.register-form .errorlist {
+    list-style: none;
+    margin-top: 8px;
+    padding: 10px 14px;
+    background-color: #fef2f2;
+    border-radius: 10px;
+    border-right: 4px solid #ef4444;
+}
+
+.register-form .errorlist li {
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.register-form .errorlist li::before {
+    content: "⚠️";
+    font-size: 16px;
+}
+
+/* Help Text */
+.register-form .helptext {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+/* Submit Button */
+.form-actions {
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 2px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+}
+
+.btn-register-submit {
+    background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+    color: white;
+    border: none;
+    padding: 16px 40px;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 20px rgba(5, 150, 105, 0.25);
+    font-family: inherit;
+}
+
+.btn-register-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(5, 150, 105, 0.35);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.btn-register-submit:active {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(5, 150, 105, 0.3);
+}
+
+.btn-register-icon {
+    font-size: 22px;
+}
+
+.btn-cancel {
+    background-color: #f1f5f9;
+    color: #64748b;
+    border: 2px solid #e2e8f0;
+    padding: 16px 32px;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-cancel:hover {
+    background-color: #e2e8f0;
+    color: #334155;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+    .register-container {
+        padding: 28px 24px;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .register-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+    
+    .register-header-icon {
+        width: 64px;
+        height: 64px;
+        font-size: 36px;
+    }
+    
+    .register-title {
+        font-size: 22px;
+    }
+    
+    .register-form input[type="text"],
+    .register-form input[type="number"],
+    .register-form input[type="tel"],
+    .register-form input[type="email"],
+    .register-form input[type="date"],
+    .register-form select,
+    .register-form textarea {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+    
+    .register-form ul[id*="gender"],
+    .register-form ul[id*="university"],
+    .register-form ul[id*="دانشگاه"] {
+        gap: 12px 16px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-register-submit,
+    .btn-cancel {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .register-container {
+        padding: 24px 18px;
+        border-radius: 16px;
+    }
+    
+    .register-title {
+        font-size: 20px;
+    }
+    
+    .register-form label {
+        font-size: 14px;
+    }
+    
+    .register-form input[type="text"],
+    .register-form input[type="number"],
+    .register-form input[type="tel"],
+    .register-form input[type="email"],
+    .register-form input[type="date"],
+    .register-form select,
+    .register-form textarea {
+        padding: 10px 12px;
+        font-size: 13px;
+        border-radius: 10px;
+    }
+    
+    .register-form input[type="file"]::file-selector-button {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+    
+    .btn-register-submit {
+        font-size: 16px;
+        padding: 14px 20px;
+    }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY & PRINT
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+*:focus-visible {
+    outline: 3px solid #059669;
+    outline-offset: 2px;
+}
+
+@media print {
+    .register-container {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+    
+    .btn-register-submit,
+    .btn-cancel {
+        display: none;
+    }
+    
+    .register-form input,
+    .register-form select,
+    .register-form textarea {
+        border: 1px solid #ccc;
+        background: white;
+    }
+}

@@ -1,14 +1,98 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}{{lesson.name}}{% endblock title %}
+{% block title %}{{ lesson.name }}{% endblock title %}
 
 {% block content %}
-    <h3>
-        روز های برگزاری:
-        {% for i in lesson %}
-                <h4>{{i.0}}</h4>
-                <a href="{% url 'professor:grade' l_code i.1%}"><h4>لیست دانشجوهای روز {{i.0}}</h4></a>
-        {% endfor %}
-    </h3>
-    
+    <link rel="stylesheet" href="{% static 'professor_lesson_details.css' %}">
+    <div class="lesson-detail-page-wrapper">
+        
+        <div class="page-header-card">
+            <div class="page-header-icon">📝</div>
+            <div class="page-header-info">
+                <h1 class="page-title">{{ lesson.name }}</h1>
+                <p class="page-subtitle">روزهای برگزاری کلاس</p>
+            </div>
+            {% with day_count=lesson|length %}
+                <span class="day-count-badge">{{ day_count }} روز</span>
+            {% endwith %}
+        </div>
+        
+        <div class="class-days-section">
+            <div class="section-header">
+                <span class="section-icon">📅</span>
+                <div>
+                    <h2 class="section-title">روزهای برگزاری</h2>
+                    <p class="section-subtitle">برای مشاهده لیست دانشجویان هر روز کلیک کنید</p>
+                </div>
+            </div>
+            
+            {% if lesson %}
+                <div class="days-list">
+                    {% for i in lesson %}
+                        <div class="day-item">
+                            <div class="day-header">
+                                <div class="day-header-icon">
+                                    {% if 'شنبه' in i.0 %}📅
+                                    {% elif 'یکشنبه' in i.0 %}📅
+                                    {% elif 'دوشنبه' in i.0 %}📅
+                                    {% elif 'سه شنبه' in i.0 %}📅
+                                    {% elif 'چهارشنبه' in i.0 %}📅
+                                    {% elif 'پنجشنبه' in i.0 %}📅
+                                    {% elif 'جمعه' in i.0 %}📅
+                                    {% else %}📅{% endif %}
+                                </div>
+                                <h3 class="day-name">{{ i.0 }}</h3>
+                                <a href="{% url 'professor:grade' l_code i.1 %}" class="day-action-link">
+                                    <span class="day-action-icon">👨‍🎓</span>
+                                    لیست دانشجویان
+                                    <span class="day-action-arrow">→</span>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <span class="empty-state-icon">📭</span>
+                    <h3>روز برگزاری یافت نشد</h3>
+                    <p>در حال حاضر هیچ روز برگزاری برای این درس ثبت نشده است</p>
+                    <a href="javascript:history.back()" class="btn-back">
+                        <span>↩️</span>
+                        بازگشت
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dayItems = document.querySelectorAll('.day-item');
+            
+            dayItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    const icon = this.querySelector('.day-header-icon');
+                    if (icon) {
+                        icon.style.transform = 'scale(1.1) rotate(-5deg)';
+                        icon.style.transition = 'transform 0.3s ease';
+                    }
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    const icon = this.querySelector('.day-header-icon');
+                    if (icon) {
+                        icon.style.transform = 'scale(1) rotate(0deg)';
+                    }
+                });
+            });
+            
+            // Log day count
+            const countBadge = document.querySelector('.day-count-badge');
+            if (countBadge) {
+                console.log(`Total class days: ${countBadge.textContent}`);
+            }
+        });
+    </script>
 {% endblock content %}

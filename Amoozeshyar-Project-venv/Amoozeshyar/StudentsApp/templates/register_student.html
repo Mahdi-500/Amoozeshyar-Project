@@ -1,13 +1,151 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}ثبت نام دانشجو{% endblock title %}
 
 {% block content %}
+    <link rel="stylesheet" href="{% static 'register_student.css' %}">
+    <div class="register-page-wrapper">
+        <div class="register-container">
+            
+            <div class="register-header">
+                <span class="register-header-icon">👨‍🎓</span>
+                <div>
+                    <h1 class="register-title">ثبت نام دانشجو</h1>
+                    <p class="register-subtitle">اطلاعات دانشجوی جدید را وارد نمایید</p>
+                </div>
+            </div>
+            
+            <form method="POST" enctype="multipart/form-data" class="register-form">
+                {% csrf_token %}
+                
+                <div class="form-grid">
+                    {% for field in form %}
+                        <p class="{% if field.name == 'address' or field.name == 'آدرس' %}full-width{% endif %}">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.errors %}
+                                <ul class="errorlist">
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            {% if field.help_text %}
+                                <span class="helptext">{{ field.help_text }}</span>
+                            {% endif %}
+                        </p>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-actions">
+                    <a href="{% url 'academic:main' %}" class="btn-cancel">
+                        <span>↩️</span>
+                        انصراف
+                    </a>
+                    <button type="submit" class="btn-register-submit">
+                        <span class="btn-register-icon">✅</span>
+                        ثبت دانشجو
+                    </button>
+                </div>
+            </form>
+            
+        </div>
+    </div>
 
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">ثبت</button>
-    </form>
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.register-form');
+            const inputs = form.querySelectorAll('input, select, textarea');
+            
+            // Add focus effects
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    const parent = this.closest('p');
+                    if (parent) {
+                        parent.style.transform = 'scale(1.01)';
+                        parent.style.transition = 'transform 0.2s ease';
+                    }
+                });
+                
+                input.addEventListener('blur', function() {
+                    const parent = this.closest('p');
+                    if (parent) {
+                        parent.style.transform = 'scale(1)';
+                    }
+                });
+            });
+            
+            // File input enhancement
+            const fileInputs = form.querySelectorAll('input[type="file"]');
+            fileInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    const fileName = this.files[0]?.name;
+                    if (fileName) {
+                        this.style.borderColor = '#16a34a';
+                        this.style.backgroundColor = '#f0fdf4';
+                        this.setAttribute('data-file', fileName);
+                    } else {
+                        this.style.borderColor = '#cbd5e1';
+                        this.style.backgroundColor = '#f8fafc';
+                    }
+                });
+            });
+            
+            // Form validation feedback
+            form.addEventListener('submit', function(e) {
+                let hasError = false;
+                const requiredFields = form.querySelectorAll('[required]');
+                
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        field.style.borderColor = '#ef4444';
+                        field.style.backgroundColor = '#fef2f2';
+                        hasError = true;
+                        
+                        field.addEventListener('input', function() {
+                            field.style.borderColor = '#e2e8f0';
+                            field.style.backgroundColor = '#f8fafc';
+                        }, { once: true });
+                    }
+                });
+                
+                if (hasError) {
+                    e.preventDefault();
+                    const firstError = form.querySelector('[style*="border-color: rgb(239, 68, 68)"]');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstError.focus();
+                    }
+                    return;
+                }
+                
+                // Add loading state
+                const btn = this.querySelector('.btn-register-submit');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span style="display: inline-block; animation: spin 1s linear infinite;">⏳</span> در حال ثبت...';
+                btn.disabled = true;
+                btn.style.opacity = '0.85';
+                btn.style.cursor = 'wait';
+                
+                setTimeout(() => {
+                    if (btn.disabled) {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        btn.style.opacity = '1';
+                        btn.style.cursor = 'pointer';
+                    }
+                }, 10000);
+            });
+        });
+        
+        const spinStyle = document.createElement('style');
+        spinStyle.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(spinStyle);
+    </script>
 {% endblock content %}

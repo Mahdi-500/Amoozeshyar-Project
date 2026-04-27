@@ -1,11 +1,74 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}{{professor.first_name}} {{professor.last_name}}{% endblock title %}
+{% block title %}پروفایل {{ professor.first_name }} {{ professor.last_name }}{% endblock title %}
 
 {% block content %}
-    {% for uni in p_university %}
-        <a href="{% url 'professor:professor_lessons' professor.code  uni.code %}">لیست دروس {{uni.name}}</a>    
-    {% endfor %}
-    
-    
+    <link rel="stylesheet" href="{% static 'profile.css' %}">
+    <div class="profile-page-wrapper">
+        
+        <div class="profile-header-card">
+            <div class="profile-avatar">👨‍🏫</div>
+            <div class="profile-info">
+                <h1 class="profile-name">{{ professor.first_name }} {{ professor.last_name }}</h1>
+                <div class="profile-code">{{ professor.code }}</div>
+                <span class="profile-role-badge">استاد</span>
+            </div>
+        </div>
+        
+        <div class="universities-section">
+            <div class="section-header">
+                <span class="section-icon">🏛️</span>
+                <div>
+                    <h2 class="section-title">دانشگاه‌های محل تدریس</h2>
+                    <p class="section-subtitle">برای مشاهده دروس هر دانشگاه کلیک کنید</p>
+                </div>
+            </div>
+            
+            {% if p_university %}
+                <div class="university-grid">
+                    {% for uni in p_university %}
+                        <a href="{% url 'professor:professor_lessons' professor.code uni.code %}" class="university-card">
+                            <div class="university-card-icon">🎓</div>
+                            <div class="university-card-content">
+                                <div class="university-name">{{ uni.name }}</div>
+                                <div class="university-action">لیست دروس</div>
+                            </div>
+                            <span class="university-arrow">→</span>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">🏛️</div>
+                    <h3>دانشگاهی یافت نشد</h3>
+                    <p>شما در حال حاضر در هیچ دانشگاهی مشغول به تدریس نیستید</p>
+                </div>
+            {% endif %}
+        </div>
+        
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover sound effect simulation with subtle animation
+            const cards = document.querySelectorAll('.university-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    const icon = this.querySelector('.university-card-icon');
+                    if (icon) {
+                        icon.style.transform = 'scale(1.1) rotate(-5deg)';
+                    }
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    const icon = this.querySelector('.university-card-icon');
+                    if (icon) {
+                        icon.style.transform = 'scale(1) rotate(0deg)';
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock content %}

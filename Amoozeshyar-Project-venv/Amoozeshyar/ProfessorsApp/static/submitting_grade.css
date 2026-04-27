@@ -1,0 +1,625 @@
+/* static/css/submitting_grade.css */
+
+/* ============================================
+   UNIVERSITY GRADE SUBMISSION STYLES
+   For Professors
+   ============================================ */
+
+/* Grade Page Container */
+.grade-page-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 0;
+}
+
+/* ============================================
+   PAGE HEADER
+   ============================================ */
+.page-header-card {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+    border-radius: 20px;
+    padding: 32px 36px;
+    margin-bottom: 32px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 8px 30px rgba(6, 78, 59, 0.2);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.page-header-icon {
+    font-size: 44px;
+    background: rgba(255, 255, 255, 0.15);
+    width: 76px;
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+}
+
+.page-header-info {
+    flex: 1;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0 0 4px 0;
+    line-height: 1.3;
+}
+
+.page-subtitle {
+    font-size: 15px;
+    color: #a7f3d0;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.page-subtitle::before {
+    content: "📝";
+    font-size: 16px;
+}
+
+.student-count-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 6px 18px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 700;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    white-space: nowrap;
+}
+
+/* ============================================
+   GRADE FORM SECTION
+   ============================================ */
+.grade-form-section {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 20, 40, 0.08);
+    padding: 32px;
+    border: 1px solid #e2e8f0;
+    animation: fadeInUp 0.5s ease-out;
+    animation-delay: 0.1s;
+    animation-fill-mode: both;
+}
+
+/* ============================================
+   GRADE TABLE STYLES
+   ============================================ */
+.grade-table-wrapper {
+    overflow-x: auto;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    margin-bottom: 28px;
+    border: 1px solid #e2e8f0;
+}
+
+.grade-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    min-width: 700px;
+    table-layout: auto;
+}
+
+/* Table Header */
+.grade-table thead tr {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+}
+
+.grade-table th {
+    color: white;
+    padding: 16px 14px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.grade-table th:first-child {
+    border-radius: 0 14px 0 0;
+    min-width: 160px;
+}
+
+.grade-table th:nth-child(2),
+.grade-table th:nth-child(3) {
+    min-width: 120px;
+}
+
+.grade-table th:last-child {
+    border-radius: 14px 0 0 0;
+    min-width: 120px;
+}
+
+/* Table Body */
+.grade-table tbody tr {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.grade-table tbody tr:hover {
+    background-color: #f0fdf4;
+}
+
+.grade-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.grade-table td {
+    padding: 14px 12px;
+    text-align: center;
+    color: #1e293b;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+/* Student Number Cell */
+.grade-table td:first-child {
+    font-weight: 600;
+    color: #064e3b;
+    direction: ltr;
+    font-family: 'Courier New', 'Vazirmatn', monospace;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    min-width: 160px;
+    padding: 14px 16px;
+}
+
+/* Name Cells */
+.grade-table td:nth-child(2),
+.grade-table td:nth-child(3) {
+    font-weight: 500;
+    color: #334155;
+    white-space: nowrap;
+}
+
+/* Grade Input Cell */
+.grade-table td:last-child {
+    padding: 8px 16px;
+}
+
+/* Student Number Display - handle the Django field rendering */
+.grade-table td:first-child input[type="text"] {
+    width: 100%;
+    min-width: 140px;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: 'Courier New', 'Vazirmatn', monospace;
+    text-align: center;
+    font-weight: 600;
+    color: #064e3b;
+    background-color: #f8fafc;
+    direction: ltr;
+    letter-spacing: 0.5px;
+}
+
+.grade-table td:first-child input[type="text"]:focus {
+    outline: none;
+    border-color: #059669;
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+}
+
+/* Name Display - handle the Django field rendering */
+.grade-table td:nth-child(2) input[type="text"],
+.grade-table td:nth-child(3) input[type="text"] {
+    width: 100%;
+    min-width: 100px;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    text-align: center;
+    font-weight: 500;
+    color: #334155;
+    background-color: #f8fafc;
+}
+
+.grade-table td:nth-child(2) input[type="text"]:focus,
+.grade-table td:nth-child(3) input[type="text"]:focus {
+    outline: none;
+    border-color: #059669;
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+}
+
+/* Readonly fields - if the student info is readonly */
+.grade-table td:first-child input[readonly],
+.grade-table td:nth-child(2) input[readonly],
+.grade-table td:nth-child(3) input[readonly] {
+    background-color: #f1f5f9;
+    cursor: default;
+    border-style: dashed;
+}
+
+/* Grade Input Field */
+.grade-table td:last-child input[type="text"],
+.grade-table td:last-child input[type="number"] {
+    width: 90px;
+    padding: 10px 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: inherit;
+    text-align: center;
+    font-weight: 600;
+    color: #1e293b;
+    transition: all 0.25s ease;
+    background-color: #f8fafc;
+    direction: ltr;
+}
+
+.grade-table td:last-child input[type="text"]:hover,
+.grade-table td:last-child input[type="number"]:hover {
+    border-color: #94a3b8;
+    background-color: #ffffff;
+}
+
+.grade-table td:last-child input[type="text"]:focus,
+.grade-table td:last-child input[type="number"]:focus {
+    outline: none;
+    border-color: #059669;
+    box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.12);
+    background-color: #ffffff;
+    width: 95px;
+}
+
+.grade-table td:last-child input[type="number"] {
+    -moz-appearance: textfield;
+    -webkit-appearance: none;
+    appearance: textfield;
+}
+
+.grade-table td:last-child input[type="number"]::-webkit-inner-spin-button,
+.grade-table td:last-child input[type="number"]::-webkit-outer-spin-button {
+    opacity: 1;
+    height: 24px;
+}
+
+/* Grade Colors based on value */
+.grade-high {
+    color: #16a34a !important;
+    border-color: #16a34a !important;
+    background-color: #f0fdf4 !important;
+}
+
+.grade-medium {
+    color: #d97706 !important;
+    border-color: #d97706 !important;
+    background-color: #fffbeb !important;
+}
+
+.grade-low {
+    color: #dc2626 !important;
+    border-color: #dc2626 !important;
+    background-color: #fef2f2 !important;
+}
+
+/* Hidden Fields */
+.grade-table input[type="hidden"] {
+    display: none;
+}
+
+/* Error Rows */
+.grade-table .error-row td {
+    background-color: #fef2f2;
+    padding: 10px 14px;
+}
+
+.error {
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+
+.error::before {
+    content: "⚠️";
+    font-size: 16px;
+}
+
+/* Management Form Hidden */
+.grade-form-section > input[type="hidden"] {
+    display: none;
+}
+
+/* ============================================
+   FORM ACTIONS
+   ============================================ */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    padding-top: 8px;
+}
+
+.btn-submit-grade {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+    color: white;
+    border: none;
+    padding: 16px 36px;
+    border-radius: 14px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    box-shadow: 0 8px 20px rgba(5, 150, 105, 0.25);
+}
+
+.btn-submit-grade:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(5, 150, 105, 0.35);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.btn-submit-grade:active {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(5, 150, 105, 0.3);
+}
+
+.btn-submit-icon {
+    font-size: 22px;
+}
+
+.btn-cancel {
+    background-color: #f1f5f9;
+    color: #64748b;
+    border: 2px solid #e2e8f0;
+    padding: 16px 28px;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-cancel:hover {
+    background-color: #e2e8f0;
+    color: #334155;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+.empty-state {
+    text-align: center;
+    padding: 56px 24px;
+    background-color: #f8fafc;
+    border-radius: 16px;
+    border: 2px dashed #e2e8f0;
+}
+
+.empty-state-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+    display: block;
+}
+
+.empty-state h3 {
+    color: #334155;
+    font-size: 20px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.empty-state p {
+    color: #64748b;
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+    .page-header-card {
+        padding: 24px 20px;
+        flex-direction: column;
+        text-align: center;
+        gap: 14px;
+    }
+    
+    .page-header-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 34px;
+    }
+    
+    .page-title {
+        font-size: 20px;
+    }
+    
+    .grade-form-section {
+        padding: 24px 18px;
+    }
+    
+    .grade-table-wrapper {
+        border-radius: 12px;
+    }
+    
+    .grade-table th,
+    .grade-table td {
+        padding: 12px 8px;
+        font-size: 13px;
+    }
+    
+    .grade-table td:first-child {
+        min-width: 130px;
+    }
+    
+    .grade-table th:first-child {
+        min-width: 130px;
+    }
+    
+    .grade-table td:first-child input[type="text"] {
+        min-width: 110px;
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+    
+    .grade-table td:last-child input[type="text"],
+    .grade-table td:last-child input[type="number"] {
+        width: 70px;
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-submit-grade,
+    .btn-cancel {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header-card {
+        padding: 20px 16px;
+        border-radius: 16px;
+    }
+    
+    .page-header-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 28px;
+    }
+    
+    .page-title {
+        font-size: 18px;
+    }
+    
+    .grade-form-section {
+        padding: 20px 14px;
+        border-radius: 16px;
+    }
+    
+    .grade-table {
+        min-width: 550px;
+    }
+    
+    .grade-table th,
+    .grade-table td {
+        padding: 10px 6px;
+        font-size: 12px;
+    }
+    
+    .grade-table td:first-child {
+        min-width: 110px;
+    }
+    
+    .grade-table th:first-child {
+        min-width: 110px;
+    }
+    
+    .grade-table td:first-child input[type="text"] {
+        min-width: 90px;
+        padding: 5px 8px;
+        font-size: 12px;
+    }
+    
+    .grade-table td:nth-child(2) input[type="text"],
+    .grade-table td:nth-child(3) input[type="text"] {
+        min-width: 70px;
+        padding: 5px 8px;
+        font-size: 12px;
+    }
+    
+    .grade-table td:last-child input[type="text"],
+    .grade-table td:last-child input[type="number"] {
+        width: 55px;
+        padding: 6px 8px;
+        font-size: 13px;
+    }
+    
+    .btn-submit-grade {
+        font-size: 15px;
+        padding: 12px 20px;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY & PRINT
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+*:focus-visible {
+    outline: 3px solid #059669;
+    outline-offset: 2px;
+}
+
+@media print {
+    .page-header-card {
+        background: #064e3b !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .btn-submit-grade,
+    .btn-cancel {
+        display: none;
+    }
+    
+    .grade-table-wrapper {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+    
+    .grade-table input {
+        border: 1px solid #ccc;
+        background: white;
+    }
+    
+    .grade-form-section {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}

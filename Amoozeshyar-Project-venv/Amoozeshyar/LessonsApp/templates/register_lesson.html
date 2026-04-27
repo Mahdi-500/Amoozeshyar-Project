@@ -1,12 +1,186 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %} ایجاد درس {% endblock title %}
+{% block title %}ایجاد درس{% endblock title %}
 
 {% block content %}
-    
-    <form method="POST", enctype="multipart/form-data">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="Submit">ثبت</button>
-    </form>
+    <link rel="stylesheet" href="{% static 'register_lesson.css' %}">
+    <div class="register-page-wrapper">
+        <div class="register-container">
+            
+            <div class="register-header">
+                <span class="register-header-icon">📖</span>
+                <div>
+                    <h1 class="register-title">ایجاد درس جدید</h1>
+                    <p class="register-subtitle">اطلاعات درس جدید را وارد نمایید</p>
+                </div>
+            </div>
+            
+            <form method="POST" enctype="multipart/form-data" class="lesson-form">
+                {% csrf_token %}
+                
+                <div class="form-grid">
+                    {% for field in form %}
+                        {% if field.name == 'prerequisites' or field.name == 'corequisites' or field.name == 'majors' or 'پیش نیاز' in field.label or 'هم نیاز' in field.label or 'رشته' in field.label %}
+                            <p class="full-width">
+                                {{ field.label_tag }}
+                                <div class="checkbox-list-container">
+                                    {% for choice in field %}
+                                        <div class="checkbox-item">
+                                            {{ choice.tag }}
+                                            <label for="{{ choice.id_for_label }}">
+                                                {{ choice.choice_label }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                {% if field.errors %}
+                                    <ul class="errorlist">
+                                        {% for error in field.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                {% if field.help_text %}
+                                    <span class="helptext">{{ field.help_text }}</span>
+                                {% endif %}
+                            </p>
+                        {% else %}
+                            <p>
+                                {{ field.label_tag }}
+                                {{ field }}
+                                {% if field.errors %}
+                                    <ul class="errorlist">
+                                        {% for error in field.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                {% if field.help_text %}
+                                    <span class="helptext">{{ field.help_text }}</span>
+                                {% endif %}
+                            </p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                
+                <div class="form-actions">
+                    <a href="{% url 'academic:main' %}" class="btn-cancel">
+                        <span>↩️</span>
+                        انصراف
+                    </a>
+                    <button type="submit" class="btn-register-submit">
+                        <span class="btn-register-icon">✅</span>
+                        ثبت درس
+                    </button>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.lesson-form');
+            const inputs = form.querySelectorAll('input[type="text"], input[type="number"], select');
+            
+            // Add focus effects to regular inputs
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    const parent = this.closest('p');
+                    if (parent) {
+                        parent.style.transform = 'scale(1.01)';
+                        parent.style.transition = 'transform 0.2s ease';
+                    }
+                });
+                
+                input.addEventListener('blur', function() {
+                    const parent = this.closest('p');
+                    if (parent) {
+                        parent.style.transform = 'scale(1)';
+                    }
+                });
+            });
+            
+            // Checkbox selection visual feedback
+            const checkboxContainers = document.querySelectorAll('.checkbox-list-container');
+            checkboxContainers.forEach(container => {
+                const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        const item = this.closest('.checkbox-item');
+                        if (this.checked) {
+                            item.style.backgroundColor = '#fff7ed';
+                            item.style.borderRight = '3px solid #ea580c';
+                        } else {
+                            item.style.backgroundColor = '';
+                            item.style.borderRight = '';
+                        }
+                    });
+                    
+                    // Set initial state
+                    if (checkbox.checked) {
+                        const item = checkbox.closest('.checkbox-item');
+                        item.style.backgroundColor = '#fff7ed';
+                        item.style.borderRight = '3px solid #ea580c';
+                    }
+                });
+            });
+            
+            // Form validation feedback
+            form.addEventListener('submit', function(e) {
+                let hasError = false;
+                const requiredInputs = form.querySelectorAll('input[type="text"][required], input[type="number"][required], select[required]');
+                
+                requiredInputs.forEach(field => {
+                    if (!field.value.trim()) {
+                        field.style.borderColor = '#ef4444';
+                        field.style.backgroundColor = '#fef2f2';
+                        hasError = true;
+                        
+                        field.addEventListener('input', function() {
+                            field.style.borderColor = '#e2e8f0';
+                            field.style.backgroundColor = '#f8fafc';
+                        }, { once: true });
+                    }
+                });
+                
+                if (hasError) {
+                    e.preventDefault();
+                    const firstError = form.querySelector('[style*="border-color: rgb(239, 68, 68)"]');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstError.focus();
+                    }
+                    return;
+                }
+                
+                // Add loading state
+                const btn = this.querySelector('.btn-register-submit');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span style="display: inline-block; animation: spin 1s linear infinite;">⏳</span> در حال ثبت...';
+                btn.disabled = true;
+                btn.style.opacity = '0.85';
+                btn.style.cursor = 'wait';
+                
+                setTimeout(() => {
+                    if (btn.disabled) {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        btn.style.opacity = '1';
+                        btn.style.cursor = 'pointer';
+                    }
+                }, 10000);
+            });
+        });
+        
+        const spinStyle = document.createElement('style');
+        spinStyle.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(spinStyle);
+    </script>
 {% endblock content %}

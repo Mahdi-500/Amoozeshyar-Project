@@ -1,18 +1,131 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Login{% endblock title %}
+{% block title %}ورود به سامانه{% endblock title %}
 
 {% block content %}
-    <form method="POST">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">وارد شوید</button>
-    </form>
+    <link rel="stylesheet" href="{% static 'login.css' %}">
+    <div class="login-page-wrapper">
+        <div class="login-container">
+            
+            <div class="login-header">
+                <span class="login-logo">🎓</span>
+                <h1 class="login-title">ورود به سامانه</h1>
+                <p class="login-subtitle">به پورتال آموزشی دانشگاه خوش آمدید</p>
+            </div>
+            
+            <form method="POST" class="login-form">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    <p>
+                        {{ field.label_tag }}
+                        {% if field.name == 'password' %}
+                            <div class="password-field-wrapper">
+                                {{ field }}
+                                <button type="button" class="password-toggle" aria-label="نمایش رمز عبور">👁️</button>
+                            </div>
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
+                        {% if field.errors %}
+                            <ul class="errorlist">
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        {% if field.help_text %}
+                            <span class="helptext">{{ field.help_text }}</span>
+                        {% endif %}
+                    </p>
+                {% endfor %}
+                
+                <button type="submit" class="btn-login-submit">
+                    <span class="btn-login-icon">🔑</span>
+                    وارد شوید
+                </button>
+            </form>
+            
+            {% if messages %}
+                <div class="login-alerts">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <div class="login-footer-links">
+                <a href="#" class="login-footer-link">
+                    <span>❓</span>
+                    نیاز به راهنمایی دارید؟
+                </a>
+            </div>
+            
+        </div>
+    </div>
 
-    {% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-    {% endfor %}
-
-{% endif %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.login-form');
+            const inputs = form.querySelectorAll('input[type="text"], input[type="password"]');
+            
+            // Add focus animation
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    const wrapper = this.closest('.password-field-wrapper') || this.parentElement;
+                    wrapper.style.transform = 'scale(1.01)';
+                    wrapper.style.transition = 'transform 0.2s ease';
+                });
+                
+                input.addEventListener('blur', function() {
+                    const wrapper = this.closest('.password-field-wrapper') || this.parentElement;
+                    wrapper.style.transform = 'scale(1)';
+                });
+            });
+            
+            // Password toggle functionality
+            const passwordToggle = document.querySelector('.password-toggle');
+            if (passwordToggle) {
+                const passwordInput = document.querySelector('input[type="password"]');
+                
+                passwordToggle.addEventListener('click', function() {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    this.innerHTML = type === 'password' ? '👁️' : '🙈';
+                    this.setAttribute('aria-label', type === 'password' ? 'نمایش رمز عبور' : 'مخفی کردن رمز عبور');
+                });
+            }
+            
+            // Auto-hide alerts after 5 seconds
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach((alert, index) => {
+                setTimeout(() => {
+                    alert.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                    alert.style.opacity = '0';
+                    alert.style.transform = 'translateX(80px)';
+                    setTimeout(() => {
+                        if (alert.parentNode) {
+                            alert.remove();
+                        }
+                    }, 400);
+                }, 5000 + (index * 500));
+            });
+            
+            // Add loading state on submit
+            form.addEventListener('submit', function() {
+                const btn = this.querySelector('.btn-login-submit');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span class="spinner">⏳</span> در حال ورود...';
+                btn.disabled = true;
+                
+                setTimeout(() => {
+                    if (btn.disabled) {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    }
+                }, 10000);
+            });
+        });
+    </script>
 {% endblock content %}

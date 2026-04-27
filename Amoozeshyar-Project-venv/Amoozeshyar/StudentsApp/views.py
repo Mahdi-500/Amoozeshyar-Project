@@ -51,7 +51,7 @@ def student_form_view(request):
 
 
 @login_required(login_url=settings.LOGIN_URL)
-@is_user_authorized(role_name="student")
+@is_user_authorized(role_name="student", can_admin_access=True)
 def student_lesson_search_view(request):
     flag = False
     if request.method == "POST":

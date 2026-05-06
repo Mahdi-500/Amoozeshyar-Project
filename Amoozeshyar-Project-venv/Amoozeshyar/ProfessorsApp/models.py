@@ -67,15 +67,15 @@ log = logging.getLogger(__name__)
 def set_professor_code(sender, instance, **kwargs):
     if hasattr(instance, "code") and instance.code == "1111111111":
         part_1 = str(instance.date_of_birth)[:4]
-        part_2 = str(instance.created)[1:4]
+        part_2 = str(jmodels.jdatetime.date.today().year)[1:]
 
         last_user = professor.objects.all().order_by("-code")
         if last_user:
-            part_3 = str(int(last_user[0].code[6:]) + 1)
+            part_3 = int(last_user[0].code[6:]) + 1
         else:
-            part_3 = "100"
+            part_3 = 100
 
-        instance.code = part_1 + part_2 + part_3
+        instance.code = f"{part_1}{part_2}{part_3}"
 
     else:
         log.info(msg="set_professor_code; this is an update")

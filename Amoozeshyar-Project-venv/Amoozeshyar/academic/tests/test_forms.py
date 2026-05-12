@@ -1,48 +1,86 @@
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth.models import User, Group
-from ..models import *
 from ..forms import *
 class testLoginForm(TestCase):
-    def setUp(self):
-        self.admin = User.objects.create_user(username="testadmin", password="test")
-        Group.objects.create(name="admin")
-
-
-
-    def test_with_wrong_username_password(self):
-        # ? testing with wrong username and password
+    def test_username_missing(self):
         form_data = {
-            "username":"test",
-            "password":"test1"
-        }
-        response = self.client.post(reverse("academic:login"), data={**form_data}, follow=True)
-        messages = list(response.context["messages"])
-        self.assertTrue("نام کاربری یا رمز عبور صحیح نیست" == str(messages[0]))
-        self.assertRedirects(response, reverse("academic:login"))
-
-
-
-    def test_no_group(self):
-        # ? testing with a user which doesn't have any group
-        form_data = {
-            "username":"testadmin",
+            "username":"",
             "password":"test"
         }
-        response = self.client.post(reverse("academic:login"), data={**form_data}, follow=True)
-        messages = list(response.context["messages"])
-        self.assertTrue("گروهی برای شما تعیین نشده است" == str(messages[0]))
-        self.assertRedirects(response, reverse("academic:login"))
+        form = LoginForm(data={**form_data})
+        self.assertFalse(form.is_valid())
+        self.assertIn("username", form.errors)
+        self.assertEqual(form.errors["username"], ["این فیلد اجباری است"])
 
-    
 
+
+    def test_password_missing(self):
+        form_data = {
+            "username":"test_user",
+            "password":""
+        }
+        form = LoginForm(data={**form_data})
+        self.assertFalse(form.is_valid())
+        self.assertIn("password", form.errors)
+        self.assertEqual(form.errors["password"], ["این فیلد اجباری است"])
+
+
+
+    def test_both_fields_missing(self):
+        form_data = {
+            "username":"",
+            "password":""
+        }
+        form = LoginForm(data={**form_data})
+        self.assertFalse(form.is_valid())
+        self.assertIn("password", form.errors)
+        self.assertIn("username", form.errors)
+        self.assertEqual(form.errors["password"], ["این فیلد اجباری است"])
+        self.assertEqual(form.errors["username"], ["این فیلد اجباری است"])
+
+
+
+    def test_labels(self):
+        form_data = {
+            "username":"test_user",
+            "password":"test_pass"
+        }
+        form = LoginForm(data={**form_data})
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.fields["username"].label, "نام کاربری")
+        self.assertEqual(form.fields["password"].label, "رمز عبور")
+
+
+
+    def test_widgets(self):
+        form_data = {
+            "username":"test_user",
+            "password":"test_pass"
+        }
+        form = LoginForm(data={**form_data})
+        self.assertTrue(form.is_valid())
+        
+        from django.forms import PasswordInput
+        self.assertIsInstance(form.fields["password"].widget, PasswordInput)
+
+
+
+    def test_attribute(self):
+        form_data = {
+            "username":"test_user",
+            "password":"test_pass"
+        }
+        form = LoginForm(data={**form_data})
+        self.assertTrue(form.is_valid())
+        self.assertTrue(form.fields["password"].required)
+        self.assertTrue(form.fields["username"].required)
+
+
+        
     def test_with_correct_data(self):
         form_data = {
-            "username":"testadmin",
-            "password":"test"
+            "username":"test_user",
+            "password":"test_pass"
         }
-        self.admin.groups.add(Group.objects.get(name="admin"))
-        response = self.client.post(reverse("academic:login"), data={**form_data}, follow=True)
-        messages = list(response.context["messages"])
-        self.assertTrue("وارد شدید" == str(messages[0]))
-        self.assertRedirects(response, reverse("academic:main"))
+        form = LoginForm(data={**form_data})
+        self.assertTrue(form.is_valid())

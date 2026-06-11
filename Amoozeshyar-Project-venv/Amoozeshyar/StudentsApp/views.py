@@ -18,6 +18,7 @@ from .models import *
 def student_form_view(request):
     if request.method == "POST":
         form = StudentForm(request.POST, request.FILES)
+        print(form.errors)
         if form.is_valid():
             new_student = form.save(commit=False)
             set_entrance_year(student, new_student)
@@ -45,7 +46,6 @@ def student_form_view(request):
         
     else:
         form = StudentForm()
-
     return render(request, "register_student.html", {"form":form})
 
 
@@ -209,13 +209,13 @@ def temporarely_saving_chosen_lesson_view(request):
 
             try:
                 student_choosing_lesson.objects.get(student_name=student_info, chosen_class=class_info, semester=request.session.get("semester"))
-                messages.warning(request, "این درس را قبلا برداشته اید")    # ! warning
+                messages.warning(request, "درس تکراری مجاز نیست")    # ! warning
 
             except student_choosing_lesson.DoesNotExist:
                 temp = student_choosing_lesson.objects.filter(student_name=student_info)
             
 
-                # ? checking for duplicate lesson
+                # ? checking for duplicate lesson (previous semesters)
                 duplicate_flag = False
                 for i in temp:
                     if i.chosen_class.lesson_code == class_info.lesson_code:
@@ -237,7 +237,7 @@ def temporarely_saving_chosen_lesson_view(request):
                 ## ? checking the maximum units allowed
 
                 max_unit = maximum_unit_allowed(student_info)
-                is_maximum_units_limit_passed = check_overall_unit_picked(request, student_info, max_unit, class_info)
+                is_maximum_units_limit_passed = check_overall_unit_picked(request, max_unit, class_info)
 
                 if is_maximum_units_limit_passed:
                     messages.error(request, f"تعداد واحد انتخابی از سقف تعداد واحد مجاز ({max_unit}) بیشتر است")    # ! error
@@ -314,16 +314,22 @@ def student_report_view(request):
             if lesson_mark != "No mark yet":
                 score += (lesson_mark * j.chosen_class.lesson_code.unit)
                 total_units += j.chosen_class.lesson_code.unit
+            else:
+                total_units += j.chosen_class.lesson_code.unit
         try:
             average = score / total_units
         except ZeroDivisionError:
             pass
-        overall_average += average   
+        overall_average += average
+        overall_average = round(overall_average, 2)
         overall_units += total_units
 
-        semester_status.setdefault(i[0], []).append((score, total_units, average))
+        semester_status.setdefault(i[0], []).append((round(score, 2), total_units, round(average, 2)))
 
-    overall_average /= len(semester_list)
+    try:
+        overall_average /= len(semester_list)
+    except ZeroDivisionError:
+        pass
 
     lesson_type_status = student_lesson_type_status(request)
 
@@ -339,8 +345,6 @@ def student_report_view(request):
 
 
 
-@login_required(login_url=settings.LOGIN_URL)
-@is_user_authorized(role_name="student")
 def student_lesson_type_status(request) -> dict:
     student_info = student.objects.get(student_number=request.user.username)
     student_lesson_type_status = {
@@ -358,10 +362,10 @@ def student_lesson_type_status(request) -> dict:
 todo - these functions below are for validating different things before a student can choose a class
 """
 def maximum_unit_allowed(student_info) -> int:
-    current_semester = semester()
-    if current_semester[3] == '2' or current_semester[3] == '3':
+    current_semester = set_semester()
+    if current_semester[3] == '2':
         previous_semester = str(int(current_semester) - 1)
-    else:
+    elif current_semester[3] == '1':
         previous_semester = str(int(current_semester[:3]) - 1) + '2'
 
     
@@ -396,7 +400,7 @@ def maximum_unit_allowed(student_info) -> int:
 """
 ? False means student still can choose class / True means the student will exceed the limit
 """
-def check_overall_unit_picked(request, student_info, max_unit, chosen_class) -> bool:
+def check_overall_unit_picked(request, max_unit, chosen_class) -> bool:
     if request.session["chosen_classes"] == []:
         return False
     else:
@@ -415,13 +419,11 @@ def check_overall_unit_picked(request, student_info, max_unit, chosen_class) -> 
 
 
 def check_lesson_requirements_status(class_info, student_info) -> bool:
-    student_classes = ""
     requirements = ""
-    passed = True
     try:
         requirements = class_info.lesson_code.pishniaz.all()
     except lesson.DoesNotExist:
-        return passed
+        return True
     
     # ? if lesson has no requirements
     if len(requirements) == 0:
@@ -430,18 +432,12 @@ def check_lesson_requirements_status(class_info, student_info) -> bool:
         for i in requirements:
             # ? if the student had this lesson before or not
             try:
-                student_classes = student_info.lessons.filter(chosen_class=i.code)
+                student_class = student_info.lessons.filter(chosen_class=lesson_class.objects.get(lesson_code=i.code)).order_by("modified").last()
             except student_choosing_lesson.DoesNotExist:
-                pass
-
-        if not student_classes:
-            return False
-        else:
-            for i in student_classes:
-                latest_lesson_status = Grade.objects.filter(student_name=student_info, lesson_name=i.chosen_class.lesson_code)
-                if latest_lesson_status.mark >= 10:
-                    passed &= True
+                return False
+            else:
+                lesson_grade = Grade.objects.get(student_name=student_info, lesson_name=student_class.chosen_class).mark
+                if lesson_grade >= 10:
+                    return True
                 else:
-                    passed &= False
-            
-    return passed
+                    return False

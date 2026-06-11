@@ -34,11 +34,6 @@ class StudentForm(forms.ModelForm):
             "date_of_birth":"مثال: 25-08-1357",
         }
 
-        widget = {
-            "date_of_birth":forms.TextInput(attrs={
-                "dir":"rtl"})
-        }
-
         error_messages = {
             "date_of_birth":{"invalid":"تاریخ نامعتبر است"},
             "student_id":{"unique":"کد ملی را با دقت وارد کنید"},
@@ -118,7 +113,8 @@ class StudentLessonSearchForm(forms.Form):
             if len(str(lesson_code)) != 10:
                 self.add_error("query_lesson_code", "کد درس باید 10 کاراکتر باشد")
 
-            if not lesson_name.isalpha() or not lesson_name.isalnum():
+        if lesson_name is not None:
+            if not lesson_name.isalpha() and not lesson_name.isalnum():
                 self.add_error("query_lesson_name", "نام درس معتر نیست")
         
         return clean_data

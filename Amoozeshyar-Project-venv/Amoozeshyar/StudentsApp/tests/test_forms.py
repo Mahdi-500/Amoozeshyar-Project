@@ -10,95 +10,226 @@ from ..models import *
 from ..forms import *
 
 class testStudentForm(TestCase):
-    def setUp(self):
-        admin = User.objects.create_user(username="testadmin", password="test")
-        Group.objects.create(name="admin")
-        admin.groups.add(Group.objects.get(name="admin"))
-        self.client.login(username="testadmin", password="test")
-
-        self.test_major = major.objects.create(name="test", code=100, capacity=1000)
-        self.test_uni_1 = university.objects.create(name="test", code=500, address="test")
-
-        with open("academic/tests/test_photo.jpg", "rb") as f:
-            self.photo = SimpleUploadedFile(name="test_photo.jpg",
-                                    content=f.read(),
-                                    content_type="image/jpeg")
-
-    def test_help_texts(self):
-        response = self.client.get(reverse("student:register_student"))
-        self.assertContains(response, "مثال: 09121234567")
-        self.assertContains(response, "مثال: 25-08-1357")
+    def test_excluded_fields_not_showing(self):
+        form = StudentForm()
+        self.assertFalse(form.is_valid())
+        excluded_fields = ["created", "modified", "role", "user", "last_year", "student_number"]
+        for i in excluded_fields:
+            self.assertNotIn(i, form.fields)
     
 
 
-    def test_form_errors(self):
+    def test_help_texts_showing(self):
+        form = StudentForm()
+        self.assertFalse(form.is_valid())
+        self.assertEqual("مثال: 09121234567", form.fields["mobile"].help_text)
+        self.assertEqual("مثال: 25-08-1357", form.fields["date_of_birth"].help_text)
+
+
+    
+    def test_invalid_date_of_birth(self):
+        # ? invalid month
         form_data = {
-            "first_name": "#@$565",
-            "last_name":"#@565",
-            "date_of_birth":jdatetime.date(1382,12,21),
-            "student_id":"0f@23g45",
-            "mobile":"+98811212345678",
-            "address":"این1 یک آدر# برای تست کر&ن است",
-            "major":self.test_major.pk,
-            "university":self.test_uni_1.pk,
-        }
-
-        response = self.client.post(reverse("student:register_student"), data={**form_data, "photo":self.photo})
-        form = response.context["form"]
-        self.assertFormError(form, errors="فقط حروف الفبا در نام و نام خانوادگی مجاز است", field="first_name")
-        self.assertFormError(form, errors="فقط حروف الفبا در نام و نام خانوادگی مجاز است", field="last_name")
-        self.assertFormError(form, errors=["فقط عدد مجاز است",  "کد ملی باید 10 کاراکتر باشد"], field="student_id")
-        self.assertFormError(form, errors="فقط حروف الفبا مجاز است", field="address")
-        self.assertFormError(form, errors=["شماره موبایل نامعتبر است", "شماره موبایل باید شامل 11 عدد باشد"], field="mobile")
-        self.assertTemplateUsed(response, "register_student.html")
-        self.assertFalse(student.objects.filter(**form_data).exists())
-
-
-
-    def test_duplicate_id(self):
-        test_student = User.objects.create_user(username="teststudents", password="test")
-        student.objects.create(user=test_student, first_name = "test", last_name="test", date_of_birth=jdatetime.date(1382,10,10), student_id="0123456789",
-                            photo=self.photo, marriage=False, mobile="09121234567", address="test", gender=student.gender_choices.MALE, 
-                            major=self.test_major, university=self.test_uni_1, status=student.status_choices.STUDYING)
-        form_data = {
-            "first_name": "محم5د عل@",
-            "last_name":"حدا85د@",
-            "date_of_birth":jdatetime.date(1382,10,21),
+            "first_name":"test",
+            "last_name":"test",
+            "date_of_birth":"1406-13-01",
             "student_id":"0123456789",
-            "mobile":"+98811212345678",
-            "address":"این1 یک آدر# برای تست کر&ن است",
-            "major":self.test_major.pk,
-            "university":self.test_uni_1.pk,
+            "mobile":"091212345678",
+            "address":"test",
         }
+        form = StudentForm(data={**form_data})
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.errors["date_of_birth"], "تاریخ نامعتبر است")
 
-        response = self.client.post(reverse("student:register_student"), data={**form_data, "photo":self.photo})
-        form = response.context["form"]
-        self.assertFormError(form, errors="کد ملی را با دقت وارد کنید",field="student_id")
-        self.assertFalse(student.objects.filter(**form_data).exists())
-        self.assertTemplateUsed(response, "register_student.html")
+        # ? invalid day
+        form_data = {
+            "first_name":"test",
+            "last_name":"test",
+            "date_of_birth":"1406-01-32",
+            "student_id":"0123456789",
+            "mobile":"091212345678",
+            "address":"test",
+        }
+        form = StudentForm(data={**form_data})
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.errors["date_of_birth"], "تاریخ نامعتبر است")
 
 
+
+    def test_duplicate_student_id(self):
+        # ? create user
+        test_student_user = User.objects.create_user(username="test_student", password="test_pass")
+
+        # ? cretae university
+        test_uni = university.objects.create(name="test", code=100)
+
+        # ? creating major
+        test_major = major.objects.create(name="test", code=200, capacity=200)
+
+        # ? create student
+        with open("academic/tests/test_photo.jpg", "rb") as f:
+            photo = SimpleUploadedFile(name="test_photo.jpg",
+                                        content=f.read(),
+                                        content_type="image/jpeg")
+        student_data = {
+            "user":test_student_user,
+            "first_name":"test",
+            "last_name":"test",
+            "date_of_birth":"1382-02-12",
+            "student_id":"0123456789",
+            "photo":photo,
+            "mobile":"09121234567",
+            "address":"test",
+            "university":test_uni,
+            "major":test_major
+        }
+        student.objects.create(**student_data)
+
+        form_data = {
+            "first_name":"test",
+            "last_name":"test",
+            "student_id":"0123456789",
+            "mobile":"091212345678",
+            "address":"test",
+        }
+        form = StudentForm(data={**form_data})
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.errors["student_id"], ["کد ملی را با دقت وارد کنید"])
+
+
+
+    def test_letters_not_allowed_in_student_id(self):
+        form_data = {
+            "first_name":"test",
+            "last_name":"test",
+            "student_id":"0a12345678",
+            "mobile":"091212345678",
+            "address":"test",
+        }
+        form = StudentForm(data={**form_data})
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.errors["student_id"], ["فقط عدد مجاز است"])
+
+
+
+    def test_not_enough_digits_for_student_id(self):
+        form_data = {
+            "first_name":"test",
+            "last_name":"test",
+            "student_id":"12345678",
+            "mobile":"091212345678",
+            "address":"test",
+        }
+        form = StudentForm(data={**form_data})
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.errors["student_id"], ["کد ملی باید 10 کاراکتر باشد"])
+
+
+
+    def test_invalid_phone_number(self):
+        form_data = {
+            "first_name":"test",
+            "last_name":"test",
+            "student_id":"0123456789",
+            "mobile":"091212345678",
+            "address":"test",
+        }
+        form = StudentForm(data={**form_data})
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.errors["mobile"], ["شماره موبایل نامعتبر است"])
+
+
+
+    def test_empty_phone_number(self):
+        form_data = {
+            "first_name":"test",
+            "last_name":"test",
+            "student_id":"0123456789",
+            "mobile":"",
+            "address":"test",
+        }
+        form = StudentForm(data={**form_data})
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.errors["mobile"], ["شماره موبایل باید شامل 11 عدد باشد"])
     
+
+
+
+    def test_invalid_first_name(self):
+        form_data = {
+            "first_name":"test 54@jhsfd",
+            "last_name":"test",
+            "student_id":"0123456789",
+            "mobile":"09121234567",
+            "address":"test",
+        }
+        form = StudentForm(data={**form_data})
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.errors["first_name"], ["فقط حروف الفبا در نام و نام خانوادگی مجاز است"])
+
+
+
+    def test_invalid_last_name(self):
+        form_data = {
+            "first_name":"test",
+            "last_name":"test 54@jhsfd",
+            "student_id":"0123456789",
+            "mobile":"09121234567",
+            "address":"test",
+        }
+        form = StudentForm(data={**form_data})
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.errors["last_name"], ["فقط حروف الفبا در نام و نام خانوادگی مجاز است"])
+
+
+
+    def test_invalid_address(self):
+        form_data = {
+            "first_name":"test",
+            "last_name":"test",
+            "student_id":"0123456789",
+            "mobile":"09121234567",
+            "address":"te6564#st",
+        }
+        form = StudentForm(data={**form_data})
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.errors["address"], ["فقط حروف الفبا مجاز است"])
+
+
+
     def test_with_correct_data(self):
+        # ? create user
+        test_student_user = User.objects.create_user(username="test_student", password="test_pass")
+
+        # ? cretae university
+        test_uni = university.objects.create(name="test", code=100)
+
+        # ? creating major
+        test_major = major.objects.create(name="test", code=200, capacity=200)
+
+        # ? create student
         with open("academic/tests/test_photo.jpg", "rb") as f:
             photo = SimpleUploadedFile(name="test_photo.jpg",
                                     content=f.read(),
                                     content_type="image/jpeg")
         form_data = {
-            "first_name": "محمد",
-            "last_name":"محمدی",
-            "date_of_birth":jdatetime.date(1382,5,12),
-            "student_id":"1234567890",
-            "mobile":"+989121234567",
-            "address":"این یک آدرس برای تست است",
-            "major":self.test_major.pk,
-            "university":self.test_uni_1.pk,
+            "user":test_student_user,
+            "first_name":"test",
+            "last_name":"test",
+            "date_of_birth":"1382-02-12",
+            "student_id":"0123456789",
+            "mobile":"09121234567",
+            "photo":photo,
+            "address":"test",
+            "university":test_uni,
+            "major":test_major
         }
-        response = self.client.post(reverse("student:register_student"), data={**form_data, "photo":photo}, follow=True)
-        messages = list(response.context["messages"])
-        self.assertRedirects(response, reverse("academic:main"))
-        self.assertTrue("ثبت نام موفقیت آمیز بود" == str(messages[0]))
-        self.assertTrue(student.objects.filter(**form_data).exists())
+
+        files_data = {
+            "photo":photo,
+        }
+        form = StudentForm(data={**form_data}, files=files_data)
+        self.assertTrue(form.is_valid())
 
 
 

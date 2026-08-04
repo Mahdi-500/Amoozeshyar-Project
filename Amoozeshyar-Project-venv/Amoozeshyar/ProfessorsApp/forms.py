@@ -23,9 +23,10 @@ class ProfessorForm(forms.ModelForm):
 
         error_messages = {
             "date_of_birth":{"invalid":"تاریخ نامعتبر است"},
-            "email":{"invalid":"ایمیل نامعبتر است"},
+            "email":{"invalid":"ایمیل نامعتبر است"},
             "phone":{"invalid":"شماره موبایل نامعتبر است"},
-            "universities":{"required":"این فیلد اجباری است"}
+            "universities":{"required":"این فیلد اجباری است"},
+            "professor_id":{"max_length":"کد ملی باید 10 رقم باشد"}
         }
 
     def clean(self):
@@ -33,9 +34,9 @@ class ProfessorForm(forms.ModelForm):
         first_name = clean_data.get("first_name")
         last_name = clean_data.get("last_name")
         address = clean_data.get("address")
-        phone_number = clean_data.get("phone")
+        phone_number = self.data.get("phone")
         major = clean_data.get("major")
-        professor_id = clean_data.get("professor_id")
+        professor_id = self.data.get("professor_id")
 
         no_space_first_name = first_name.replace(" ","")
         no_space_last_name = last_name.replace(" ","")
@@ -63,8 +64,8 @@ class ProfessorForm(forms.ModelForm):
 
 
         # ? mobile validation
-        if phone_number is None:
-            self.add_error("phone","شماره موبایل باید شامل 11 عدد باشد")
+        if len(phone_number) != 11:
+            self.add_error("phone","شماره موبایل باید شامل 11 رقم باشد")
 
 
         # ? major validation
@@ -76,8 +77,8 @@ class ProfessorForm(forms.ModelForm):
         if not professor_id.isdigit():
             self.add_error("professor_id", "فقط عدد مجاز است")
         
-        if len(professor_id) != 10:
-            self.add_error("professor_id", "کد ملی باید 10 کاراکتر باشد")
+        if len(professor_id) < 10:
+            self.add_error("professor_id", "کد ملی باید 10 رقم باشد")
         
         return clean_data
         
@@ -96,11 +97,11 @@ class GradeForm(forms.Form):
     first_name = forms.CharField(max_length=100, label="نام")
     last_name = forms.CharField(max_length=150, label="نام خانوادگی")
     student_number = forms.CharField(max_length=12, label="شماره دانشجویی")
-    mark = forms.DecimalField(label="نمره", required=True, decimal_places=2 , min_value=0, max_value=20, 
+    mark = forms.DecimalField(label="نمره", required=True, decimal_places=2, min_value=0, max_value=20, 
                                 error_messages={"max_value":"نمره باید بین 0 تا 20 باشد",
                                                 "min_value":"نمره باید بین 0 تا 20 باشد",
                                                 "max_decimal_places":"فرمت نمره صحیح نیست"},
-                                widget=forms.NumberInput(attrs={"step":0.25, "min":0, "max":20}))
+                                widget=forms.NumberInput(attrs={"step":"0.25", "min":0, "max":20}))
     
         
     def __init__(self, *args, **kwargs):

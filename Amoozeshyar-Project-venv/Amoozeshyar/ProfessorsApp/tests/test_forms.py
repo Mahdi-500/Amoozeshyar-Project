@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.urls import reverse
 from django.contrib.auth.models import User, Group
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django_jalali.db.models import jdatetime

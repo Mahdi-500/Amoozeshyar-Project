@@ -14,7 +14,7 @@ class LessonClassFrom(forms.ModelForm):
     class Meta:
         model = lesson_class
         fields = "__all__"
-        exclude = ['created', 'modified', '']
+        exclude = ['created', 'modified']
 
         help_texts = {
             "class_start_time":"AM/PM 09:05 :مثال",
@@ -60,12 +60,12 @@ class LessonClassFrom(forms.ModelForm):
                 exam_hour = int(exam_date_time[11:13])
                 exam_minute = int(exam_date_time[14:])
             except (ValueError, TypeError):
-                self.add_error("exam_date_time","باشد yyyy/mm/ddThh:mm تاریخ و زمان باید به فرمت")
+                self.add_error("exam_date_time","در تاریخ و ساعت فقط عدد مجاز است")
                 return clean_date
 
             T_location = exam_date_time.find("T")
             if T_location != 10:
-                self.add_error("exam_date_time","باشد yyyy/mm/ddThh:mm تاریخ و زمان باید به فرمت")
+                self.add_error("exam_date_time", "حرف T وجود ندارد یا در مکان اشتباهی قرار داده شده")
             
             if exam_year < jdatetime.date.today().year:
                 self.add_error("exam_date_time", "سال امتحان نمی تواند از سال فعلی کمتر باشد")
@@ -120,11 +120,9 @@ class LessonForm(forms.ModelForm):
         no_space_name = name.replace(" ","")
         # apply_to_all = clean_data.get("apply_to_all")
 
-        # ? lesson name validation
-        for i in no_space_name:
-            if not i.isalpha() and not i.isalnum():
-                self.add_error("name", " ترکیب عدد با حروف الفبا یا فقط حروف الفبا مجاز است")
-                return clean_data
+        # ? lesson name 
+        if not no_space_name.isalpha() or not no_space_name.isalnum():
+            self.add_error("name", " ترکیب عدد با حروف الفبا یا فقط حروف الفبا مجاز است")
 
         
         # ? pishniaz and hamniaz validation

@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.urls import reverse
 from ..forms import *
 class testLoginForm(TestCase):
     def test_username_missing(self):

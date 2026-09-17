@@ -41,7 +41,13 @@ def lesson_class_form_view(request):
         form = LessonClassFrom(request.POST)
         #flag = False
 
-        if form.is_valid():
+        if "class_code" in form.errors.keys():
+            if form.errors["class_code"] == ["این کد ارائه در این نیمسال وجود دارد"]:
+                messages.error(request, "این کد ارائه در این نیمسال وجود دارد")
+                form = LessonClassFrom(request.POST)
+                return render(request, "add_lesson_class.html", {'form':form})
+        
+        elif form.is_valid():
             new_lesson_class = form.save(commit=False)
             day = form.cleaned_data["class_day"]
             start_time = form.cleaned_data["class_start_time"]
@@ -68,12 +74,6 @@ def lesson_class_form_view(request):
                 messages.error(request, f"زمان و روز برگزاری این کلاس با  {classes[0]}  تداخل دارد")
                 return render(request, "add_lesson_class.html", {'form':form})
             
-            try:
-                form.save(commit=True)
-            except IntegrityError:
-                messages.error(request, "این کد ارائه در این نیمسال وجود دارد")
-                form = LessonClassFrom(request.POST)
-                return render(request, "add_lesson_class.html", {'form':form})
             
             messages.success(request, "کلاس با موفقیت ایجاد شد")
             return redirect("academic:main")

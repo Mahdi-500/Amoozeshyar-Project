@@ -44,6 +44,7 @@ class LessonClassFrom(forms.ModelForm):
         start_time = clean_date.get("class_start_time")
         end_time = clean_date.get("class_end_time")
         exam_date_time = clean_date.get("exam_date_time")
+        clean_class_code = clean_date.get("class_code")
         
         if start_time == end_time:
             raise forms.ValidationError("ساعت شروع و پایان نمی توانند یکسان باشند")
@@ -84,7 +85,10 @@ class LessonClassFrom(forms.ModelForm):
             
             if not self.errors.get("exam_date_time"):
                 clean_date['exam_date_time'] = jdatetime.datetime(exam_year, exam_month, exam_day, exam_hour, exam_minute)
-        
+
+            if lesson_class.objects.filter(class_code=clean_class_code):
+                self.add_error("class_code", "این کد ارائه در این نیمسال وجود دارد")
+                
         return clean_date
 
     def save(self, commit=True):
